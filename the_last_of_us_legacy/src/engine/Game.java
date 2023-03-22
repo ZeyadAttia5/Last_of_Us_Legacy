@@ -15,10 +15,11 @@ public class Game {
 	public static ArrayList<Zombie> zombies;
 	public static Cell [][] map;
 
-	public Game() {}
+
 	
 	public static void loadHeros(String filePath) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\omar\\OneDrive\\Documents\\GitHub\\Last_of_Us_Legacy\\info\\Heros_csv"));
+		File csvFile = new File("C:/Users/amrkh/Desktop/Heros.csv");
+		BufferedReader br = new BufferedReader(new FileReader(csvFile));
 		String line = br.readLine();
 		while(line != null) {
 			String [] Content = line.split(",");
