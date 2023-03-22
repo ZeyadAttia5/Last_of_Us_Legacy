@@ -1,6 +1,15 @@
+<<<<<<< Updated upstream
 Hero_0,FIGH,64,8,169
 Hero_1,EXP,73,7,16
 Hero_2,MED,68,7,32
 Hero_3,EXP,78,6,206
 Hero_4,FIGH,107,9,82
 Hero_5,EXP,49,6,99
+=======
+Hero_0,FIGH,27,9,195
+Hero_1,EXP,32,7,172
+Hero_2,MED,31,7,105
+Hero_3,EXP,22,8,207
+Hero_4,FIGH,78,7,163
+Hero_5,EXP,17,8,88
+>>>>>>> Stashed changes

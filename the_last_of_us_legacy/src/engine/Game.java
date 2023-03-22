@@ -18,27 +18,28 @@ public class Game {
 
 	
 	public static void loadHeros(String filePath) throws Exception {
-		File csvFile = new File("C:/Users/amrkh/Desktop/Heros.csv");
-		BufferedReader br = new BufferedReader(new FileReader(csvFile));
+		FileReader csvFile = new FileReader(filePath);
+		BufferedReader br = new BufferedReader((csvFile));
 		String line = br.readLine();
 		while(line != null) {
 			String [] Content = line.split(",");
 
 			if (Content[1].equals("FIGH")) {
-				Fighter newFighter = new Fighter(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[3]), Integer.parseInt(Content[4]));
+				Fighter newFighter = new Fighter(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[4]), Integer.parseInt(Content[3]));
 				availableHeroes.add(newFighter);
 			}
 			if (Content[1].equals("MED")) {
-				Medic newMed = new Medic(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[3]), Integer.parseInt(Content[4]));
+				Medic newMed = new Medic(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[4]), Integer.parseInt(Content[3]));
 				availableHeroes.add(newMed);
 			}
 			if (Content[1].equals("EXP")) {
-				Explorer newExp = new Explorer(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[3]), Integer.parseInt(Content[4]));
+				Explorer newExp = new Explorer(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[4]), Integer.parseInt(Content[3]));
 				availableHeroes.add(newExp);
 			}
 			line = br.readLine();
 		}
 		br.close();
+		csvFile.close();
 		
 	}
 

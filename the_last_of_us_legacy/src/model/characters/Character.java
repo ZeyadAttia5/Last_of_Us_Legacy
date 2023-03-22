@@ -10,10 +10,17 @@ public abstract class Character {
 	private Character target;
 	
 	public Character(String name, int maxHp, int attackDmg) {
+<<<<<<< Updated upstream
 		setName(name);
 		setMaxHp(maxHp);
 		setAttackDmg(attackDmg);
 		setCurrentHp(maxHp);
+=======
+		this.name = name;
+		this.maxHp = maxHp;
+		this.attackDmg = attackDmg;
+		this.currentHp = maxHp;
+>>>>>>> Stashed changes
 	}
 	public void setName(String name) {
 		this.name = name;
@@ -25,7 +32,9 @@ public abstract class Character {
 		this.maxHp = maxHp;
 	}
 	public void setCurrentHp(int currentHp) {
-		this.currentHp = currentHp;
+		if(currentHp<= maxHp) {
+			this.currentHp = currentHp;
+		}
 	}
 	public void setAttackDmg(int attackDmg) {
 		this.attackDmg = attackDmg;
