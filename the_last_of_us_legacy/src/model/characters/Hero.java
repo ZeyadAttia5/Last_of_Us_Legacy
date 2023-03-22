@@ -2,7 +2,7 @@ package model.characters;
 import model.collectibles.*;
 import java.util.ArrayList;
 
-public class Hero extends Character {
+public abstract class Hero extends Character {
 	private int actionsAvailable;
 	private int maxActions;
 	private boolean specialAction;
@@ -27,10 +27,10 @@ public class Hero extends Character {
 	public boolean getSpecialAction() {
 		return specialAction;
 	}
-	public ArrayList getVaccineInventory() {
+	public ArrayList<Vaccine> getVaccineInventory() {
 		return vaccineInventory;
 	}
-	public ArrayList getSupplyInventory() {
+	public ArrayList<Supply> getSupplyInventory() {
 		return supplyInventory;
 	}
 }

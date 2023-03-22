@@ -18,23 +18,22 @@ public class Game {
 	public Game() {}
 	
 	public static void loadHeros(String filePath) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\omar\\OneDrive\\Documents\\GitHub\\Last_of_Us_Legacy\\info\\Heros_csv"));
+		BufferedReader br = new BufferedReader(new FileReader("Heros.csv"));
 		String line = br.readLine();
-		int i = 0;
 		while(line != null) {
 			String [] Content = line.split(",");
-			Integer.parseInt(Content[i++]);
-			if (Content[i].equals("FIGH")) {
-				Fighter newFighter = new Fighter();
-				Heroes.add(newFighter);
+
+			if (Content[1].equals("FIGH")) {
+				Fighter newFighter = new Fighter(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[3]), Integer.parseInt(Content[4]));
+				availableHeroes.add(newFighter);
 			}
-			if (Content[i].equals("MED")) {
-				Medic newMed = new Medic();
-				Heroes.add(newMed);
+			if (Content[1].equals("MED")) {
+				Medic newMed = new Medic(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[3]), Integer.parseInt(Content[4]));
+				availableHeroes.add(newMed);
 			}
-			if (Content[i].equals("EXP")) {
-				Explorer newExp = new Explorer();
-				Heroes.add(newExp);
+			if (Content[1].equals("EXP")) {
+				Explorer newExp = new Explorer(Content[0], Integer.parseInt(Content[2]), Integer.parseInt(Content[3]), Integer.parseInt(Content[4]));
+				availableHeroes.add(newExp);
 			}
 			line = br.readLine();
 		}

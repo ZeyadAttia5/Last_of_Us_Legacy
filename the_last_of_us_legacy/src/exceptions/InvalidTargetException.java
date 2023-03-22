@@ -1,10 +1,10 @@
 package exceptions;
 public class InvalidTargetException extends GameActionException {
-	private InvalidTargetException() {
+	public InvalidTargetException() {
 		super();
 	}
 
-	private InvalidTargetException(String message) {
+	public InvalidTargetException(String message) {
 		super(message);
 	}
 }

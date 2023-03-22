@@ -1,11 +1,11 @@
 package exceptions;
 
 public class MovementException extends GameActionException {
-	private MovementException() {
+	public MovementException() {
 		super();
 	}
 
-	private MovementException(String message) {
+	public MovementException(String message) {
 		super(message);
 	}
 }

@@ -1,11 +1,11 @@
 package exceptions;
 
 public class NotEnoughActionsException extends GameActionException {
-	private NotEnoughActionsException() {
+	public NotEnoughActionsException() {
 		super();
 	}
 
-	private NotEnoughActionsException(String message) {
+	public NotEnoughActionsException(String message) {
 		super(message);
 	}
 }

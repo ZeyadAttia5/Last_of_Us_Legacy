@@ -1,11 +1,11 @@
 package exceptions;
 
 public class NoAvailableResourcesException extends GameActionException {
-	private NoAvailableResourcesException() {
+	public NoAvailableResourcesException() {
 		super();
 	}
 
-	private NoAvailableResourcesException(String message) {
+	public NoAvailableResourcesException(String message) {
 		super(message);
 	}
 }
