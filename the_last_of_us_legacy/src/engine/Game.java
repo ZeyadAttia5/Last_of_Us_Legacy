@@ -1,28 +1,45 @@
 package engine;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.*;
+import java.io.*;
 
 import model.characters.*;
-
 import model.world.Cell;
 
 public class Game {
-	static ArrayList<Hero> availableHeros;
-	static ArrayList<Hero> heros;
-	static ArrayList<Zombie> zombies;
+	static ArrayList<Hero> availableHeroes;
+	static ArrayList<Hero> Heroes;
+	static ArrayList<Zombie> Zombies;
 	static Cell [][] map;
 
 	public Game() {}
 	
 	public static void loadHeros(String filePath) throws Exception {
-		Scanner Heros = new Scanner(new File("C:\\Users\\amrkh\\Desktop\\Heros.csv"));
-		Heros.useDelimiter(",");
+		BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\omar\\OneDrive\\Documents\\GitHub\\Last_of_Us_Legacy\\info\\Heros_csv"));
+		String line = br.readLine();
 		int i = 0;
-	    while (Heros.hasNext()) {
-		availabeHeros = Heros.next();	
-	    }
-	    Heros.close();
+		while(line != null) {
+			String [] Content = line.split(",");
+			Integer.parseInt(Content[i++]);
+			if (Content[i].equals("FIGH")) {
+				Fighter newFighter = new Fighter();
+				Heroes.add(newFighter);
+			}
+			if (Content[i].equals("MED")) {
+				Medic newMed = new Medic();
+				Heroes.add(newMed);
+			}
+			if (Content[i].equals("EXP")) {
+				Explorer newExp = new Explorer();
+				Heroes.add(newExp);
+			}
+			
+		}
+		
+		
 	}
 
 }

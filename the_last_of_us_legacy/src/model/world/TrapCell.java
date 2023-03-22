@@ -3,7 +3,9 @@ package model.world;
 public class TrapCell extends Cell {
 	private int trapDamage = 20;
 
-	public TrapCell() {}
+	public TrapCell() {
+		super();
+	}
 	
 	public int getTrapDamage() {
 		return trapDamage;
