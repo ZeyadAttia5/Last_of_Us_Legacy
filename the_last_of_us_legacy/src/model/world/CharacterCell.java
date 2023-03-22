@@ -5,7 +5,7 @@ public class CharacterCell extends Cell {
 	 private Character character;
 	 private boolean isSafe;
 	 
-	 public CharacterCell() {
+	 public CharacterCell(Character character) {
 		 super();
 		 this.character = character;
 	}
@@ -18,13 +18,13 @@ public class CharacterCell extends Cell {
 		 return isSafe;
 	 }
 	 
-	// public void setCharacter(Character character) {
-	//	 this.character = character;
-	 //}
+	 public void setCharacter(Character character) {
+		 this.character = character;
+	 }
 	 
-	// public Character getCharacter() {
-		 //return character;
-	 //}	
+	 public Character getCharacter() {
+		 return character;
+	 }	
 	 
 
 
