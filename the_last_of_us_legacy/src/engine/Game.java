@@ -17,7 +17,7 @@ public class Game {
 
 	public Game() {}
 	
-	public static void loadHeros(String filePath) throws Exception {
+	public static void loadHeroes(String filePath) throws Exception {
 		File csvFile = new File("C:/Users/amrkh/Desktop/Heros.csv");
 		BufferedReader br = new BufferedReader(new FileReader(csvFile));
 		String line = br.readLine();
