@@ -8,6 +8,7 @@ public class Fighter extends Hero{
 		setMaxHp(maxHp);
 		setAttackDmg(attackDmg);
 		setActionsAvailable(maxActions);
+		//setCurrentHp(maxHp);
 	}
 
 }

@@ -8,6 +8,7 @@ public class Zombie extends Character {
 		setName(k);
 		setMaxHp(40);
 		setAttackDmg(10);
+		//setCurrentHp(40);
 		ZOMBIES_COUNT++;
 	}
 
