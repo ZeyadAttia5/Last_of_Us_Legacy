@@ -1,5 +1,5 @@
 package engine;
-import model.characters;
+package model.characters;
 import java.io.File;
 import java.util.*;
 import model.world.Cell;
