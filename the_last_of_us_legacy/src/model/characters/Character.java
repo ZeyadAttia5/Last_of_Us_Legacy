@@ -9,27 +9,15 @@ public abstract class Character {
 	private int attackDmg;
 	private Character target;
 	
-	public Character(int maxHp, int attackDmg) {
-		//setName(name);
-		setMaxHp(maxHp);
-		//setAttackDmg(attackDmg);
+	public Character(String name, int maxHp, int attackDmg) {
 		setCurrentHp(maxHp);
 	}
-	//public void setName(String name) {
-		//this.name = name;
-	//}
 	public void setLocation(Point location) {
 		this.location = location;
-	}
-	public void setMaxHp(int maxHp) {
-		this.maxHp = maxHp;
 	}
 	public void setCurrentHp(int currentHp) {
 		this.currentHp = currentHp;
 	}
-	//public void setAttackDmg(int attackDmg) {
-		//this.attackDmg = attackDmg;
-	//}
 	public void setTarget(Character target) {
 		this.target = target;
 	}

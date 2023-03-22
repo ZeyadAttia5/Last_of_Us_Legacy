@@ -9,7 +9,7 @@ public abstract class Hero extends Character {
 	private ArrayList<Vaccine> vaccineInventory;
 	private ArrayList<Supply> supplyInventory;
 	public Hero(String name, int maxHp,int attackDmg, int maxActions ) {
-		super( maxHp, attackDmg);
+		super(name, maxHp, attackDmg);
 		setActionsAvailable(maxActions);
 	}
 	public void setActionsAvailable(int actionsAvailable) {
