@@ -36,9 +36,9 @@ public class Game {
 				Explorer newExp = new Explorer();
 				Heroes.add(newExp);
 			}
-			
+			line = br.readLine();
 		}
-		
+		br.close();
 		
 	}
 
