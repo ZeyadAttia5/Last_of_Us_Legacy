@@ -11,6 +11,9 @@ public abstract class Character {
 	
 	public Character(String name, int maxHp, int attackDmg) {
 		setCurrentHp(maxHp);
+		this.name = name;
+		this.maxHp = maxHp;
+		this.attackDmg = attackDmg;
 	}
 	public void setLocation(Point location) {
 		this.location = location;
