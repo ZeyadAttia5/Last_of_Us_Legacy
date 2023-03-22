@@ -13,6 +13,7 @@ public abstract class Character {
 		setName(name);
 		setMaxHp(maxHp);
 		setAttackDmg(attackDmg);
+		setCurrentHp(maxHp);
 	}
 	public void setName(String name) {
 		this.name = name;

@@ -18,7 +18,7 @@ public class Game {
 	public Game() {}
 	
 	public static void loadHeros(String filePath) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader("Heros.csv"));
+		BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\omar\\OneDrive\\Documents\\GitHub\\Last_of_Us_Legacy\\info\\Heros_csv"));
 		String line = br.readLine();
 		while(line != null) {
 			String [] Content = line.split(",");

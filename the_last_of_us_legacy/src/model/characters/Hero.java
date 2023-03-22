@@ -21,16 +21,17 @@ public abstract class Hero extends Character {
 	public int getMaxActions() {
 		return maxActions;
 	}
-	public void SetSpecialAction(boolean specialAction) {
-		this.specialAction = specialAction;
-	}
-	public boolean getSpecialAction() {
-		return specialAction;
-	}
 	public ArrayList<Vaccine> getVaccineInventory() {
 		return vaccineInventory;
 	}
 	public ArrayList<Supply> getSupplyInventory() {
 		return supplyInventory;
+	}
+	
+	public boolean isSpecialAction() {
+		return specialAction;
+	}
+	public void setSpecialAction(boolean specialAction) {
+		this.specialAction = specialAction;
 	}
 }
