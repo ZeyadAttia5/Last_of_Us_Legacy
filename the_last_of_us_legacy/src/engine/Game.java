@@ -11,8 +11,8 @@ import model.world.Cell;
 
 public class Game {
 	public static ArrayList<Hero> availableHeroes;
-	public static ArrayList<Hero> Heroes;
-	public static ArrayList<Zombie> Zombies;
+	public static ArrayList<Hero> heroes;
+	public static ArrayList<Zombie> zombies;
 	public static Cell [][] map;
 
 	public Game() {}
