@@ -10,10 +10,10 @@ import model.characters.*;
 import model.world.Cell;
 
 public class Game {
-	static ArrayList<Hero> availableHeroes;
-	static ArrayList<Hero> Heroes;
-	static ArrayList<Zombie> Zombies;
-	static Cell [][] map;
+	public static ArrayList<Hero> availableHeroes;
+	public static ArrayList<Hero> Heroes;
+	public static ArrayList<Zombie> Zombies;
+	public static Cell [][] map;
 
 	public Game() {}
 	
