@@ -1,7 +1,10 @@
 package engine;
-package model.characters;
+
 import java.io.File;
 import java.util.*;
+
+import model.characters.*;
+
 import model.world.Cell;
 
 public class Game {

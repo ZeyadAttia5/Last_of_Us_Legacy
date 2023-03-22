@@ -1,5 +1,5 @@
 package model.characters;
-package model.collectibles;
+import model.collectibles.*;
 import java.util.ArrayList;
 
 public class Hero extends Character {
