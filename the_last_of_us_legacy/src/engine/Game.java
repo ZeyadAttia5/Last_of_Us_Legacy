@@ -15,7 +15,7 @@ public class Game {
 	public static ArrayList<Zombie> zombies;
 	public static Cell [][] map;
 
-
+	public Game() {}
 	
 	public static void loadHeros(String filePath) throws Exception {
 		File csvFile = new File("C:/Users/amrkh/Desktop/Heros.csv");
