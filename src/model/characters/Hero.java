@@ -5,7 +5,7 @@ import model.collectibles.Supply;
 import model.collectibles.Vaccine;
 
 
-public abstract class Hero extends Character {
+public  class Hero extends Character {
 	
 
 		private int actionsAvailable;
