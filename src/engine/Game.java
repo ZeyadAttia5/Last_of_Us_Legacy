@@ -1,9 +1,10 @@
 package engine;
-
+import model.collectibles.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import model.characters.Explorer;
 import model.characters.Fighter;
@@ -11,6 +12,10 @@ import model.characters.Hero;
 import model.characters.Medic;
 import model.characters.Zombie;
 import model.world.Cell;
+import model.world.CharacterCell;
+import model.world.CollectibleCell;
+import model.world.TrapCell;
+
 
 public class Game {
 	
@@ -18,6 +23,7 @@ public class Game {
 	public static ArrayList <Hero> availableHeroes = new ArrayList<Hero>();
 	public static ArrayList <Hero> heroes =  new ArrayList<Hero>();
 	public static ArrayList <Zombie> zombies =  new ArrayList<Zombie>();
+	public static int vaccinesUsed;
 	
 	
 	
@@ -47,11 +53,63 @@ public class Game {
 			
 		}
 		br.close();
-
+		
+		
 		
 		
 	}
+	
+	public static void startGame(Hero h) {
+		availableHeroes.remove(h);
+		heroes.add(h);
+		map[0][0] = new CharacterCell(h,true);
+		
+		for(int i = 0; i < 5; i++) { //Add Randomized Vax
+			Vaccine v = new Vaccine();
+			Random rand = new Random();
+			int x = rand.nextInt(14)+1;
+			int y = rand.nextInt(14)+1;
+			if(map[x][y] == null) 
+				map[x][y] = new CollectibleCell(v);
+			else 
+				i--;
+		}
+		for(int i = 0; i < 5; i++) { //Add Randomized Supply
+			Supply s = new Supply();
+			Random rand = new Random();
+			int x = rand.nextInt(14)+1;
+			int y = rand.nextInt(14)+1;
+			if(map[x][y] == null) 
+				map[x][y] = new CollectibleCell(s);
+			else 
+				i--;
+		}
+		
+		for(int i = 0; i < 10; i++) { //Add Randomized Zombie
+			Zombie z = new Zombie();
+			Random rand = new Random();
+			int x = rand.nextInt(14)+1;
+			int y = rand.nextInt(14)+1;
+			if(map[x][y] == null) 
+				map[x][y] = new CharacterCell(z);
+			else 
+				i--;
+		}
+		
+		for(int i = 0; i < 5; i++) { //Add Randomized Trap
+			Random rand = new Random();
+			int x = rand.nextInt(14)+1;
+			int y = rand.nextInt(14)+1;
+			if(map[x][y] == null) 
+				map[x][y] = new TrapCell();
+			else 
+				i--;
+		}
 
 
 
+	}
+	public static boolean checkGameOver() {
+		
+	}
 }
