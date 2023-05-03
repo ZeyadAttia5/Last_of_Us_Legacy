@@ -112,4 +112,8 @@ public class Game {
 	public static boolean checkGameOver() {
 		return false;
 	}
+	
+	public static boolean checkGameOver2() {
+		return false;
+	}
 }
