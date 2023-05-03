@@ -1,5 +1,5 @@
 package model.characters;
-
+import engine.Game;
 import java.util.ArrayList;
 import model.collectibles.Supply;
 import model.collectibles.Vaccine;
@@ -67,7 +67,11 @@ public abstract class Hero extends Character {
 		public ArrayList<Supply> getSupplyInventory() {
 			return supplyInventory;
 		}
+		
 
+		public void onCharacterDeath() {
+			Game.heroes.remove(this);
+		}
 
 
 		
