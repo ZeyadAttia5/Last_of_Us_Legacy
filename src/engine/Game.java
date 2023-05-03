@@ -110,6 +110,6 @@ public class Game {
 
 	}
 	public static boolean checkGameOver() {
-		
+		return false;
 	}
 }
