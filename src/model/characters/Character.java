@@ -65,8 +65,6 @@ public abstract class Character {
 	}
 	
 	public void attack() {
-			if(getAttackDmg() > 0)
-			target.setCurrentHp(target.getCurrentHp() - this.getAttackDmg());
 			
 	}
 	
