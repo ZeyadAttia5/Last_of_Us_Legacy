@@ -117,7 +117,21 @@ public abstract class Hero extends Character {
 	public void useSpecial() throws NoAvailableResourcesException {
 		
 	}
-
+	
+	public void cure() throws exceptions.NoAvailableResourcesException{
+		if(!this.getVaccineInventory().isEmpty()) {
+			int indexOfZombie =  Game.zombies.indexOf(this.getTarget());
+			Hero newHero = Game.availableHeroes.get(0);
+			((CharacterCell) Game.map[this.getTarget().getLocation().x][this.getTarget().getLocation().y]).setCharacter(newHero);
+			newHero.setLocation(this.getTarget().getLocation());
+			Game.heroes.add(newHero);
+			Game.availableHeroes.remove(0);
+			Game.zombies.remove(indexOfZombie);
+		}
+		else {
+			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
+		}
+	}
 
 	@Override
 	public void onCharacterDeath() {
