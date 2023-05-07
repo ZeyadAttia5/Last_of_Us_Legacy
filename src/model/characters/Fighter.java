@@ -19,6 +19,7 @@ public class Fighter extends Hero{
 
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
+		if (this.isTargetAdjacent()) { 
 		if(getActionsAvailable() > 0 ) {
 			setActionsAvailable(getActionsAvailable() - 1);
 			if(getTarget() instanceof Zombie)
@@ -28,7 +29,11 @@ public class Fighter extends Hero{
 		}
 		else 
 			throw new NotEnoughActionsException("Not Enough Actions Available");
-		getTarget().setHasBeenAttacked(true);
+		getTarget().getAttackers().add(this);
+		
+	}
+		else 
+			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}
 
 

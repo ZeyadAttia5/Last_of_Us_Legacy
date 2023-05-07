@@ -16,7 +16,7 @@ public abstract class Character {
 	private int currentHp;
 	private int attackDmg;
 	private Character target;
-	private boolean hasBeenAttacked;
+	private ArrayList<Character> attackers;
 	
 	
 	public Character() {
@@ -76,10 +76,8 @@ public abstract class Character {
 	}
 	
 
-	public void defend(Character c) {
-		if (HasBeenAttacked()) {
-			
-		}
+	public void defend(Character c) throws exceptions.InvalidTargetException {
+		
 	}
 
 	public void onCharacterDeath() {
@@ -87,15 +85,6 @@ public abstract class Character {
 	}
 
 
-
-	public boolean HasBeenAttacked() {
-		return hasBeenAttacked;
-	}
-
-
-	public void setHasBeenAttacked(boolean hasBeenAttacked) {
-		this.hasBeenAttacked = hasBeenAttacked;
-	}
 	
 
 	public ArrayList<Cell> getAdjacentCells() {
@@ -130,11 +119,21 @@ public abstract class Character {
 			if(adjCell instanceof CharacterCell) {
 				if(((CharacterCell) adjCell).getCharacter() == this.getTarget()) {
 					targetAdjacent = true;
-					return targetAdjacent;
+					break;
 				}
 			}
 		}
 		return targetAdjacent;
+	}
+
+
+	public ArrayList<Character> getAttackers() {
+		return attackers;
+	}
+
+
+	public void setAttackers(ArrayList<Character> attackers) {
+		this.attackers = attackers;
 	}
 
 

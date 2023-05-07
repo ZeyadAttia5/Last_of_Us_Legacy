@@ -2,12 +2,11 @@ package model.characters;
 
 
 import engine.Game;
-import exceptions.NoAvailableResourcesException;
-import exceptions.NotEnoughActionsException;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.characters.Character;
 import model.collectibles.Collectible;
 import model.collectibles.Supply;
 import model.collectibles.Vaccine;
@@ -17,7 +16,6 @@ import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import model.world.TrapCell;
 import exceptions.*;
-import exceptions.NotEnoughActionsException;
 
 public abstract class Hero extends Character {
 
@@ -124,19 +122,43 @@ public abstract class Hero extends Character {
 	@Override
 	public void onCharacterDeath() {
 		Game.heroes.remove(this);
-		
-		
 	}
 	public void attack() throws InvalidTargetException, NotEnoughActionsException{
-		if(getActionsAvailable() > 0 ) {
-			setActionsAvailable(getActionsAvailable() - 1);
-			if(getTarget() instanceof Zombie)
-				getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
-			else
-				throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
-		}
+		if (this.isTargetAdjacent()) { 
+			
+			if(getActionsAvailable() > 0 ) {
+				setActionsAvailable(getActionsAvailable() - 1);
+				if(getTarget() instanceof Zombie)
+					getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
+				else
+					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
+			}
+			else 
+				throw new NotEnoughActionsException("Not Enough Actions Available.");
+			getTarget().getAttackers().add(this);
+			}
 		else 
-			throw new NotEnoughActionsException("Not Enough Actions Available");
-		getTarget().setHasBeenAttacked(true);
+			throw new exceptions.InvalidTargetException("Target is not adjacent.");
+	}
+	public void defend(Character c) throws exceptions.InvalidTargetException {
+		if(maxActions > 0) {
+			maxActions--;
+			if (!getAttackers().isEmpty()) {
+				if(getAttackers().contains(c)) {
+					c.setCurrentHp(c.getCurrentHp()-(c.getAttackDmg()/2));
+					getAttackers().clear();
+				}
+				else
+					throw new InvalidTargetException("This target did not attack you.");
+			}
+			else
+				throw new InvalidTargetException("You have not been attacked.");
+		}
+		else
+			throw new InvalidTargetException("Not Enough Actions Available.");
 	}
 }
+
+	
+
+
