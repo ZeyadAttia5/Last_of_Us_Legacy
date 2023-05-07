@@ -155,8 +155,8 @@ public abstract class Hero extends Character {
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}
 	public void defend(Character c) throws exceptions.InvalidTargetException {
-		if(maxActions > 0) {
-			maxActions--;
+		if(getActionsAvailable() > 0) {
+			setActionsAvailable(getActionsAvailable()-1);
 			if (!getAttackers().isEmpty()) {
 				if(getAttackers().contains(c)) {
 					c.setCurrentHp(c.getCurrentHp()-(c.getAttackDmg()/2));

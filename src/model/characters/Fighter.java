@@ -26,7 +26,7 @@ public class Fighter extends Hero{
 			if(getTarget() instanceof Zombie)
 				getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
 			else
-				throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
+				throw new InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
 		}
 		else 
 			throw new NotEnoughActionsException("Not Enough Actions Available");
@@ -34,7 +34,7 @@ public class Fighter extends Hero{
 		
 	}
 		else 
-			throw new exceptions.InvalidTargetException("Target is not adjacent.");
+			throw new InvalidTargetException("Target is not adjacent.");
 	}
 
 
