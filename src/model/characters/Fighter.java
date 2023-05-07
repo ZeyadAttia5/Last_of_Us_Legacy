@@ -1,5 +1,6 @@
 package model.characters;
 
+import exceptions.NoAvailableResourcesException;
 
 public class Fighter extends Hero{
 
@@ -10,7 +11,11 @@ public class Fighter extends Hero{
 	}
 
 	
-
+	@Override
+	public void useSpecial() throws NoAvailableResourcesException{
+		//When a supply is used, Fighter can attack as many times in a turn 
+		//without costing action points, for 1 turn.
+	}
 	
 	
 	

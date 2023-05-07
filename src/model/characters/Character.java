@@ -1,6 +1,10 @@
 package model.characters;
 import engine.Game;
+import model.world.Cell;
+import model.world.CharacterCell;
+
 import java.awt.Point;
+import java.util.ArrayList;
 
 
 public abstract class Character {
@@ -68,12 +72,50 @@ public abstract class Character {
 			
 	}
 	
-	void defend(Character c) {
+	public void defend(Character c) {
 		
 	}
-	void onCharacterDeath() {
+	public void onCharacterDeath() {
 		
 	}
-	
+
+	public ArrayList<Cell> getAdjacentCells() {
+		ArrayList<Cell> adjacentCharList = new ArrayList<Cell>();
+
+		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
+		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
+		for (int i = 0; i < Game.map.length; i++) {
+			for (int j = 0; j < Game.map[i].length; j++) {
+				// loop over adjacent cells
+				for (int rowOffset : rowOffsets) {
+					for (int colOffset : colOffsets) {
+						// calculate adjacent cell coordinates
+						int adjRow = i + rowOffset;
+						int adjCol = j + colOffset;
+
+						// check if adjacent cell is within the Game.map bounds
+						if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0
+								&& adjCol < Game.map[adjRow].length) {							
+								adjacentCharList.add(Game.map[adjRow][adjCol]);
+						}
+					}
+				}
+			}
+		}
+		return adjacentCharList;
+	}
+	public boolean isTargetAdjacent() {
+		boolean targetAdjacent = false;
+		ArrayList<Cell> adjacentCells = this.getAdjacentCells();
+		for(Cell adjCell : adjacentCells) {
+			if(adjCell instanceof CharacterCell) {
+				if(((CharacterCell) adjCell).getCharacter() == this.getTarget()) {
+					targetAdjacent = true;
+					return targetAdjacent;
+				}
+			}
+		}
+		return targetAdjacent;
+	}
 
 }
