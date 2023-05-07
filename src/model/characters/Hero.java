@@ -10,6 +10,8 @@ import engine.Game;
 import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import model.world.TrapCell;
+import exceptions.*;
+import exceptions.NotEnoughActionsException;
 
 public abstract class Hero extends Character {
 
@@ -129,5 +131,19 @@ public abstract class Hero extends Character {
 
 	public void onCharacterDeath() {
 		Game.heroes.remove(this);
+		
+		
+	}
+	public void attack() throws InvalidTargetException, NotEnoughActionsException{
+		if(getActionsAvailable() > 0 ) {
+			setActionsAvailable(getActionsAvailable() - 1);
+			if(getTarget() instanceof Zombie)
+				getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
+			else
+				throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
+		}
+		else 
+			throw new NotEnoughActionsException("Not Enough Actions Available");
+		getTarget().setHasBeenAttacked(true);
 	}
 }

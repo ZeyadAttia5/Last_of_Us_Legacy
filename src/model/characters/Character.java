@@ -1,5 +1,8 @@
 package model.characters;
 import engine.Game;
+import exceptions.InvalidTargetException;
+import exceptions.NotEnoughActionsException;
+
 import java.awt.Point;
 
 
@@ -10,7 +13,8 @@ public abstract class Character {
 	private int currentHp;
 	private int attackDmg;
 	private Character target;
-
+	private boolean hasBeenAttacked;
+	
 	
 	public Character() {
 	}
@@ -64,15 +68,27 @@ public abstract class Character {
 		return attackDmg;
 	}
 	
-	public void attack() {
-			
+	public void attack () throws InvalidTargetException, NotEnoughActionsException{
+			//SubClass Implementation
 	}
 	
 	void defend(Character c) {
-		
+		if (HasBeenAttacked()) {
+			
+		}
 	}
 	void onCharacterDeath() {
 		
+	}
+
+
+	public boolean HasBeenAttacked() {
+		return hasBeenAttacked;
+	}
+
+
+	public void setHasBeenAttacked(boolean hasBeenAttacked) {
+		this.hasBeenAttacked = hasBeenAttacked;
 	}
 	
 
