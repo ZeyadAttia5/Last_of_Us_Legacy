@@ -1,8 +1,14 @@
 package model.characters;
 
+
 import engine.Game;
+import exceptions.NoAvailableResourcesException;
+import exceptions.NotEnoughActionsException;
+
 import java.awt.Point;
 import java.util.ArrayList;
+
+import model.collectibles.Collectible;
 import model.collectibles.Supply;
 import model.collectibles.Vaccine;
 import model.world.Cell;
@@ -59,7 +65,7 @@ public abstract class Hero extends Character {
 		return supplyInventory;
 	}
 
-	public void move(Direction d) throws exceptions.MovementException {
+	public void move(Direction d) throws exceptions.MovementException, NotEnoughActionsException {
 		Point currLocation = this.getLocation();
 		Point newLocation = currLocation;
 		if (actionsAvailable > 0) {
@@ -86,6 +92,7 @@ public abstract class Hero extends Character {
 			else if(Game.map[newLocation.x][newLocation.y] instanceof CollectibleCell) {
 				this.setLocation(newLocation);
 				actionsAvailable--;
+				((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible().pickUp(this);
 			}
 			else if(Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setLocation(newLocation);
@@ -96,39 +103,25 @@ public abstract class Hero extends Character {
 				this.setLocation(newLocation);
 				actionsAvailable--;
 			}
-		}
-	}
-
-	// returns an array of points
-	public ArrayList<Point> getAdjacentCharactersLocation() {
-		ArrayList<Point> adjacentCharList = new ArrayList<Point>();
-
-		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
-		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
-		for (int i = 0; i < Game.map.length; i++) {
-			for (int j = 0; j < Game.map[i].length; j++) {
-				// loop over adjacent cells
-				for (int rowOffset : rowOffsets) {
-					for (int colOffset : colOffsets) {
-						// calculate adjacent cell coordinates
-						int adjRow = i + rowOffset;
-						int adjCol = j + colOffset;
-
-						// check if adjacent cell is within the Game.map bounds
-						if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0
-								&& adjCol < Game.map[adjRow].length) {
-							if (Game.map[adjRow][adjCol] instanceof CharacterCell) {
-								Point adjLocation = new Point(adjRow, adjCol);
-								adjacentCharList.add(adjLocation);
-							}
-						}
-					}
-				}
+			//After the hero moves, the new location becomes a CharacterCell
+			Game.map[newLocation.x][newLocation.y] = new CharacterCell(this);
+			
+			//set the visibility to true for all adjacent cells
+			for(Cell adjCell : getAdjacentCells()) {
+				adjCell.setVisible(true);
 			}
 		}
-		return adjacentCharList;
+		else {
+			throw new exceptions.NotEnoughActionsException("Not Enough Action Points");
+		}
+	}
+	
+	public void useSpecial() throws NoAvailableResourcesException {
+		
 	}
 
+
+	@Override
 	public void onCharacterDeath() {
 		Game.heroes.remove(this);
 		

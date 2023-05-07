@@ -13,6 +13,7 @@ public class Zombie extends Character {
 		ZOMBIES_COUNT++;
 	}
 	
+	@Override
 	public void onCharacterDeath() {
 		Game.zombies.remove(this);
 		Game.zombiesRemoved.add(new Zombie());

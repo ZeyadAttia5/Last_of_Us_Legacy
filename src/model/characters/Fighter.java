@@ -1,7 +1,11 @@
 package model.characters;
 
+
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
+
+import exceptions.NoAvailableResourcesException;
+
 
 public class Fighter extends Hero{
 
@@ -12,6 +16,7 @@ public class Fighter extends Hero{
 		
 		
 	}
+
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 		if(getActionsAvailable() > 0 ) {
@@ -24,6 +29,14 @@ public class Fighter extends Hero{
 		else 
 			throw new NotEnoughActionsException("Not Enough Actions Available");
 		getTarget().setHasBeenAttacked(true);
+	}
+
+
+	
+	@Override
+	public void useSpecial() throws NoAvailableResourcesException{
+		//When a supply is used, Fighter can attack as many times in a turn 
+		//without costing action points, for 1 turn.
 	}
 
 	
