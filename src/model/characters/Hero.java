@@ -1,6 +1,5 @@
 package model.characters;
 
-
 import engine.Game;
 
 import java.awt.Point;
@@ -84,51 +83,48 @@ public abstract class Hero extends Character {
 				if (newLocation.x >= 15)
 					throw new exceptions.MovementException("Invalid Move");
 			}
-			if(Game.map[newLocation.x][newLocation.y] instanceof CharacterCell) {
+			if (Game.map[newLocation.x][newLocation.y] instanceof CharacterCell) {
 				throw new exceptions.MovementException("Invalid Move");
-			}
-			else if(Game.map[newLocation.x][newLocation.y] instanceof CollectibleCell) {
+			} else if (Game.map[newLocation.x][newLocation.y] instanceof CollectibleCell) {
 				this.setLocation(newLocation);
 				actionsAvailable--;
 				((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible().pickUp(this);
-			}
-			else if(Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
+			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setLocation(newLocation);
 				actionsAvailable--;
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
-			}
-			else {
+			} else {
 				this.setLocation(newLocation);
 				actionsAvailable--;
 			}
-			//After the hero moves, the new location becomes a CharacterCell
-			Game.map[newLocation.x][newLocation.y] = new CharacterCell(this);
-			
-			//set the visibility to true for all adjacent cells
-			for(Cell adjCell : getAdjacentCells()) {
+			// After the hero moves, the new location becomes a CharacterCell
+			((CharacterCell) Game.map[newLocation.x][newLocation.y]).setCharacter(this);
+			((CharacterCell) Game.map[currLocation.x][currLocation.y]).setCharacter(null);
+
+			// set the visibility to true for all adjacent cells
+			for (Cell adjCell : getAdjacentCells()) {
 				adjCell.setVisible(true);
 			}
-		}
-		else {
+		} else {
 			throw new exceptions.NotEnoughActionsException("Not Enough Action Points");
 		}
 	}
-	
+
 	public void useSpecial() throws NoAvailableResourcesException {
-		
+
 	}
-	
-	public void cure() throws exceptions.NoAvailableResourcesException{
-		if(!this.getVaccineInventory().isEmpty()) {
-			int indexOfZombie =  Game.zombies.indexOf(this.getTarget());
+
+	public void cure() throws exceptions.NoAvailableResourcesException {
+		if (!this.getVaccineInventory().isEmpty()) {
+			int indexOfZombie = Game.zombies.indexOf(this.getTarget());
 			Hero newHero = Game.availableHeroes.get(0);
-			((CharacterCell) Game.map[this.getTarget().getLocation().x][this.getTarget().getLocation().y]).setCharacter(newHero);
+			((CharacterCell) Game.map[this.getTarget().getLocation().x][this.getTarget().getLocation().y])
+					.setCharacter(newHero);
 			newHero.setLocation(this.getTarget().getLocation());
 			Game.heroes.add(newHero);
 			Game.availableHeroes.remove(0);
 			Game.zombies.remove(indexOfZombie);
-		}
-		else {
+		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
 	}
@@ -137,42 +133,41 @@ public abstract class Hero extends Character {
 	public void onCharacterDeath() {
 		Game.heroes.remove(this);
 	}
-	public void attack() throws InvalidTargetException, NotEnoughActionsException{
-		if (this.isTargetAdjacent()) { 
-			
-			if(getActionsAvailable() > 0 ) {
+
+	public void attack() throws InvalidTargetException, NotEnoughActionsException {
+		if (this.isTargetAdjacent()) {
+
+			if (getActionsAvailable() > 0) {
 				setActionsAvailable(getActionsAvailable() - 1);
-				if(getTarget() instanceof Zombie)
+				if (getTarget() instanceof Zombie)
 					getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
 				else
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
-			}
-			else 
+			} else
 				throw new NotEnoughActionsException("Not Enough Actions Available.");
 			getTarget().getAttackers().add(this);
-			}
-		else 
+		} else
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}
+
 	public void defend(Character c) throws exceptions.InvalidTargetException {
+
 		if(getActionsAvailable() > 0) {
 			setActionsAvailable(getActionsAvailable()-1);
+
+		if (maxActions > 0) {
+			maxActions--;
+
 			if (!getAttackers().isEmpty()) {
-				if(getAttackers().contains(c)) {
-					c.setCurrentHp(c.getCurrentHp()-(c.getAttackDmg()/2));
+				if (getAttackers().contains(c)) {
+					c.setCurrentHp(c.getCurrentHp() - (c.getAttackDmg() / 2));
 					getAttackers().clear();
-				}
-				else
+				} else
 					throw new InvalidTargetException("This target did not attack you.");
-			}
-			else
+			} else
 				throw new InvalidTargetException("You have not been attacked.");
-		}
-		else
+		} else
 			throw new InvalidTargetException("Not Enough Actions Available.");
 	}
 }
-
-	
-
-
+}
