@@ -19,6 +19,7 @@ public class Explorer extends Hero {
 		
 		if(this.getSupplyInventory().size() > 0) {
 			this.getSupplyInventory().get(0).use(this);
+			this.setSpecialAction(true);
 			for (int row = 0; row < Game.map.length; row++) {
 				for(int col = 0; col < Game.map[row].length;col++) {
 					Game.map[row][col].setVisible(true);
@@ -26,7 +27,7 @@ public class Explorer extends Hero {
 			}
 		}
 		else {
-			throw new exceptions.NoAvailableResourcesException("Insufficient Supply");
+			throw new exceptions.NoAvailableResourcesException("Insufficient Supplies");
 		}
 	}
 

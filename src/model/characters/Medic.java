@@ -14,11 +14,13 @@ public class Medic extends Hero {
 	public void useSpecial() throws NoAvailableResourcesException{
 		//Whenever a supply is used, allows Medic to other heros or themselves
 		if(this.getSupplyInventory().size() > 0) {
-			this.getSupplyInventory().remove(0);
-			this.getTarget().setCurrentHp(getMaxHp());
+			Hero target = (Hero) this.getTarget();
+			this.setSpecialAction(true);
+			this.getSupplyInventory().get(0).use(this);
+			target.setCurrentHp(target.getMaxHp());
 		}
 		else {
-			throw new exceptions.NoAvailableResourcesException("Insufficient Resources");
+			throw new exceptions.NoAvailableResourcesException("Insufficient Supplies");
 		}
 	}
 

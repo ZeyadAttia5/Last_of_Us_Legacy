@@ -111,7 +111,7 @@ public abstract class Character {
 			if(adjCell instanceof CharacterCell) {
 				if(((CharacterCell) adjCell).getCharacter() == this.getTarget()) {
 					targetAdjacent = true;
-					return targetAdjacent;
+					break;
 				}
 			}
 		}
