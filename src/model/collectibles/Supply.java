@@ -19,11 +19,7 @@ public class Supply implements Collectible  {
 
 	@Override
 	public void use(Hero h) {
-<<<<<<< Updated upstream
-		h.getSupplyInventory().remove((h.getSupplyInventory().size()-1));
-=======
-		h.getSupplyInventory().remove(this);
->>>>>>> Stashed changes
+		h.getSupplyInventory().remove((h.getSupplyInventory().size()-1)); //this
 		
 	}
 

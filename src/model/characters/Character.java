@@ -1,5 +1,5 @@
 package model.characters;
-
+import engine.Game;
 import java.awt.Point;
 
 
@@ -62,6 +62,17 @@ public abstract class Character {
 
 	public int getAttackDmg() {
 		return attackDmg;
+	}
+	
+	public void attack() {
+			
+	}
+	
+	void defend(Character c) {
+		
+	}
+	void onCharacterDeath() {
+		
 	}
 	
 

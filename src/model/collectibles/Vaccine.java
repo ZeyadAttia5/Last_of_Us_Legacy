@@ -1,5 +1,5 @@
 package model.collectibles;
-
+import engine.Game;
 import model.characters.Hero;
 
 public class Vaccine implements Collectible {
@@ -15,7 +15,8 @@ public class Vaccine implements Collectible {
 	@Override
 	public void use(Hero h) {
 		
-		h.getVaccineInventory().remove((h.getVaccineInventory().size()-1));
+		Game.vaccinesUsed = Game.vaccinesUsed + 1;
+		h.getVaccineInventory().remove((this));
 		
 	}
 
