@@ -1,5 +1,7 @@
 package model.characters;
 
+
+import engine.Game;
 import java.awt.Point;
 import java.util.ArrayList;
 import model.collectibles.Supply;
@@ -97,8 +99,8 @@ public abstract class Hero extends Character {
 	}
 
 	// returns an array of points
-	public ArrayList<Point> getAdjacentCharactersLocation() {
-		ArrayList<Point> adjacentCharList = new ArrayList<Point>();
+	public ArrayList<Cell> getAdjacentCells() {
+		ArrayList<Cell> adjacentCharList = new ArrayList<Cell>();
 
 		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
 		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
@@ -113,11 +115,8 @@ public abstract class Hero extends Character {
 
 						// check if adjacent cell is within the Game.map bounds
 						if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0
-								&& adjCol < Game.map[adjRow].length) {
-							if (Game.map[adjRow][adjCol] instanceof CharacterCell) {
-								Point adjLocation = new Point(adjRow, adjCol);
-								adjacentCharList.add(adjLocation);
-							}
+								&& adjCol < Game.map[adjRow].length) {							
+								adjacentCharList.add(Game.map[adjRow][adjCol]);
 						}
 					}
 				}
@@ -126,4 +125,8 @@ public abstract class Hero extends Character {
 		return adjacentCharList;
 	}
 
+	@Override
+	public void onCharacterDeath() {
+		Game.heroes.remove(this);
+	}
 }
