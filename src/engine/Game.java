@@ -169,12 +169,6 @@ public class Game {
 
 		}
 		// turnOff visibility for the whole map
-		for (int row = 0; row < map.length; row++) {
-			for (int col = 0; col < map[row].length; col++) {
-				map[row][col].setVisible(false);
-			}
-		}
-
 		// reset each hero’s actions, target, and special, update the map visibility
 		// in the game such that only
 		// cells adjacent to heroes are visible
@@ -186,6 +180,8 @@ public class Game {
 			hero.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 			Point heroLocation = hero.getLocation();
 			map[heroLocation.x][heroLocation.y].setVisible(true);
+			hero.getPreviousCells().forEach((cell) -> cell.setVisible(false));
+			hero.getPreviousCells().clear();
 		});
 
 		if (zombies.size() < 10) {
