@@ -92,7 +92,11 @@ public abstract class Hero extends Character {
 				isValidMove = true;
 			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
+
+				Game.map[currLocation.x][currLocation.y] = new CharacterCell(this);
+
 				isValidMove = true;
+
 			} else {
 				isValidMove = true;
 			}
@@ -116,6 +120,7 @@ public abstract class Hero extends Character {
 	}
 
 	public void cure() throws NoAvailableResourcesException, InvalidTargetException, NotEnoughActionsException {
+		System.out.println("Cure Activated");
 		if (this.getActionsAvailable() <= 0) {
 			throw new exceptions.NotEnoughActionsException("You don't have enough action points to spend");
 		}
@@ -123,11 +128,15 @@ public abstract class Hero extends Character {
 			throw new exceptions.InvalidTargetException("you can only cure zombies");
 		}
 		if (!(this.isTargetAdjacent())) {
+			System.out.println("Target Adjac Error");
 			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
 		}
+		System.out.println("No Errors so far");
 		if (!this.getVaccineInventory().isEmpty()) {
 			this.getVaccineInventory().get(0).use(this);
 			this.actionsAvailable--;
+			Game.vaccinesUsed = Game.vaccinesUsed + 1;
+			System.out.println(Game.vaccinesUsed + " have been used!");
 		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
@@ -140,6 +149,8 @@ public abstract class Hero extends Character {
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 
+		super.attack();		
+
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
 		}
@@ -147,16 +158,18 @@ public abstract class Hero extends Character {
 			if (getActionsAvailable() > 0) {
 				setActionsAvailable(getActionsAvailable() - 1);
 				if (getTarget() instanceof Zombie) {
+					getTarget().setCurrentHp(this.getTarget().getCurrentHp()  - getAttackDmg());
 					getTarget().getAttackers().add(this);
-					getTarget().setCurrentHp(this.getTarget().getCurrentHp() - getAttackDmg());
-				} else
+				}
+				else
+
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
 			} else
 				throw new NotEnoughActionsException("Not Enough Actions Available.");
+			
 		} else
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}
-
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 		if (this.actionsAvailable > 0) {
 			setActionsAvailable(actionsAvailable - 1);

@@ -12,10 +12,12 @@ public class Fighter extends Hero {
 
 	}
 
+	@Override
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		if (this.getTarget() == null) 
+		super.attack();
+		if (this.getTarget() == null)
 			throw new InvalidTargetException("No target is selected");
-		 else {
+		else {
 			if (this.isTargetAdjacent()) {
 				if (!isSpecialAction()) {
 					if (getActionsAvailable() > 0) {
@@ -23,8 +25,7 @@ public class Fighter extends Hero {
 							getTarget().getAttackers().add(this);
 							getTarget().setCurrentHp(this.getTarget().getCurrentHp() - this.getAttackDmg());
 							setActionsAvailable(getActionsAvailable() - 1);
-						}
-						else
+						} else
 							throw new exceptions.InvalidTargetException(
 									"Invalid Target, You Cannot Attack Other Heros");
 					} else
@@ -35,9 +36,8 @@ public class Fighter extends Hero {
 					if (this.getTarget() instanceof Zombie) {
 						getTarget().getAttackers().add(this);
 						this.getTarget().setCurrentHp(this.getTarget().getCurrentHp() - this.getAttackDmg());
-						System.out.println("Fighter Available Actions: "+this.getActionsAvailable());
-					}
-					else
+						System.out.println("Fighter Available Actions: " + this.getActionsAvailable());
+					} else
 						throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
 				}
 			} else

@@ -68,8 +68,8 @@ public class Game {
 
 		availableHeroes.remove(h);
 		heroes.add(h);
-		h.setLocation(new Point(0, 0));
-		map[0][0] = new CharacterCell(h, true);
+		h.setLocation(new Point(0,0));
+		((CharacterCell)map[0][0]).setCharacter(h);
 		h.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 		map[0][0].setVisible(true);
 
@@ -107,8 +107,8 @@ public class Game {
 			int y = rand.nextInt(14) + 1;
 			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null) {
-					map[x][y] = new CharacterCell(z);
-					z.setLocation(new Point(x, y));
+					((CharacterCell)map[x][y]).setCharacter(z);
+					z.setLocation(new Point(x,y));
 					zombies.add(z);
 				} else
 					i--;
@@ -129,6 +129,16 @@ public class Game {
 		}
 
 	}
+	
+	public static boolean checkWin() {
+		boolean result = false;
+		if (vaccinesUsed == 5) {
+			if (heroes.size() >= 5) 
+				result = true;
+		}
+		return result;
+	}
+
 
 	public static void endTurn() {
 		for (int i = 0; i < zombies.size(); i++) {
@@ -191,10 +201,15 @@ public class Game {
 	}
 
 	public static boolean checkGameOver() {
-		return false;
+		boolean result = false;
+		
+		if (availableHeroes.isEmpty()) 
+				result = true;
+		if (heroes.isEmpty()) 
+			result = true;
+		
+			return result;
 	}
-
-	public static boolean checkGameOver2() {
-		return false;
-	}
+	
+	
 }
