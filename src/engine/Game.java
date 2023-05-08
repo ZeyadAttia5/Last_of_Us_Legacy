@@ -1,6 +1,8 @@
 package engine;
 
 import model.collectibles.*;
+
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -55,33 +57,29 @@ public class Game {
 
 	}
 
-	public static void createMap() {
-		for (int x = 0; x < 16; x++) {
-
-			for (int y = 0; y < 16; y++) {
+	public static void startGame(Hero h) {
+		for (int x = 0; x < 15; x++) {
+			for (int y = 0; y < 15; y++) {
 				map[x][y] = new CharacterCell(null);
 			}
-
 		}
-	}
 
-	public static void startGame(Hero h) {
 		availableHeroes.remove(h);
 		heroes.add(h);
+		h.setLocation(new Point(0,0));
 		map[0][0] = new CharacterCell(h, true);
-
+		h.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
 			int y = rand.nextInt(14) + 1;
-			if(map[x][y] instanceof CharacterCell) {
+			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null)
 					map[x][y] = new CollectibleCell(v);
 				else
 					i--;
-			}
-			else
+			} else
 				i--;
 		}
 		for (int i = 0; i < 5; i++) { // Add Randomized Supply
@@ -89,13 +87,12 @@ public class Game {
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
 			int y = rand.nextInt(14) + 1;
-			if(map[x][y] instanceof CharacterCell) {
+			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null)
 					map[x][y] = new CollectibleCell(s);
 				else
 					i--;
-			}
-			else
+			} else
 				i--;
 		}
 
@@ -104,13 +101,14 @@ public class Game {
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
 			int y = rand.nextInt(14) + 1;
-			if(map[x][y] instanceof CharacterCell) {
-				if (((CharacterCell) map[x][y]).getCharacter() == null)
+			if (map[x][y] instanceof CharacterCell) {
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
 					map[x][y] = new CharacterCell(z);
-				else
+					z.setLocation(new Point(x,y));
+					zombies.add(z);
+				} else
 					i--;
-			}
-			else
+			} else
 				i--;
 		}
 
@@ -118,13 +116,12 @@ public class Game {
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
 			int y = rand.nextInt(14) + 1;
-			if(map[x][y] instanceof CharacterCell) {
+			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null)
 					map[x][y] = new TrapCell();
 				else
 					i--;
-			}
-			else
+			} else
 				i--;
 		}
 

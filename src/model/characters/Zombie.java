@@ -20,6 +20,9 @@ public class Zombie extends Character {
 	}
 	
 	public void attack() throws InvalidTargetException{
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No target is selected");
+		}
 		if (this.isTargetAdjacent()) { 
 			if(getTarget() instanceof Hero)
 				getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());

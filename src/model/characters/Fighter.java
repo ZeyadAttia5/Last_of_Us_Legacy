@@ -20,6 +20,9 @@ public class Fighter extends Hero{
 
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No target is selected");
+		}
 		if (this.isTargetAdjacent()) { 
 		if(getActionsAvailable() > 0 ) {
 			setActionsAvailable(getActionsAvailable() - 1);
