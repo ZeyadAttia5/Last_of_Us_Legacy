@@ -96,7 +96,6 @@ public abstract class Character {
 				// check if adjacent cell is within the Game.map bounds
 				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
 					adjacentCharList.add(Game.map[adjRow][adjCol]);
-
 				}
 			}
 		}

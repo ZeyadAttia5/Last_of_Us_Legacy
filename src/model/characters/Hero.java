@@ -134,21 +134,23 @@ public abstract class Hero extends Character {
 		Game.heroes.remove(this);
 	}
 
-	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 
+	public void attack() throws InvalidTargetException, NotEnoughActionsException {
+		
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
 		}
 		if (this.isTargetAdjacent()) {
 			if (getActionsAvailable() > 0) {
 				setActionsAvailable(getActionsAvailable() - 1);
-				if (getTarget() instanceof Zombie)
+				if (getTarget() instanceof Zombie) {
+					getTarget().getAttackers().add(this);
 					getTarget().setCurrentHp(this.getTarget().getCurrentHp()  - getAttackDmg());
+				}
 				else
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
 			} else
 				throw new NotEnoughActionsException("Not Enough Actions Available.");
-			getTarget().getAttackers().add(this);
 		} else
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}

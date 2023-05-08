@@ -11,7 +11,7 @@ public class Fighter extends Hero {
 		super(name, maxHp, attackDmg, maxActions);
 
 	}
-
+	@Override
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 		if (this.getTarget() == null) 
 			throw new InvalidTargetException("No target is selected");
@@ -19,23 +19,27 @@ public class Fighter extends Hero {
 			if (this.isTargetAdjacent()) {
 				if (!isSpecialAction()) {
 					if (getActionsAvailable() > 0) {
-						setActionsAvailable(getActionsAvailable() - 1);
-						if (getTarget() instanceof Zombie)
+						if (getTarget() instanceof Zombie) {
+							getTarget().getAttackers().add(this);
 							getTarget().setCurrentHp(this.getTarget().getCurrentHp() - this.getAttackDmg());
+							setActionsAvailable(getActionsAvailable() - 1);
+						}
 						else
 							throw new exceptions.InvalidTargetException(
 									"Invalid Target, You Cannot Attack Other Heros");
-					} else
+					}
+					else
 						throw new NotEnoughActionsException("Not Enough Actions Available");
-					getTarget().getAttackers().add(this);
 				}
 				// special action is true
 				else {
-					if (this.getTarget() instanceof Zombie)
+					if (this.getTarget() instanceof Zombie) {
+						getTarget().getAttackers().add(this);
 						this.getTarget().setCurrentHp(this.getTarget().getCurrentHp() - this.getAttackDmg());
+						System.out.println("Fighter Available Actions: "+this.getActionsAvailable());
+					}
 					else
 						throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
-					getTarget().getAttackers().add(this);
 				}
 			} else
 				throw new exceptions.InvalidTargetException("Target is not adjacent.");
