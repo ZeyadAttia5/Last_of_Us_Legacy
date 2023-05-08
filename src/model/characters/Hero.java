@@ -143,7 +143,7 @@ public abstract class Hero extends Character {
 			if (getActionsAvailable() > 0) {
 				setActionsAvailable(getActionsAvailable() - 1);
 				if (getTarget() instanceof Zombie)
-					getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
+					getTarget().setCurrentHp(this.getTarget().getCurrentHp()  - getAttackDmg());
 				else
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
 			} else
@@ -154,11 +154,11 @@ public abstract class Hero extends Character {
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
-		if (maxActions > 0) {
-			maxActions--;
+		if (this.actionsAvailable > 0) {
+			setActionsAvailable(actionsAvailable-1);
 			if (!getAttackers().isEmpty()) {
 				if (getAttackers().contains(c)) {
-					c.setCurrentHp(c.getCurrentHp() - (c.getAttackDmg() / 2));
+					c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));
 					getAttackers().clear();
 				} else
 					throw new InvalidTargetException("This target did not attack you.");

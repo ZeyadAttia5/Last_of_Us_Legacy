@@ -58,6 +58,7 @@ public class Game {
 	}
 
 	public static void startGame(Hero h) {
+		//create map
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15; y++) {
 				map[x][y] = new CharacterCell(null);

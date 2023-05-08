@@ -25,7 +25,7 @@ public class Zombie extends Character {
 		}
 		if (this.isTargetAdjacent()) { 
 			if(getTarget() instanceof Hero)
-				getTarget().setCurrentHp(getCurrentHp() - getAttackDmg());
+				getTarget().setCurrentHp(this.getTarget().getCurrentHp()  - getAttackDmg());
 			else
 				throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
 			getTarget().getAttackers().add(this);

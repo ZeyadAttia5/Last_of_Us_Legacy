@@ -17,8 +17,9 @@ public class Vaccine implements Collectible {
 
 	@Override
 	public void use(Hero h) {
-		Random rand = new Random();
 		Game.vaccinesUsed = Game.vaccinesUsed + 1;
+		
+		Random rand = new Random();
 		h.getVaccineInventory().remove((0));
 		int indexOfZombie = Game.zombies.indexOf(h.getTarget());
 		Hero newHero = Game.availableHeroes.get(rand.nextInt(Game.availableHeroes.size()));
