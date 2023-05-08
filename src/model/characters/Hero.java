@@ -140,6 +140,7 @@ public abstract class Hero extends Character {
 		Game.heroes.remove(this);
 	}
 
+
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 		super.attack();		
 		if (this.getTarget() == null) {
@@ -160,7 +161,6 @@ public abstract class Hero extends Character {
 		} else
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}
-
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 		if (this.actionsAvailable > 0) {
 			setActionsAvailable(actionsAvailable-1);
