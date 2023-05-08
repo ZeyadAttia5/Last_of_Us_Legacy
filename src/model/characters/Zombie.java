@@ -19,16 +19,19 @@ public class Zombie extends Character {
 		Game.zombiesRemoved.add(new Zombie());
 	}
 	
-	public void attack() throws InvalidTargetException{
+	public void attack() throws InvalidTargetException, NotEnoughActionsException{
+		super.attack();	
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
 		}
 		if (this.isTargetAdjacent()) { 
-			if(getTarget() instanceof Hero)
+			if(getTarget() instanceof Hero) {
 				getTarget().setCurrentHp(this.getTarget().getCurrentHp()  - getAttackDmg());
+				getTarget().getAttackers().add(this);
+				}
 			else
 				throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
-			getTarget().getAttackers().add(this);
+			
 		}
 		else 
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");

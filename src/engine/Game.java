@@ -127,12 +127,27 @@ public class Game {
 		}
 
 	}
+	
+	public static boolean checkWin() {
+		boolean result = false;
+		if (vaccinesUsed == 5) {
+			if (heroes.size() >= 5) 
+				result = true;
+		}
+		return result;
+	}
+
 
 	public static boolean checkGameOver() {
-		return false;
+		boolean result = false;
+		
+		if (availableHeroes.isEmpty()) 
+				result = true;
+		if (heroes.isEmpty()) 
+			result = true;
+		
+			return result;
 	}
-
-	public static boolean checkGameOver2() {
-		return false;
-	}
+	
+	
 }
