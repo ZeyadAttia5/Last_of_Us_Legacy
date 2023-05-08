@@ -64,7 +64,7 @@ public abstract class Hero extends Character {
 
 	public void move(Direction d) throws exceptions.MovementException, NotEnoughActionsException {
 		Point currLocation = this.getLocation();
-		Point newLocation = new Point(currLocation.x,currLocation.y);
+		Point newLocation = new Point(currLocation.x, currLocation.y);
 		boolean isValidMove = false;
 		if (actionsAvailable > 0) {
 			if (d == Direction.UP) {
@@ -84,18 +84,19 @@ public abstract class Hero extends Character {
 				if (newLocation.y >= 15)
 					throw new exceptions.MovementException("Invalid Move");
 			}
-			if (((CharacterCell) Game.map[newLocation.x][newLocation.y]).getCharacter() != null) {
-				isValidMove = false;
-				throw new exceptions.MovementException("Cell is not empty");
+			if (Game.map[newLocation.x][newLocation.y] instanceof CharacterCell) {
+				if (((CharacterCell) Game.map[newLocation.x][newLocation.y]).getCharacter() != null) {
+					isValidMove = false;
+					throw new exceptions.MovementException("Cell is not empty");
+				} else {
+					isValidMove = true;
+				}
 			} else if ((Game.map[newLocation.x][newLocation.y] instanceof CollectibleCell)) {
 				((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible().pickUp(this);
 				isValidMove = true;
 			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
 				Game.map[currLocation.x][currLocation.y] = new CharacterCell(this);
-				isValidMove = true;
-
-			} else {
 				isValidMove = true;
 			}
 
@@ -131,10 +132,10 @@ public abstract class Hero extends Character {
 		}
 		System.out.println("No Errors so far");
 		if (!this.getVaccineInventory().isEmpty()) {
+			System.out.println(Game.vaccinesUsed + " have been used!");
 			this.getVaccineInventory().get(0).use(this);
 			this.actionsAvailable--;
 			Game.vaccinesUsed = Game.vaccinesUsed + 1;
-			System.out.println(Game.vaccinesUsed + " have been used!");
 		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
@@ -142,7 +143,11 @@ public abstract class Hero extends Character {
 
 	@Override
 	public void onCharacterDeath() {
-		Game.heroes.remove(this);
+
+		if (this.getCurrentHp() <= 0) {
+			((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
+			Game.heroes.remove(this);
+		}
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {

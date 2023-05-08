@@ -16,7 +16,7 @@ public abstract class Character {
 	private int currentHp;
 	private int attackDmg;
 	private Character target;
-	private ArrayList<Character> attackers;
+	private ArrayList<Character> attackers = new ArrayList<>();
 
 	public Character() {
 	}
@@ -71,6 +71,9 @@ public abstract class Character {
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 		// SubClass Implementation
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No target is selected");
+		}
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
