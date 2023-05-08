@@ -90,10 +90,10 @@ public abstract class Character {
 		for (int rowOffset : rowOffsets) {
 			for (int colOffset : colOffsets) {
 				// calculate adjacent cell coordinates
-				int adjRow = this.getLocation().y + rowOffset;
-				int adjCol = this.getLocation().x + colOffset;
+				int adjRow = this.getLocation().x + rowOffset;
+				int adjCol = this.getLocation().y + colOffset;
 
-				if(adjRow == 0 && adjCol == 0)
+				if(rowOffset == 0 && colOffset == 0)
 
 					continue;
 				// check if adjacent cell is within the Game.map bounds

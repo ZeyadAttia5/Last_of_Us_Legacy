@@ -64,7 +64,7 @@ public abstract class Hero extends Character {
 
 	public void move(Direction d) throws exceptions.MovementException, NotEnoughActionsException {
 		Point currLocation = this.getLocation();
-		Point newLocation = currLocation;
+		Point newLocation = new Point(currLocation.x,currLocation.y);
 		boolean isValidMove = false;
 		if (actionsAvailable > 0) {
 			if (d == Direction.UP) {
@@ -87,14 +87,12 @@ public abstract class Hero extends Character {
 			if (((CharacterCell) Game.map[newLocation.x][newLocation.y]).getCharacter() != null) {
 				isValidMove = false;
 				throw new exceptions.MovementException("Cell is not empty");
-			} else if (((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible() != null) {
+			} else if ((Game.map[newLocation.x][newLocation.y] instanceof CollectibleCell)) {
 				((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible().pickUp(this);
 				isValidMove = true;
 			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
-
 				Game.map[currLocation.x][currLocation.y] = new CharacterCell(this);
-
 				isValidMove = true;
 
 			} else {
@@ -149,7 +147,7 @@ public abstract class Hero extends Character {
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 
-		super.attack();		
+		super.attack();
 
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
@@ -158,18 +156,18 @@ public abstract class Hero extends Character {
 			if (getActionsAvailable() > 0) {
 				setActionsAvailable(getActionsAvailable() - 1);
 				if (getTarget() instanceof Zombie) {
-					getTarget().setCurrentHp(this.getTarget().getCurrentHp()  - getAttackDmg());
+					getTarget().setCurrentHp(this.getTarget().getCurrentHp() - getAttackDmg());
 					getTarget().getAttackers().add(this);
-				}
-				else
+				} else
 
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
 			} else
 				throw new NotEnoughActionsException("Not Enough Actions Available.");
-			
+
 		} else
 			throw new exceptions.InvalidTargetException("Target is not adjacent.");
 	}
+
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 		if (this.actionsAvailable > 0) {
 			setActionsAvailable(actionsAvailable - 1);

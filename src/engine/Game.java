@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import exceptions.InvalidTargetException;
+import exceptions.NotEnoughActionsException;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -100,7 +101,8 @@ public class Game {
 				i--;
 		}
 
-		for (int i = 0; i < 10; i++) { // Add Randomized Zombie
+		int zombieCount = 0;
+		do { // Add Randomized Zombie
 			Zombie z = new Zombie();
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
@@ -110,11 +112,10 @@ public class Game {
 					((CharacterCell)map[x][y]).setCharacter(z);
 					z.setLocation(new Point(x,y));
 					zombies.add(z);
-				} else
-					i--;
-			} else
-				i--;
-		}
+					zombieCount++;
+				}
+			}
+		}while(zombieCount==10);
 		for (int i = 0; i < 5; i++) { // Add Randomized Trap
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
@@ -141,6 +142,7 @@ public class Game {
 
 
 	public static void endTurn() {
+		//The method should allow all zombies to attempt to attack an adjacent hero (if exists)
 		for (int i = 0; i < zombies.size(); i++) {
 			Zombie zombie = zombies.get(i);
 			ArrayList<Cell> adjCells = zombie.getAdjacentCells();
@@ -152,6 +154,9 @@ public class Game {
 						zombie.attack();
 						continue;
 					} catch (InvalidTargetException e) {
+						// TODO Auto-generated catch block
+						e.getMessage();
+					} catch (NotEnoughActionsException e) {
 						// TODO Auto-generated catch block
 						e.getMessage();
 					}
@@ -180,7 +185,8 @@ public class Game {
 
 			if (zombies.size() < 10) {
 				// Add a Randomized Zombie
-				for (int zombieIndex = 0; zombieIndex < 1; zombieIndex++) {
+				boolean isZombieAdded = false;
+				do {
 					Zombie z = new Zombie();
 					Random rand = new Random();
 					int x = rand.nextInt(14) + 1;
@@ -190,11 +196,10 @@ public class Game {
 							map[x][y] = new CharacterCell(z);
 							z.setLocation(new Point(x, y));
 							zombies.add(z);
-						} else
-							zombieIndex--;
-					} else
-						zombieIndex--;
-				}
+							isZombieAdded = true;
+						}
+					}
+				}while(!isZombieAdded);
 
 			}
 		}
