@@ -102,6 +102,7 @@ public abstract class Hero extends Character {
 
 		} else {
 			throw new exceptions.NotEnoughActionsException("Not Enough Action Points");
+
 		}
 		if (isValidMove) {
 			// After the hero moves, the new location becomes a CharacterCell
@@ -159,23 +160,22 @@ public abstract class Hero extends Character {
 		}
 		if (this.isTargetAdjacent()) {
 			if (getActionsAvailable() > 0) {
-				setActionsAvailable(getActionsAvailable() - 1);
 				if (getTarget() instanceof Zombie) {
+					setActionsAvailable(getActionsAvailable() - 1);
 					getTarget().setCurrentHp(this.getTarget().getCurrentHp() - getAttackDmg());
 					getTarget().getAttackers().add(this);
 				} else
-
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
 			} else
 				throw new NotEnoughActionsException("Not Enough Actions Available.");
-
 		} else
-			throw new exceptions.InvalidTargetException("Target is not adjacent.");
+			throw new InvalidTargetException("Target is not adjacent.");
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
-		if (this.actionsAvailable > 0) {
-			setActionsAvailable(actionsAvailable - 1);
+
+		if (getActionsAvailable() > 0) {
+			setActionsAvailable(getActionsAvailable() - 1);
 			if (!getAttackers().isEmpty()) {
 				if (getAttackers().contains(c)) {
 					c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));

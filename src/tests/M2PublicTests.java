@@ -2102,7 +2102,7 @@ public class M2PublicTests {
 			Method attackMethod = characterClass.getMethod("attack");
 			attackMethod.invoke(character1);
 		} catch (Exception e) {
-			fail(e.getCause().getClass() + "occuered while trying to attack a character");
+			fail(e.getCause().getClass() + " ccuered while trying to attack a character");
 		}
 
 		try {
