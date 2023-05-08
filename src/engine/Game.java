@@ -68,7 +68,7 @@ public class Game {
 		availableHeroes.remove(h);
 		heroes.add(h);
 		h.setLocation(new Point(0,0));
-		map[0][0] = new CharacterCell(h, true);
+		((CharacterCell)map[0][0]).setCharacter(h);
 		h.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
@@ -104,7 +104,7 @@ public class Game {
 			int y = rand.nextInt(14) + 1;
 			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null) {
-					map[x][y] = new CharacterCell(z);
+					((CharacterCell)map[x][y]).setCharacter(z);
 					z.setLocation(new Point(x,y));
 					zombies.add(z);
 				} else
@@ -113,6 +113,8 @@ public class Game {
 				i--;
 		}
 
+
+		
 		for (int i = 0; i < 5; i++) { // Add Randomized Trap
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;

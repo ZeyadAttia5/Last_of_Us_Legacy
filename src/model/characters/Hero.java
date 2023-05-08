@@ -113,6 +113,7 @@ public abstract class Hero extends Character {
 	}
 
 	public void cure() throws NoAvailableResourcesException, InvalidTargetException, NotEnoughActionsException {
+		System.out.println("Cure Activated");
 		if (this.getActionsAvailable() <= 0) {
 			throw new exceptions.NotEnoughActionsException("You don't have enough action points to spend");
 		}
@@ -120,12 +121,15 @@ public abstract class Hero extends Character {
 			throw new exceptions.InvalidTargetException("you can only cure zombies");
 		}
 		if (!(this.isTargetAdjacent())) {
+			System.out.println("Target Adjac Error");
 			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
 		}
+		System.out.println("No Errors so far");
 		if (!this.getVaccineInventory().isEmpty()) {
 			this.getVaccineInventory().get(0).use(this);
 			this.actionsAvailable--;
 			Game.vaccinesUsed = Game.vaccinesUsed + 1;
+			System.out.println(Game.vaccinesUsed + " have been used!");
 		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
