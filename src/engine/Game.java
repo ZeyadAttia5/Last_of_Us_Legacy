@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import exceptions.InvalidTargetException;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -58,7 +59,7 @@ public class Game {
 	}
 
 	public static void startGame(Hero h) {
-		//create map
+		// create map
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15; y++) {
 				map[x][y] = new CharacterCell(null);
@@ -70,6 +71,8 @@ public class Game {
 		h.setLocation(new Point(0,0));
 		((CharacterCell)map[0][0]).setCharacter(h);
 		h.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
+		map[0][0].setVisible(true);
+
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
 			Random rand = new Random();
@@ -112,9 +115,6 @@ public class Game {
 			} else
 				i--;
 		}
-
-
-		
 		for (int i = 0; i < 5; i++) { // Add Randomized Trap
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
@@ -139,6 +139,66 @@ public class Game {
 		return result;
 	}
 
+
+	public static void endTurn() {
+		for (int i = 0; i < zombies.size(); i++) {
+			Zombie zombie = zombies.get(i);
+			ArrayList<Cell> adjCells = zombie.getAdjacentCells();
+			for (int j = 0; j < adjCells.size(); j++) {
+				Cell adjCell = (Cell) adjCells.get(i);
+				if (((CharacterCell) adjCell).getCharacter() instanceof Hero) {
+					zombie.setTarget(((CharacterCell) adjCell).getCharacter());
+					try {
+						zombie.attack();
+						continue;
+					} catch (InvalidTargetException e) {
+						// TODO Auto-generated catch block
+						e.getMessage();
+					}
+				}
+			}
+
+			// turnOff visibility for the whole map
+			for (int row = 0; row < map.length; row++) {
+				for (int col = 0; row < map[row].length; col++) {
+					map[row][col].setVisible(false);
+				}
+			}
+
+			// reset each hero’s actions, target, and special, update the map visibility
+			// in the game such that only
+			// cells adjacent to heroes are visible
+			heroes.forEach((hero) -> {
+				hero.setActionsAvailable(hero.getMaxActions());
+				hero.setTarget(null);
+				hero.setSpecialAction(false);
+				// set visibility for adjacent maps only
+				hero.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
+				Point heroLocation = hero.getLocation();
+				map[heroLocation.x][heroLocation.y].setVisible(true);
+			});
+
+			if (zombies.size() < 10) {
+				// Add a Randomized Zombie
+				for (int zombieIndex = 0; zombieIndex < 1; zombieIndex++) {
+					Zombie z = new Zombie();
+					Random rand = new Random();
+					int x = rand.nextInt(14) + 1;
+					int y = rand.nextInt(14) + 1;
+					if (map[x][y] instanceof CharacterCell) {
+						if (((CharacterCell) map[x][y]).getCharacter() == null) {
+							map[x][y] = new CharacterCell(z);
+							z.setLocation(new Point(x, y));
+							zombies.add(z);
+						} else
+							zombieIndex--;
+					} else
+						zombieIndex--;
+				}
+
+			}
+		}
+	}
 
 	public static boolean checkGameOver() {
 		boolean result = false;

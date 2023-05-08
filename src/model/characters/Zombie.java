@@ -34,8 +34,10 @@ public class Zombie extends Character {
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 		if (!getAttackers().isEmpty()) {
-			if (getAttackers().contains(c)) {
-				c.setCurrentHp(c.getCurrentHp() - (c.getAttackDmg() / 2));
+
+			if(getAttackers().contains(c)) {
+				c.setCurrentHp(c.getCurrentHp()-(getAttackDmg()/2));
+
 				getAttackers().clear();
 			} else
 				throw new InvalidTargetException("This target did not attack you.");

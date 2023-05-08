@@ -65,6 +65,7 @@ public abstract class Hero extends Character {
 	public void move(Direction d) throws exceptions.MovementException, NotEnoughActionsException {
 		Point currLocation = this.getLocation();
 		Point newLocation = currLocation;
+		boolean isValidMove = false;
 		if (actionsAvailable > 0) {
 			if (d == Direction.UP) {
 				newLocation.x += 1;
@@ -84,27 +85,33 @@ public abstract class Hero extends Character {
 					throw new exceptions.MovementException("Invalid Move");
 			}
 			if (((CharacterCell) Game.map[newLocation.x][newLocation.y]).getCharacter() != null) {
-				throw new exceptions.MovementException("Invalid Move");
+				isValidMove = false;
+				throw new exceptions.MovementException("Cell is not empty");
 			} else if (((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible() != null) {
 				((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible().pickUp(this);
-				Game.map[currLocation.x][currLocation.y] = new CharacterCell(this);
+				isValidMove = true;
 			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
+
 				Game.map[currLocation.x][currLocation.y] = new CharacterCell(this);
+
+				isValidMove = true;
+
 			} else {
-				// do nothing
+				isValidMove = true;
 			}
+
 		} else {
 			throw new exceptions.NotEnoughActionsException("Not Enough Action Points");
 		}
-		// After the hero moves, the new location becomes a CharacterCell
-		((CharacterCell) Game.map[currLocation.x][currLocation.y]).setCharacter(null);
-		((CharacterCell) Game.map[newLocation.x][newLocation.y]).setCharacter(this);
-		this.setLocation(newLocation);
-		actionsAvailable--;
-		// set the visibility to true for all adjacent cells
-		for (Cell adjCell : getAdjacentCells()) {
-			adjCell.setVisible(true);
+		if (isValidMove) {
+			// After the hero moves, the new location becomes a CharacterCell
+			((CharacterCell) Game.map[currLocation.x][currLocation.y]).setCharacter(null);
+			((CharacterCell) Game.map[newLocation.x][newLocation.y]).setCharacter(this);
+			this.setLocation(newLocation);
+			this.setActionsAvailable(this.getActionsAvailable() - 1);
+			// set the visibility to true for all adjacent cells
+			this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 		}
 	}
 
@@ -140,9 +147,10 @@ public abstract class Hero extends Character {
 		Game.heroes.remove(this);
 	}
 
-
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
+
 		super.attack();		
+
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
 		}
@@ -154,6 +162,7 @@ public abstract class Hero extends Character {
 					getTarget().getAttackers().add(this);
 				}
 				else
+
 					throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
 			} else
 				throw new NotEnoughActionsException("Not Enough Actions Available.");
@@ -163,7 +172,7 @@ public abstract class Hero extends Character {
 	}
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 		if (this.actionsAvailable > 0) {
-			setActionsAvailable(actionsAvailable-1);
+			setActionsAvailable(actionsAvailable - 1);
 			if (!getAttackers().isEmpty()) {
 				if (getAttackers().contains(c)) {
 					c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));
