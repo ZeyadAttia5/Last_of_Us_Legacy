@@ -18,7 +18,7 @@ public class Zombie extends Character {
 		Game.zombies.remove(this);
 		Game.zombiesRemoved.add(new Zombie());
 	}
-	@Override
+	
 	public void attack() throws InvalidTargetException{
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
@@ -37,7 +37,7 @@ public class Zombie extends Character {
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 		if (!getAttackers().isEmpty()) {
 			if(getAttackers().contains(c)) {
-				c.setCurrentHp(c.getCurrentHp()-(c.getAttackDmg()/2));
+				c.setCurrentHp(c.getCurrentHp()-(getAttackDmg()/2));
 				getAttackers().clear();
 			}
 			else

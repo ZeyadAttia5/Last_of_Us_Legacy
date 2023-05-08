@@ -11,7 +11,7 @@ public class Fighter extends Hero {
 		super(name, maxHp, attackDmg, maxActions);
 
 	}
-	@Override
+
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 		if (this.getTarget() == null) 
 			throw new InvalidTargetException("No target is selected");
@@ -27,8 +27,7 @@ public class Fighter extends Hero {
 						else
 							throw new exceptions.InvalidTargetException(
 									"Invalid Target, You Cannot Attack Other Heros");
-					}
-					else
+					} else
 						throw new NotEnoughActionsException("Not Enough Actions Available");
 				}
 				// special action is true
