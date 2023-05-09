@@ -153,10 +153,13 @@ public abstract class Hero extends Character {
 		if (this.getCurrentHp() <= 0) {
 			if (Game.map[this.getLocation().x][this.getLocation().y] instanceof CharacterCell) {
 				((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
+				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.heroes.remove(this);
 			} else if (Game.map[this.getLocation().x][this.getLocation().y] instanceof TrapCell) {
+				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.map[this.getLocation().x][this.getLocation().y] = new CharacterCell(null);
 				Game.heroes.remove(this);
+				
 			}
 		}
 	}
