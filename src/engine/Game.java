@@ -154,6 +154,7 @@ public class Game {
 							zombie.setTarget(((CharacterCell) adjCell).getCharacter());
 							try {
 								zombie.attack();
+								zombie.setTarget(null);
 								break;
 							} catch (InvalidTargetException e) {
 								// TODO Auto-generated catch block
