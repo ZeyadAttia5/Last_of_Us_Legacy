@@ -70,11 +70,31 @@ public abstract class Character {
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-
-		getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
-		getTarget().defend(this);
-		getTarget().onCharacterDeath();
-		this.onCharacterDeath();
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No Target is Selected");
+		}
+		else if(!this.isTargetAdjacent()) {
+			throw new InvalidTargetException("Target is Not Adjacent");
+		}
+		if (this instanceof Zombie) {
+			if (getTarget() instanceof Hero) {
+				getTarget().getAttackers().add(this);
+				getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+				getTarget().onCharacterDeath();
+			} else {
+				throw new InvalidTargetException("Invalid! Target is not a Hero");
+			}
+		} else if (this instanceof Hero) {
+			if (getTarget().isTargetAdjacent()) {
+				if (getTarget() instanceof Zombie) {
+					getTarget().getAttackers().add(this);
+					getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+					getTarget().onCharacterDeath();
+				} else {
+					throw new InvalidTargetException("Invalid! Target is not a Zombie");
+				}
+			}
+		}
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {

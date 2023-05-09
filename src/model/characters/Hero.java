@@ -150,9 +150,11 @@ public abstract class Hero extends Character {
 		}
 
 		if (!this.getVaccineInventory().isEmpty()) {
+
 //			TODO
 			((Vaccine) this.getVaccineInventory().get(0)).use(this);
 			setActionsAvailable(getActionsAvailable() - 1);
+
 		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
@@ -183,9 +185,9 @@ public abstract class Hero extends Character {
 		if (!(this.isTargetAdjacentCheckIndex())) {
 			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
 		}
-//		else if (!this.isTargetAdjacent()) {
-//			throw new InvalidTargetException("Target is Not Adjacent");
-//		}
+		else if (!this.isTargetAdjacent()) {
+			throw new InvalidTargetException("Target is Not Adjacent");
+		}
 		if (this.getActionsAvailable() > 0) {
 			super.attack();
 			setActionsAvailable(getActionsAvailable() - 1);
