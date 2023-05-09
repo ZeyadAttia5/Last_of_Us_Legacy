@@ -78,8 +78,8 @@ public class Game {
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
 			Random rand = new Random();
-			int x = rand.nextInt(15);
-			int y = rand.nextInt(15);
+			int x = rand.nextInt(0, 15);
+			int y = rand.nextInt(0, 15);
 			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null)
 					map[x][y] = new CollectibleCell(v);
@@ -91,8 +91,8 @@ public class Game {
 		for (int i = 0; i < 5; i++) { // Add Randomized Supply
 			Supply s = new Supply();
 			Random rand = new Random();
-			int x = rand.nextInt(15);
-			int y = rand.nextInt(15);
+			int x = rand.nextInt(0,15);
+			int y = rand.nextInt(0,15);
 			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null)
 					map[x][y] = new CollectibleCell(s);

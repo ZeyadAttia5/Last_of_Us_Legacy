@@ -113,7 +113,7 @@ public abstract class Hero extends Character {
 			this.setLocation(newLocation);
 			this.setActionsAvailable(this.getActionsAvailable() - 1);
 			// set the visibility to true for all adjacent cells
-			if(!(this.getCurrentHp() <= 0))
+			if (!(this.getCurrentHp() <= 0))
 				this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 			Game.map[newLocation.x][newLocation.y].setVisible(true);
 			if (this.getCurrentHp() <= 0) {
@@ -193,5 +193,4 @@ public abstract class Hero extends Character {
 			throw new InvalidTargetException("Not Enough Actions Available.");
 
 	}
-
 }
