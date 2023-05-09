@@ -96,7 +96,7 @@ public abstract class Character {
 				int adjRow = this.getLocation().x + rowOffset;
 				int adjCol = this.getLocation().y + colOffset;
 
-				if(rowOffset == 0 && colOffset == 0)
+				if (rowOffset == 0 && colOffset == 0)
 
 					continue;
 				// check if adjacent cell is within the Game.map bounds
