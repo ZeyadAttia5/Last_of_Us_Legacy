@@ -70,10 +70,11 @@ public abstract class Character {
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		// SubClass Implementation
-		if (this.getTarget() == null) {
-			throw new InvalidTargetException("No target is selected");
-		}
+
+		getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+		getTarget().defend(this);
+		getTarget().onCharacterDeath();
+		this.onCharacterDeath();
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
@@ -96,9 +97,9 @@ public abstract class Character {
 				int adjRow = this.getLocation().x + rowOffset;
 				int adjCol = this.getLocation().y + colOffset;
 
-				if(rowOffset == 0 && colOffset == 0)
-
+				if (rowOffset == 0 && colOffset == 0)
 					continue;
+
 				// check if adjacent cell is within the Game.map bounds
 				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
 					adjacentCharList.add(Game.map[adjRow][adjCol]);
@@ -115,11 +116,57 @@ public abstract class Character {
 		for (Cell adjCell : adjacentCells) {
 			if (adjCell instanceof CharacterCell) {
 				if (((CharacterCell) adjCell).getCharacter() == this.getTarget()) {
-					//System.out.println("Adjacent Confirm");
+					// System.out.println("Adjacent Confirm");
 					targetAdjacent = true;
 					break;
 				}
 			}
+		}
+		return targetAdjacent;
+	}
+
+	public ArrayList<Point> getAdjacentIndices() {
+		/*
+		 * getAdjacentIndcies Method: 
+		 * puts the adjacent indices of the adjacent cells
+		 * in an ArrayList adjacentLocations
+		 * 
+		 */
+
+		ArrayList<Point> adjacentLocations = new ArrayList<>();
+		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
+		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
+		// loop over adjacent cells
+		for (int rowOffset : rowOffsets) {
+			for (int colOffset : colOffsets) {
+				// calculate adjacent cell coordinates
+				int adjRow = this.getLocation().x + rowOffset;
+				int adjCol = this.getLocation().y + colOffset;
+
+				if (rowOffset == 0 && colOffset == 0)
+					continue;
+
+				// check if adjacent cell is within the Game.map bounds
+				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
+					adjacentLocations.add(new Point(adjRow, adjCol));
+				}
+			}
+		}
+		return adjacentLocations;
+	}
+
+	
+	public boolean isTargetAdjacentCheckIndex() {
+		/*
+		 * isTargetAdjacentCheckIndex Method: 
+		 * checks if the target of a given character
+		 * is adjacent using the location (x,y) coordinates
+		 */
+		boolean targetAdjacent = false;
+		ArrayList<Point> adjacentLocations = this.getAdjacentIndices();
+		Point targetLocation = this.getTarget().getLocation();
+		if(adjacentLocations.contains(targetLocation)){
+			targetAdjacent = true;
 		}
 		return targetAdjacent;
 	}
