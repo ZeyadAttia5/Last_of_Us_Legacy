@@ -184,7 +184,7 @@ public class Game {
 			hero.getPreviousCells().clear();
 		});
 
-		if (zombies.size() < 10) {
+		//if (zombies.size() < 10) {
 			// Add a Randomized Zombie
 			boolean isZombieAdded = false;
 			do {
@@ -201,7 +201,7 @@ public class Game {
 					}
 				}
 			} while (!isZombieAdded);
-		}
+		//}
 	}
 
 	public static boolean checkGameOver() {

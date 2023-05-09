@@ -12,7 +12,7 @@ public class Vaccine implements Collectible {
 	@Override
 	public void pickUp(Hero h) {
 		h.getVaccineInventory().add(this);
-		System.out.println("Vaccine Picked up");
+		//System.out.println("Vaccine Picked up");
 
 	}
 
@@ -31,7 +31,7 @@ public class Vaccine implements Collectible {
 		Game.availableHeroes.remove(newHeroIndex);
 		Game.zombies.remove(h.getTarget());
 		
-		System.out.println("Successful Use of Vacc");
+		//System.out.println("Successful Use of Vacc");
 
 	}
 
