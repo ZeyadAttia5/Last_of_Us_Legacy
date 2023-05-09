@@ -27,7 +27,6 @@ public class Game {
 	public static ArrayList<Hero> availableHeroes = new ArrayList<Hero>();
 	public static ArrayList<Hero> heroes = new ArrayList<Hero>();
 	public static ArrayList<Zombie> zombies = new ArrayList<Zombie>();
-	public static int vaccinesUsed;
 	public static ArrayList<Zombie> zombiesRemoved;
 
 	public static void loadHeroes(String filePath) throws IOException {
@@ -116,6 +115,7 @@ public class Game {
 				}
 			}
 		} while (zombieCount == 10);
+		
 		for (int i = 0; i < 5; i++) { // Add Randomized Trap
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
@@ -133,11 +133,25 @@ public class Game {
 
 	public static boolean checkWin() {
 		boolean result = false;
-		if (vaccinesUsed == 5) {
-			if (heroes.size() >= 5)
-				result = true;
+		for(Hero hero : heroes) {
+			if(hero.getVaccineInventory().size() != 0)
+			return false;
+		}
+		
+		for (int x = 0; x < 15; x++) {
+			for (int y = 0; y < 15; y++) {
+				if (map[x][y] instanceof CollectibleCell && ((CollectibleCell)map[x][y]).getCollectible() instanceof Vaccine ) {
+					return false;
+				}
+			}
+		}
+		
+		
+		if (heroes.size() >= 5) {
+			return true;
 		}
 		return result;
+
 	}
 
 	public static void endTurn() {
@@ -173,13 +187,13 @@ public class Game {
 		// reset each hero’s actions, target, and special, update the map visibility
 		// in the game such that only
 		// cells adjacent to heroes are visible
-		
+
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15; y++) {
 				map[x][y].setVisible(false);
 			}
 		}
-		
+
 		heroes.forEach((hero) -> {
 			hero.setActionsAvailable(hero.getMaxActions());
 			hero.setTarget(null);
@@ -190,35 +204,52 @@ public class Game {
 			map[heroLocation.x][heroLocation.y].setVisible(true);
 		});
 
-		//if (zombies.size() < 10) {
-			// Add a Randomized Zombie
-			boolean isZombieAdded = false;
-			do {
-				Zombie z = new Zombie();
-				Random rand = new Random();
-				int x = rand.nextInt(14) + 1;
-				int y = rand.nextInt(14) + 1;
-				if (map[x][y] instanceof CharacterCell) {
-					if (((CharacterCell) map[x][y]).getCharacter() == null) {
-						((CharacterCell) map[x][y]).setCharacter(z);
-						z.setLocation(new Point(x, y));
-						zombies.add(z);
-						isZombieAdded = true;
-					}
+		// if (zombies.size() < 10) {
+		// Add a Randomized Zombie
+		boolean isZombieAdded = false;
+		do {
+			Zombie z = new Zombie();
+			Random rand = new Random();
+			int x = rand.nextInt(14) + 1;
+			int y = rand.nextInt(14) + 1;
+			if (map[x][y] instanceof CharacterCell) {
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
+					((CharacterCell) map[x][y]).setCharacter(z);
+					z.setLocation(new Point(x, y));
+					zombies.add(z);
+					isZombieAdded = true;
 				}
-			} while (!isZombieAdded);
-		//}
+			}
+		} while (!isZombieAdded);
+		// }
 	}
 
 	public static boolean checkGameOver() {
-		boolean result = false;
-
+		
 		if (availableHeroes.isEmpty())
-			result = true;
+			return true;
 		if (heroes.isEmpty())
-			result = true;
+			return true;
+		boolean thereAreStillVaccines = false;
+		for(Hero hero : heroes) {
+			if(hero.getVaccineInventory().size() != 0)
+			return false;
+			thereAreStillVaccines = true;
+		}
+		
+		for (int x = 0; x < 15; x++) {
+			for (int y = 0; y < 15; y++) {
+				if (map[x][y] instanceof CollectibleCell && ((CollectibleCell)map[x][y]).getCollectible() instanceof Vaccine ) {
+					return false;
+				}
+			}
+		}
+		
+		if (!(availableHeroes.isEmpty()) && thereAreStillVaccines )
+			return true;
+		
 
-		return result;
+		return false;
 	}
 
 }

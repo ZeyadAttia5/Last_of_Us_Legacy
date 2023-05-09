@@ -141,7 +141,6 @@ public abstract class Hero extends Character {
 		if (!this.getVaccineInventory().isEmpty()) {
 			this.getVaccineInventory().get(0).use(this);
 			this.actionsAvailable--;
-			Game.vaccinesUsed = Game.vaccinesUsed + 1;
 		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
