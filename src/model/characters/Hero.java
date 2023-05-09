@@ -133,7 +133,7 @@ public abstract class Hero extends Character {
 		if (!(this.getTarget() instanceof Zombie)) {
 			throw new exceptions.InvalidTargetException("You can only cure zombies");
 		}
-		if(this.isTargetAdjacentCheckIndex()) {
+		if (this.isTargetAdjacentCheckIndex()) {
 			if (!this.getVaccineInventory().isEmpty()) {
 //				
 				((Vaccine) this.getVaccineInventory().get(0)).use(this);
@@ -141,8 +141,7 @@ public abstract class Hero extends Character {
 			} else {
 				throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 			}
-		}
-		else {
+		} else {
 			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
 		}
 	}
@@ -186,16 +185,13 @@ public abstract class Hero extends Character {
 
 		if (getActionsAvailable() > 0) {
 			setActionsAvailable(getActionsAvailable() - 1);
-			if (!getAttackers().isEmpty()) {
-				if (getAttackers().contains(c)) {
-					c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));
-					getAttackers().clear();
-				} else
-					throw new InvalidTargetException("This target did not attack you.");
-			} else
-				throw new InvalidTargetException("You have not been attacked.");
+			if (!getAttackers().contains(c)) {
+				getAttackers().add(c);
+				c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));
+			}
 		} else
 			throw new InvalidTargetException("Not Enough Actions Available.");
+
 	}
 
 	public ArrayList<Cell> getPreviousCells() {
