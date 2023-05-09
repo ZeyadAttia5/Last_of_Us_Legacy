@@ -125,7 +125,14 @@ public abstract class Character {
 		return targetAdjacent;
 	}
 
-	public ArrayList<Point> getAdjacentIndcies() {
+	public ArrayList<Point> getAdjacentIndices() {
+		/*
+		 * getAdjacentIndcies Method: 
+		 * puts the adjacent indices of the adjacent cells
+		 * in an ArrayList adjacentLocations
+		 * 
+		 */
+
 		ArrayList<Point> adjacentLocations = new ArrayList<>();
 		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
 		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
@@ -147,9 +154,16 @@ public abstract class Character {
 		}
 		return adjacentLocations;
 	}
+
+	
 	public boolean isTargetAdjacentCheckIndex() {
+		/*
+		 * isTargetAdjacentCheckIndex Method: 
+		 * checks if the target of a given character
+		 * is adjacent using the location (x,y) coordinates
+		 */
 		boolean targetAdjacent = false;
-		ArrayList<Point> adjacentLocations = this.getAdjacentIndcies();
+		ArrayList<Point> adjacentLocations = this.getAdjacentIndices();
 		Point targetLocation = this.getTarget().getLocation();
 		if(adjacentLocations.contains(targetLocation)){
 			targetAdjacent = true;

@@ -97,6 +97,7 @@ public abstract class Hero extends Character {
 				isValidMove = true;
 			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
+				this.onCharacterDeath();
 				isValidMove = true;
 			}
 
@@ -105,7 +106,7 @@ public abstract class Hero extends Character {
 
 		}
 		if (isValidMove) {
-			this.getPreviousCells().add(Game.map[currLocation.x][currLocation.y]);
+
 			// After the hero moves, the new location becomes a CharacterCell
 			CharacterCell newCharacterCell = new CharacterCell(this);
 			Game.map[newLocation.x][newLocation.y] = newCharacterCell;
@@ -113,7 +114,8 @@ public abstract class Hero extends Character {
 			this.setLocation(newLocation);
 			this.setActionsAvailable(this.getActionsAvailable() - 1);
 			// set the visibility to true for all adjacent cells
-			this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
+			if(!(this.getCurrentHp() <= 0))
+				this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 			Game.map[newLocation.x][newLocation.y].setVisible(true);
 			if (this.getCurrentHp() <= 0) {
 				this.onCharacterDeath();
