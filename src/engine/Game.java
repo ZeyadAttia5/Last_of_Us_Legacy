@@ -71,12 +71,15 @@ public class Game {
 		((CharacterCell) map[0][0]).setCharacter(h);
 		h.getAdjacentIndices().forEach((point) -> map[point.x][point.y].setVisible(true));
 		map[0][0].setVisible(true);
-
+		map[1][0].setVisible(true);
+		map[0][1].setVisible(true);
+		map[1][1].setVisible(true);
+		
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
 			Random rand = new Random();
-			int x = rand.nextInt(1, 15);
-			int y = rand.nextInt(1, 15);
+			int x = rand.nextInt(15);
+			int y = rand.nextInt(15);
 			if (map[x][y] instanceof CharacterCell) {
 				if (((CharacterCell) map[x][y]).getCharacter() == null)
 					map[x][y] = new CollectibleCell(v);

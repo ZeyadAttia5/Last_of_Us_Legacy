@@ -23,7 +23,6 @@ public abstract class Hero extends Character {
 	private ArrayList<Vaccine> vaccineInventory;
 	private ArrayList<Supply> supplyInventory;
 	private boolean specialAction;
-	private ArrayList<Cell> previousCells = new ArrayList<Cell>();
 
 	public Hero(String name, int maxHp, int attackDmg, int maxActions) {
 		super(name, maxHp, attackDmg);
@@ -137,7 +136,6 @@ public abstract class Hero extends Character {
 		}
 		if (this.isTargetAdjacentCheckIndex()) {
 			if (!this.getVaccineInventory().isEmpty()) {
-//				
 				((Vaccine) this.getVaccineInventory().get(0)).use(this);
 				setActionsAvailable(getActionsAvailable() - 1);
 			} else {
@@ -196,7 +194,4 @@ public abstract class Hero extends Character {
 
 	}
 
-	public ArrayList<Cell> getPreviousCells() {
-		return previousCells;
-	}
 }

@@ -15,7 +15,7 @@ public class Medic extends Hero {
 		if ((this.getTarget() instanceof Zombie)) {
 			throw new InvalidTargetException("Cannot heal a Zombie");
 		} 
-		if (!this.isTargetAdjacent()) {
+		if (!this.isTargetAdjacentCheckIndex()) {
 			throw new InvalidTargetException("The target is not adjacent");
 		}
 		else {
