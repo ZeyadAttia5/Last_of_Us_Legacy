@@ -40,17 +40,16 @@ public class Zombie extends Character {
 		}
 	}
 
-	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		super.attack();
-		if (this.isTargetAdjacent()) {
-			if (getTarget() instanceof Hero) {
-				getTarget().getAttackers().add(this);
-				getTarget().setCurrentHp(this.getTarget().getCurrentHp() - getAttackDmg());
-				//this.getTarget().onCharacterDeath();
-			} else
-				throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Zombies");
-		} else
-			throw new exceptions.InvalidTargetException("Target is not adjacent.");
+	public void attack() throws InvalidTargetException, NotEnoughActionsException{
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No target is selected");
+		}
+		else {
+			if (this.isTargetAdjacent()) 
+				super.attack();
+			else 
+				throw new exceptions.InvalidTargetException("Target is not adjacent.");
+		}
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {

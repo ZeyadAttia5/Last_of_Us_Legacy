@@ -70,11 +70,14 @@ public abstract class Character {
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		// SubClass Implementation
-		if (this.getTarget() == null) {
-			throw new InvalidTargetException("No target is selected");
+		if (getTarget() instanceof Zombie) {
+			getTarget().getAttackers().add(this);
+			getTarget().setCurrentHp(getTarget().getCurrentHp()  - this.getAttackDmg());
+			
 		}
-	}
+		else
+			throw new InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
+}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 
