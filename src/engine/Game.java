@@ -28,7 +28,6 @@ public class Game {
 	public static ArrayList<Hero> heroes = new ArrayList<Hero>();
 	public static ArrayList<Zombie> zombies = new ArrayList<Zombie>();
 	public static int vaccinesUsed;
-	public static ArrayList<Zombie> zombiesRemoved;
 
 	public static void loadHeroes(String filePath) throws IOException {
 
@@ -115,7 +114,7 @@ public class Game {
 					zombieCount++;
 				}
 			}
-		} while (zombieCount == 10);
+		} while (zombieCount < 10);
 		for (int i = 0; i < 5; i++) { // Add Randomized Trap
 			Random rand = new Random();
 			int x = rand.nextInt(14) + 1;
@@ -143,43 +142,28 @@ public class Game {
 	public static void endTurn() {
 		// The method should allow all zombies to attempt to attack an adjacent hero (if
 		// exists)
-		for (int i = 0; i < zombies.size(); i++) {
-			Zombie zombie = zombies.get(i);
-			ArrayList<Cell> adjCells = zombie.getAdjacentCells();
-			for (int j = 0; j < adjCells.size(); j++) {
-				Cell adjCell = (Cell) adjCells.get(j);
-				if (adjCell instanceof CharacterCell) {
-					if (((CharacterCell) adjCell).getCharacter() != null) {
-						if (((CharacterCell) adjCell).getCharacter() instanceof Hero) {
-							zombie.setTarget(((CharacterCell) adjCell).getCharacter());
-							try {
-								zombie.attack();
-								zombie.setTarget(null);
-								break;
-							} catch (InvalidTargetException e) {
-								// TODO Auto-generated catch block
-								e.getMessage();
-							} catch (NotEnoughActionsException e) {
-								// TODO Auto-generated catch block
-								e.getMessage();
-							}
-						}
-					}
-				}
-			}
 
+//		for(Zombie zombie : Game.zombies) {
+//			if(zombie.getCurrentHp() <= 0) {
+//				zombie.onCharacterDeath();
+//			}
+//		}
+
+		for (Zombie zombie : zombies) {
+			zombie.setTarget(null);
 		}
+
 		// turnOff visibility for the whole map
 		// reset each hero’s actions, target, and special, update the map visibility
 		// in the game such that only
 		// cells adjacent to heroes are visible
-		
+
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15; y++) {
 				map[x][y].setVisible(false);
 			}
 		}
-		
+
 		heroes.forEach((hero) -> {
 			hero.setActionsAvailable(hero.getMaxActions());
 			hero.setTarget(null);
@@ -190,24 +174,24 @@ public class Game {
 			map[heroLocation.x][heroLocation.y].setVisible(true);
 		});
 
-		//if (zombies.size() < 10) {
-			// Add a Randomized Zombie
-			boolean isZombieAdded = false;
-			do {
-				Zombie z = new Zombie();
-				Random rand = new Random();
-				int x = rand.nextInt(14) + 1;
-				int y = rand.nextInt(14) + 1;
-				if (map[x][y] instanceof CharacterCell) {
-					if (((CharacterCell) map[x][y]).getCharacter() == null) {
-						((CharacterCell) map[x][y]).setCharacter(z);
-						z.setLocation(new Point(x, y));
-						zombies.add(z);
-						isZombieAdded = true;
-					}
+		// if (zombies.size() < 10) {
+		// Add a Randomized Zombie
+		boolean isZombieAdded = false;
+		do {
+			Zombie z = new Zombie();
+			Random rand = new Random();
+			int x = rand.nextInt(14) + 1;
+			int y = rand.nextInt(14) + 1;
+			if (map[x][y] instanceof CharacterCell) {
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
+					((CharacterCell) map[x][y]).setCharacter(z);
+					z.setLocation(new Point(x, y));
+					zombies.add(z);
+					isZombieAdded = true;
 				}
-			} while (!isZombieAdded);
-		//}
+			}
+		} while (!isZombieAdded);
+		// }
 	}
 
 	public static boolean checkGameOver() {

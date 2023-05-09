@@ -133,15 +133,26 @@ public abstract class Hero extends Character {
 		if (!(this.getTarget() instanceof Zombie)) {
 			throw new exceptions.InvalidTargetException("You can only cure zombies");
 		}
-		if (!(this.isTargetAdjacent())) {
-
+		if ((getTarget().getLocation().x - this.getLocation().x == 1)
+				&& (getTarget().getLocation().y - this.getLocation().y == 1)) {
+			if (!this.getVaccineInventory().isEmpty()) {
+//				
+				((Vaccine) this.getVaccineInventory().get(0)).use(this);
+				setActionsAvailable(getActionsAvailable() - 1);
+			} else {
+				throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
+			}
+		}
+		if (!(this.isTargetAdjacentCheckIndex())) {
+			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
+		} else if (!(this.isTargetAdjacent())) {
 			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
 		}
 
 		if (!this.getVaccineInventory().isEmpty()) {
-			this.getVaccineInventory().get(0).use(this);
-			this.actionsAvailable--;
-			Game.vaccinesUsed = Game.vaccinesUsed + 1;
+//			TODO
+			((Vaccine) this.getVaccineInventory().get(0)).use(this);
+			setActionsAvailable(getActionsAvailable() - 1);
 		} else {
 			throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
 		}
@@ -152,7 +163,6 @@ public abstract class Hero extends Character {
 		if (this.getCurrentHp() <= 0) {
 			if (Game.map[this.getLocation().x][this.getLocation().y] instanceof CharacterCell) {
 				((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
-				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.heroes.remove(this);
 			} else if (Game.map[this.getLocation().x][this.getLocation().y] instanceof TrapCell) {
 				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
@@ -164,6 +174,18 @@ public abstract class Hero extends Character {
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No Target is Selected");
+		}
+		if (getTarget() instanceof Hero) {
+			throw new InvalidTargetException("Invalid! Target is not a Zombie");
+		}
+		if (!(this.isTargetAdjacentCheckIndex())) {
+			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
+		}
+//		else if (!this.isTargetAdjacent()) {
+//			throw new InvalidTargetException("Target is Not Adjacent");
+//		}
 		if (this.getActionsAvailable() > 0) {
 			super.attack();
 			setActionsAvailable(getActionsAvailable() - 1);

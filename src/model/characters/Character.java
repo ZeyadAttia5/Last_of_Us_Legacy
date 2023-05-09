@@ -70,31 +70,11 @@ public abstract class Character {
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		if (this.getTarget() == null) {
-			throw new InvalidTargetException("No Target is Selected");
-		}
-		else if(!this.isTargetAdjacent()) {
-			throw new InvalidTargetException("Target is Not Adjacent");
-		}
-		if (this instanceof Zombie) {
-			if (getTarget() instanceof Hero) {
-				getTarget().getAttackers().add(this);
-				getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
-				getTarget().onCharacterDeath();
-			} else {
-				throw new InvalidTargetException("Invalid! Target is not a Hero");
-			}
-		} else if (this instanceof Hero) {
-			if (getTarget().isTargetAdjacent()) {
-				if (getTarget() instanceof Zombie) {
-					getTarget().getAttackers().add(this);
-					getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
-					getTarget().onCharacterDeath();
-				} else {
-					throw new InvalidTargetException("Invalid! Target is not a Zombie");
-				}
-			}
-		}
+
+		getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+		getTarget().defend(this);
+		getTarget().onCharacterDeath();
+		this.onCharacterDeath();
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
@@ -118,8 +98,8 @@ public abstract class Character {
 				int adjCol = this.getLocation().y + colOffset;
 
 				if (rowOffset == 0 && colOffset == 0)
-
 					continue;
+
 				// check if adjacent cell is within the Game.map bounds
 				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
 					adjacentCharList.add(Game.map[adjRow][adjCol]);
@@ -141,6 +121,38 @@ public abstract class Character {
 					break;
 				}
 			}
+		}
+		return targetAdjacent;
+	}
+
+	public ArrayList<Point> getAdjacentIndcies() {
+		ArrayList<Point> adjacentLocations = new ArrayList<>();
+		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
+		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
+		// loop over adjacent cells
+		for (int rowOffset : rowOffsets) {
+			for (int colOffset : colOffsets) {
+				// calculate adjacent cell coordinates
+				int adjRow = this.getLocation().x + rowOffset;
+				int adjCol = this.getLocation().y + colOffset;
+
+				if (rowOffset == 0 && colOffset == 0)
+					continue;
+
+				// check if adjacent cell is within the Game.map bounds
+				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
+					adjacentLocations.add(new Point(adjRow, adjCol));
+				}
+			}
+		}
+		return adjacentLocations;
+	}
+	public boolean isTargetAdjacentCheckIndex() {
+		boolean targetAdjacent = false;
+		ArrayList<Point> adjacentLocations = this.getAdjacentIndcies();
+		Point targetLocation = this.getTarget().getLocation();
+		if(adjacentLocations.contains(targetLocation)){
+			targetAdjacent = true;
 		}
 		return targetAdjacent;
 	}
