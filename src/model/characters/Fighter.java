@@ -14,30 +14,12 @@ public class Fighter extends Hero {
 
 	@Override
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		if (this.getTarget() == null) {
-
-			throw new InvalidTargetException("No target is selected");
+		if(this.isSpecialAction()) {
+			this.setActionsAvailable(getActionsAvailable()+1);
+			super.attack();
 		}
 		else {
-			if (this.isTargetAdjacent()) {
-				if (!isSpecialAction()) {
-					if (getActionsAvailable() > 0) {
-						super.attack();
-					} else
-						throw new NotEnoughActionsException("Not Enough Actions Available");
-				}
-				// special action is true
-				else {
-					if (this.getTarget() instanceof Zombie) {
-						getTarget().getAttackers().add(this);
-						this.getTarget().setCurrentHp(this.getTarget().getCurrentHp() - this.getAttackDmg());
-					}
-					else
-						throw new exceptions.InvalidTargetException("Invalid Target, You Cannot Attack Other Heros");
-				}
-			} else
-				throw new exceptions.InvalidTargetException("Target is not adjacent.");
-
+			super.attack();
 		}
 	}
 

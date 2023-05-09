@@ -147,7 +147,7 @@ public class Game {
 			Zombie zombie = zombies.get(i);
 			ArrayList<Cell> adjCells = zombie.getAdjacentCells();
 			for (int j = 0; j < adjCells.size(); j++) {
-				Cell adjCell = (Cell) adjCells.get(i);
+				Cell adjCell = (Cell) adjCells.get(j);
 				if (adjCell instanceof CharacterCell) {
 					if (((CharacterCell) adjCell).getCharacter() != null) {
 						if (((CharacterCell) adjCell).getCharacter() instanceof Hero) {

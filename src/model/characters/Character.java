@@ -70,14 +70,32 @@ public abstract class Character {
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		if (getTarget() instanceof Zombie) {
-			getTarget().getAttackers().add(this);
-			getTarget().setCurrentHp(getTarget().getCurrentHp()  - this.getAttackDmg());
-			
+		if (this.getTarget() == null) {
+			throw new InvalidTargetException("No Target is Selected");
 		}
-		else
-			throw new InvalidTargetException("Invalid Target, You Cannot Attack Other Heros.");
-}
+		else if(!this.isTargetAdjacent()) {
+			throw new InvalidTargetException("Target is Not Adjacent");
+		}
+		if (this instanceof Zombie) {
+			if (getTarget() instanceof Hero) {
+				getTarget().getAttackers().add(this);
+				getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+				getTarget().onCharacterDeath();
+			} else {
+				throw new InvalidTargetException("Invalid! Target is not a Hero");
+			}
+		} else if (this instanceof Hero) {
+			if (getTarget().isTargetAdjacent()) {
+				if (getTarget() instanceof Zombie) {
+					getTarget().getAttackers().add(this);
+					getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+					getTarget().onCharacterDeath();
+				} else {
+					throw new InvalidTargetException("Invalid! Target is not a Zombie");
+				}
+			}
+		}
+	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
 
@@ -118,7 +136,7 @@ public abstract class Character {
 		for (Cell adjCell : adjacentCells) {
 			if (adjCell instanceof CharacterCell) {
 				if (((CharacterCell) adjCell).getCharacter() == this.getTarget()) {
-					//System.out.println("Adjacent Confirm");
+					// System.out.println("Adjacent Confirm");
 					targetAdjacent = true;
 					break;
 				}

@@ -97,7 +97,7 @@ public abstract class Hero extends Character {
 				isValidMove = true;
 			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
 				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
-					isValidMove = true;
+				isValidMove = true;
 			}
 
 		} else {
@@ -115,14 +115,14 @@ public abstract class Hero extends Character {
 			// set the visibility to true for all adjacent cells
 			this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
 			Game.map[newLocation.x][newLocation.y].setVisible(true);
-			if(this.getCurrentHp() <=0) {
+			if (this.getCurrentHp() <= 0) {
 				this.onCharacterDeath();
 			}
 		}
 	}
 
 	public void useSpecial() throws NoAvailableResourcesException, InvalidTargetException {
-
+		this.setSpecialAction(true);
 	}
 
 	public void cure() throws NoAvailableResourcesException, InvalidTargetException, NotEnoughActionsException {
@@ -158,29 +158,17 @@ public abstract class Hero extends Character {
 				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.map[this.getLocation().x][this.getLocation().y] = new CharacterCell(null);
 				Game.heroes.remove(this);
-				
+
 			}
 		}
 	}
 
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		if (this.getTarget() == null) {
-			throw new InvalidTargetException("No target is selected");
-		}
-
-		else {
-			if (this.isTargetAdjacent()) {
-				if (this.getActionsAvailable() > 0) {
-					super.attack();
-					setActionsAvailable(getActionsAvailable() - 1);
-				}
-				else
-					throw new NotEnoughActionsException("Not Enough Actions Available.");
-				} 
-			else
-				throw new exceptions.InvalidTargetException("Target is not adjacent.");
-		}
-
+		if (this.getActionsAvailable() > 0) {
+			super.attack();
+			setActionsAvailable(getActionsAvailable() - 1);
+		} else
+			throw new NotEnoughActionsException("Not Enough Actions Available.");
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {

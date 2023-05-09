@@ -20,6 +20,7 @@ public class Zombie extends Character {
 		if (this.getCurrentHp() <= 0) {
 
 			((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
+			Game.zombiesRemoved.add(this);
 			Game.zombies.remove(this);
 			boolean isZombieAdded = false;
 			do {
@@ -36,7 +37,6 @@ public class Zombie extends Character {
 					}
 				}
 			} while (!isZombieAdded);
-			Game.zombiesRemoved.add(new Zombie());
 		}
 	}
 
@@ -45,8 +45,9 @@ public class Zombie extends Character {
 			throw new InvalidTargetException("No target is selected");
 		}
 		else {
-			if (this.isTargetAdjacent()) 
+			if (this.isTargetAdjacent()) {
 				super.attack();
+			}
 			else 
 				throw new exceptions.InvalidTargetException("Target is not adjacent.");
 		}
