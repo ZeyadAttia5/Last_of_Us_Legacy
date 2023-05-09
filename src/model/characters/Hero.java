@@ -113,9 +113,10 @@ public abstract class Hero extends Character {
 			this.setLocation(newLocation);
 			this.setActionsAvailable(this.getActionsAvailable() - 1);
 			// set the visibility to true for all adjacent cells
-			if (!(this.getCurrentHp() <= 0))
+			if (!(this.getCurrentHp() <= 0)) {
 				this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
-			Game.map[newLocation.x][newLocation.y].setVisible(true);
+				Game.map[newLocation.x][newLocation.y].setVisible(true);
+			}
 			if (this.getCurrentHp() <= 0) {
 				this.onCharacterDeath();
 			}
@@ -153,7 +154,7 @@ public abstract class Hero extends Character {
 				((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
 				Game.heroes.remove(this);
 			} else if (Game.map[this.getLocation().x][this.getLocation().y] instanceof TrapCell) {
-				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
+				//this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.map[this.getLocation().x][this.getLocation().y] = new CharacterCell(null);
 				Game.heroes.remove(this);
 
