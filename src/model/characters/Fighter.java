@@ -15,6 +15,7 @@ public class Fighter extends Hero {
 	@Override
 	public void attack() throws InvalidTargetException, NotEnoughActionsException {
 		if (this.getTarget() == null) {
+
 			throw new InvalidTargetException("No target is selected");
 		}
 		else {
@@ -36,8 +37,12 @@ public class Fighter extends Hero {
 				}
 			} else
 				throw new exceptions.InvalidTargetException("Target is not adjacent.");
+
 		}
 	}
+
+
+
 
 	public void useSpecial() throws NoAvailableResourcesException {
 		// When a supply is used, Fighter can attack as many times in a turn

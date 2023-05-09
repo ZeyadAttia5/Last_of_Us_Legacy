@@ -102,6 +102,7 @@ public abstract class Hero extends Character {
 
 		} else {
 			throw new exceptions.NotEnoughActionsException("Not Enough Action Points");
+
 		}
 		if (isValidMove) {
 			this.getPreviousCells().add(Game.map[currLocation.x][currLocation.y]);
@@ -151,10 +152,13 @@ public abstract class Hero extends Character {
 		if (this.getCurrentHp() <= 0) {
 			if (Game.map[this.getLocation().x][this.getLocation().y] instanceof CharacterCell) {
 				((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
+				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.heroes.remove(this);
 			} else if (Game.map[this.getLocation().x][this.getLocation().y] instanceof TrapCell) {
+				this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
 				Game.map[this.getLocation().x][this.getLocation().y] = new CharacterCell(null);
 				Game.heroes.remove(this);
+				
 			}
 		}
 	}
@@ -163,6 +167,7 @@ public abstract class Hero extends Character {
 		if (this.getTarget() == null) {
 			throw new InvalidTargetException("No target is selected");
 		}
+
 		else {
 			if (this.isTargetAdjacent()) {
 				if (this.getActionsAvailable() > 0) {
@@ -175,11 +180,13 @@ public abstract class Hero extends Character {
 			else
 				throw new exceptions.InvalidTargetException("Target is not adjacent.");
 		}
+
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
-		if (this.actionsAvailable > 0) {
-			setActionsAvailable(actionsAvailable - 1);
+
+		if (getActionsAvailable() > 0) {
+			setActionsAvailable(getActionsAvailable() - 1);
 			if (!getAttackers().isEmpty()) {
 				if (getAttackers().contains(c)) {
 					c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));
