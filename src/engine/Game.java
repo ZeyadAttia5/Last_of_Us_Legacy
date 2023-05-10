@@ -27,6 +27,7 @@ public class Game {
 	public static ArrayList<Hero> availableHeroes = new ArrayList<Hero>();
 	public static ArrayList<Hero> heroes = new ArrayList<Hero>();
 	public static ArrayList<Zombie> zombies = new ArrayList<Zombie>();
+	public static Random rand = new Random();
 
 	public static void loadHeroes(String filePath) throws IOException {
 
@@ -72,7 +73,7 @@ public class Game {
 		((CharacterCell) map[0][0]).setCharacter(h);
 		availableHeroes.remove(h);
 
-		Random rand = new Random();
+
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
 			int x = rand.nextInt(0, 15);
@@ -160,6 +161,26 @@ public class Game {
 //				zombie.onCharacterDeath();
 //			}
 //		}
+		
+
+		// if (zombies.size() < 10) {
+		// Add a Randomized Zombie
+		boolean isZombieAdded = false;
+		Zombie z = new Zombie();
+
+		do {
+			int x = rand.nextInt(14) + 1;
+			int y = rand.nextInt(14) + 1;
+			if (map[x][y] instanceof CharacterCell) {
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
+					((CharacterCell) map[x][y]).setCharacter(z);
+					z.setLocation(new Point(x, y));
+					isZombieAdded = true;
+				}
+			}
+		} while (!isZombieAdded);
+		// }
+
 
 		for (Zombie zombie : zombies) {
 			try {
@@ -170,6 +191,9 @@ public class Game {
 				e.getMessage();
 			}
 		}
+		
+		//here to prevent an edge case of a Zombie spawning in place of a dead hero 
+		zombies.add(z);
 
 		// turnOff visibility for the whole map
 		// reset each hero’s actions, target, and special, update the map visibility
@@ -191,25 +215,6 @@ public class Game {
 			Point heroLocation = hero.getLocation();
 			map[heroLocation.x][heroLocation.y].setVisible(true);
 		});
-
-		// if (zombies.size() < 10) {
-		// Add a Randomized Zombie
-		boolean isZombieAdded = false;
-		do {
-			Zombie z = new Zombie();
-			Random rand = new Random();
-			int x = rand.nextInt(14) + 1;
-			int y = rand.nextInt(14) + 1;
-			if (map[x][y] instanceof CharacterCell) {
-				if (((CharacterCell) map[x][y]).getCharacter() == null) {
-					((CharacterCell) map[x][y]).setCharacter(z);
-					z.setLocation(new Point(x, y));
-					zombies.add(z);
-					isZombieAdded = true;
-				}
-			}
-		} while (!isZombieAdded);
-		// }
 	}
 
 	public static boolean checkGameOver() {
