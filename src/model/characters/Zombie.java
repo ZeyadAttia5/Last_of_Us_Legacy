@@ -22,11 +22,11 @@ public class Zombie extends Character {
 		if (this.getCurrentHp() <= 0) {
 
 			boolean isZombieAdded = false;
+
 			do {
 				Zombie z = new Zombie();
-				Random rand = new Random();
-				int x = rand.nextInt(14) + 1;
-				int y = rand.nextInt(14) + 1;
+				int x = Game.rand.nextInt(14) + 1;
+				int y = Game.rand.nextInt(14) + 1;
 				if (Game.map[x][y] instanceof CharacterCell) {
 					if (((CharacterCell) Game.map[x][y]).getCharacter() == null) {
 						((CharacterCell) Game.map[x][y]).setCharacter(z);
