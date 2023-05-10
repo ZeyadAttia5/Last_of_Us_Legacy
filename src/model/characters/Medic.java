@@ -1,5 +1,6 @@
 package model.characters;
 
+import engine.Game;
 import exceptions.*;
 
 public class Medic extends Hero {
@@ -11,16 +12,17 @@ public class Medic extends Hero {
 
 	@Override
 	public void useSpecial() throws NoAvailableResourcesException, InvalidTargetException {
-		
-		if(this.getTarget() == null)
+
+		if (this.getTarget() == null)
 			throw new InvalidTargetException("No Target is selected");
 		if ((this.getTarget() instanceof Zombie)) {
 			throw new InvalidTargetException("Cannot heal a Zombie");
-		} 
+		}
+		if (!(Game.heroes.contains(this.getTarget())))
+			throw new InvalidTargetException("Invalid Target");
 		if (!this.isTargetAdjacentCheckIndex()) {
 			throw new InvalidTargetException("The target is not adjacent");
-		}
-		else {
+		} else {
 			// Whenever a supply is used, allows Medic to other heros or themselves
 			if (this.getSupplyInventory().size() > 0) {
 				Hero target = (Hero) this.getTarget();
