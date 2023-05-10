@@ -21,8 +21,6 @@ public class Zombie extends Character {
 	public void onCharacterDeath() {
 		if (this.getCurrentHp() <= 0) {
 
-			((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
-			Game.zombies.remove(this);
 			boolean isZombieAdded = false;
 			do {
 				Zombie z = new Zombie();
@@ -38,6 +36,8 @@ public class Zombie extends Character {
 					}
 				}
 			} while (!isZombieAdded);
+			((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
+			Game.zombies.remove(this);
 		}
 	}
 
