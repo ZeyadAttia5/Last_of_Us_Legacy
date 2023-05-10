@@ -125,7 +125,7 @@ public class Game {
 				i--;
 		}
 		//set adjacent cells visibility to visible, here for an edge case
-	//	h.getAdjacentIndices().forEach((point) -> map[point.x][point.y].setVisible(true));
+		h.getAdjacentIndices().forEach((point) -> map[point.x][point.y].setVisible(true));
 	}
 
 	public static boolean checkWin() {
