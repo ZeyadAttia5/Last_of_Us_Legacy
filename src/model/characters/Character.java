@@ -73,8 +73,8 @@ public abstract class Character {
 
 		getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
 		getTarget().defend(this);
-		getTarget().onCharacterDeath();
 		this.onCharacterDeath();
+		getTarget().onCharacterDeath();
 	}
 
 	public void defend(Character c) throws exceptions.InvalidTargetException {
