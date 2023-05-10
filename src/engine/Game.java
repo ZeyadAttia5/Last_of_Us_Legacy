@@ -62,40 +62,37 @@ public class Game {
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15; y++) {
 				map[x][y] = new CharacterCell(null);
+				if (x == 0 && y == 0)
+					map[x][y].setVisible(true);
 			}
 		}
 
-		map[0][0].setVisible(true);
-		map[1][0].setVisible(true);
-		map[0][1].setVisible(true);
-		map[1][1].setVisible(true);
-		Random rand = new Random();
 		heroes.add(h);
-		availableHeroes.remove(h);
 		h.setLocation(new Point(0, 0));
 		((CharacterCell) map[0][0]).setCharacter(h);
-		h.getAdjacentIndices().forEach((point) -> map[point.x][point.y].setVisible(true));
-		
+		availableHeroes.remove(h);
+
+		Random rand = new Random();
 		for (int i = 0; i < 5; i++) { // Add Randomized Vax
 			Vaccine v = new Vaccine();
 			int x = rand.nextInt(0, 15);
 			int y = rand.nextInt(0, 15);
 			if (map[x][y] instanceof CharacterCell) {
-				if (((CharacterCell) map[x][y]).getCharacter() == null)
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
 					map[x][y] = new CollectibleCell(v);
-				else
+				} else
 					i--;
 			} else
 				i--;
 		}
 		for (int i = 0; i < 5; i++) { // Add Randomized Supply
 			Supply s = new Supply();
-			int x = rand.nextInt(0,15);
-			int y = rand.nextInt(0,15);
+			int x = rand.nextInt(0, 15);
+			int y = rand.nextInt(0, 15);
 			if (map[x][y] instanceof CharacterCell) {
-				if (((CharacterCell) map[x][y]).getCharacter() == null)
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
 					map[x][y] = new CollectibleCell(s);
-				else
+				} else
 					i--;
 			} else
 				i--;
@@ -120,14 +117,15 @@ public class Game {
 			int x = rand.nextInt(15);
 			int y = rand.nextInt(15);
 			if (map[x][y] instanceof CharacterCell) {
-				if (((CharacterCell) map[x][y]).getCharacter() == null)
+				if (((CharacterCell) map[x][y]).getCharacter() == null) {
 					map[x][y] = new TrapCell();
-				else
+				} else
 					i--;
 			} else
 				i--;
 		}
-
+		//set adjacent cells visibility to visible, here for an edge case
+		h.getAdjacentIndices().forEach((point) -> map[point.x][point.y].setVisible(true));
 	}
 
 	public static boolean checkWin() {
