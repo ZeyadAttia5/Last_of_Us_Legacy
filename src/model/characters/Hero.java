@@ -1,37 +1,44 @@
 package model.characters;
 
-import engine.Game;
-
 import java.awt.Point;
 import java.util.ArrayList;
 
-import model.characters.Character;
-import model.collectibles.Collectible;
 import model.collectibles.Supply;
 import model.collectibles.Vaccine;
-import model.world.Cell;
-import engine.Game;
 import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import model.world.TrapCell;
-import exceptions.*;
+import engine.Game;
+import exceptions.InvalidTargetException;
+import exceptions.MovementException;
+import exceptions.NoAvailableResourcesException;
+import exceptions.NotEnoughActionsException;
 
 public abstract class Hero extends Character {
 
 	private int actionsAvailable;
 	private int maxActions;
+	private boolean specialAction;
 	private ArrayList<Vaccine> vaccineInventory;
 	private ArrayList<Supply> supplyInventory;
-	private boolean specialAction;
 
-	public Hero(String name, int maxHp, int attackDmg, int maxActions) {
-		super(name, maxHp, attackDmg);
+	public Hero(String name, int maxHp, int attackDamage, int maxActions) {
+		super(name, maxHp, attackDamage);
 		this.maxActions = maxActions;
 		this.actionsAvailable = maxActions;
-		this.vaccineInventory = new ArrayList<Vaccine>();
 		this.supplyInventory = new ArrayList<Supply>();
-		this.specialAction = false;
+		this.vaccineInventory = new ArrayList<Vaccine>();
+	}
 
+	public int getActionsAvailable() {
+		return actionsAvailable;
+	}
+
+	public void setActionsAvailable(int actionsAvailable) {
+		if (actionsAvailable <= 0)
+			this.actionsAvailable = 0;
+		else
+			this.actionsAvailable = actionsAvailable;
 	}
 
 	public boolean isSpecialAction() {
@@ -40,14 +47,6 @@ public abstract class Hero extends Character {
 
 	public void setSpecialAction(boolean specialAction) {
 		this.specialAction = specialAction;
-	}
-
-	public int getActionsAvailable() {
-		return actionsAvailable;
-	}
-
-	public void setActionsAvailable(int actionsAvailable) {
-		this.actionsAvailable = actionsAvailable;
 	}
 
 	public int getMaxActions() {
@@ -63,135 +62,92 @@ public abstract class Hero extends Character {
 	}
 
 	public void move(Direction d) throws MovementException, NotEnoughActionsException {
-		Point currLocation = this.getLocation();
-		Point newLocation = new Point(currLocation.x, currLocation.y);
-		boolean isValidMove = false;
-		if (actionsAvailable > 0) {
-			if (d == Direction.UP) {
-				newLocation.x += 1;
-				if (newLocation.x >= 15)
-					throw new exceptions.MovementException("Invalid Move");
-			} else if (d == Direction.DOWN) {
-				newLocation.x -= 1;
-				if (newLocation.x < 0)
-					throw new exceptions.MovementException("Invalid Move");
-			} else if (d == Direction.LEFT) {
-				newLocation.y -= 1;
-				if (newLocation.y < 0)
-					throw new exceptions.MovementException("Invalid Move");
-			} else if (d == Direction.RIGHT) {
-				newLocation.y += 1;
-				if (newLocation.y >= 15)
-					throw new exceptions.MovementException("Invalid Move");
-			}
-			if (Game.map[newLocation.x][newLocation.y] instanceof CharacterCell) {
-				if (((CharacterCell) Game.map[newLocation.x][newLocation.y]).getCharacter() != null) {
-					isValidMove = false;
-					throw new exceptions.MovementException("Cell is not empty");
-				} else {
-					isValidMove = true;
-				}
-			} else if ((Game.map[newLocation.x][newLocation.y] instanceof CollectibleCell)) {
-				((CollectibleCell) Game.map[newLocation.x][newLocation.y]).getCollectible().pickUp(this);
-				isValidMove = true;
-			} else if (Game.map[newLocation.x][newLocation.y] instanceof TrapCell) {
-				this.setCurrentHp(getCurrentHp() - ((TrapCell) Game.map[newLocation.x][newLocation.y]).getTrapDamage());
-				this.onCharacterDeath();
-				isValidMove = true;
-			}
-
-		} else {
-			throw new exceptions.NotEnoughActionsException("Not Enough Action Points");
-
+		if (actionsAvailable < 1)
+			throw new NotEnoughActionsException("You need at least 1 action point in order to move.");
+		int tX = getLocation().x;
+		int tY = getLocation().y;
+		switch (d) {
+		case DOWN:
+			tX--;
+			break;
+		case LEFT:
+			tY--;
+			break;
+		case RIGHT:
+			tY++;
+			break;
+		case UP:
+			tX++;
+			break;
 		}
-		if (isValidMove) {
-
-			// After the hero moves, the new location becomes a CharacterCell
-			CharacterCell newCharacterCell = new CharacterCell(this);
-			Game.map[newLocation.x][newLocation.y] = newCharacterCell;
-			((CharacterCell) Game.map[currLocation.x][currLocation.y]).setCharacter(null);
-			this.setLocation(newLocation);
-			this.setActionsAvailable(this.getActionsAvailable() - 1);
-			// set the visibility to true for all adjacent cells
-			if (!(this.getCurrentHp() <= 0)) {
-				this.getAdjacentCells().forEach((cell) -> cell.setVisible(true));
-				Game.map[newLocation.x][newLocation.y].setVisible(true);
-			}
-			if (this.getCurrentHp() <= 0) {
-				this.onCharacterDeath();
-			}
+		if (tX < 0 || tY < 0 || tX > Game.map.length - 1 || tY > Game.map.length - 1)
+			throw new MovementException("You cannot move outside the borders of the map.");
+		if (Game.map[tX][tY] instanceof CharacterCell && ((CharacterCell) Game.map[tX][tY]).getCharacter() != null)
+			throw new MovementException("You cannot move to an occuppied cell.");
+		else if (Game.map[tX][tY] instanceof CollectibleCell) {
+			((CollectibleCell) Game.map[tX][tY]).getCollectible().pickUp(this);
+		} else if (Game.map[tX][tY] instanceof TrapCell) {
+			this.setCurrentHp(this.getCurrentHp() - ((TrapCell) Game.map[tX][tY]).getTrapDamage());
 		}
-	}
+		Game.map[getLocation().x][getLocation().y] = new CharacterCell(null);
+		this.actionsAvailable--;
 
-	public void useSpecial() throws NoAvailableResourcesException, InvalidTargetException {
-		this.setSpecialAction(true);
-	}
-
-	public void cure() throws NoAvailableResourcesException, InvalidTargetException, NotEnoughActionsException {
-
-		if (this.getActionsAvailable() <= 0) {
-			throw new exceptions.NotEnoughActionsException("You don't have enough action points to spend");
+		if (this.getCurrentHp() ==  0) {
+			return;
 		}
-		if (!(this.getTarget() instanceof Zombie)) {
-			throw new exceptions.InvalidTargetException("You can only cure zombies");
-		}
-		if (this.isTargetAdjacentCheckIndex()) {
-			if (!this.getVaccineInventory().isEmpty()) {
-				((Vaccine) this.getVaccineInventory().get(0)).use(this);
-				setActionsAvailable(getActionsAvailable() - 1);
-			} else {
-				throw new exceptions.NoAvailableResourcesException("You do not have any Vaccines to cure the Zombie");
-			}
-		} else {
-			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
-		}
+		Game.map[tX][tY] = new CharacterCell(this);
+		setLocation(new Point(tX, tY));
+		Game.adjustVisibility(this);
 	}
 
 	@Override
-	public void onCharacterDeath() {
-		if (this.getCurrentHp() <= 0) {
-			if (Game.map[this.getLocation().x][this.getLocation().y] instanceof CharacterCell) {
-				((CharacterCell) Game.map[this.getLocation().x][this.getLocation().y]).setCharacter(null);
-				Game.heroes.remove(this);
-			} else if (Game.map[this.getLocation().x][this.getLocation().y] instanceof TrapCell) {
-				//this.getAdjacentCells().forEach((cell) -> cell.setVisible(false));
-				Game.map[this.getLocation().x][this.getLocation().y] = new CharacterCell(null);
-				Game.heroes.remove(this);
-
-			}
-		}
+	public void attack() throws NotEnoughActionsException, InvalidTargetException {
+		if (actionsAvailable < 1)
+			throw new NotEnoughActionsException("You need at least 1 action point to be able to attack.");
+		if (this.getTarget() == null)
+			throw new InvalidTargetException("You should select a target to attack first.");
+		if (!checkDistance())
+			throw new InvalidTargetException("You are only able to attack adjacent targets.");
+		if (this.getTarget() instanceof Hero)
+			throw new InvalidTargetException("You can only attack zombies.");
+		super.attack();
+		if (this instanceof Fighter && (this.isSpecialAction()))
+			return;
+		actionsAvailable--;
 	}
 
-	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-		if (this.getTarget() == null) {
-			throw new InvalidTargetException("No Target is Selected");
-		}
-		if (getTarget() instanceof Hero) {
-			throw new InvalidTargetException("Invalid! Target is not a Zombie");
-		}
-		if (!(this.isTargetAdjacentCheckIndex())) {
-			throw new exceptions.InvalidTargetException("The zombie is not adjacent");
-		}
-//		else if (!this.isTargetAdjacent()) {
-//			throw new InvalidTargetException("Target is Not Adjacent");
-//		}
-		if (this.getActionsAvailable() > 0) {
-			super.attack();
-			setActionsAvailable(getActionsAvailable() - 1);
-		} else
-			throw new NotEnoughActionsException("Not Enough Actions Available.");
+	public void useSpecial() throws NoAvailableResourcesException, InvalidTargetException {
+		if (this.getSupplyInventory().size() == 0)
+			throw new NoAvailableResourcesException(
+					"You need to have at least 1 supply in your inventory to use your special abililty.");
+		this.supplyInventory.get(0).use(this);
+		this.setSpecialAction(true);
 	}
 
-	public void defend(Character c) throws exceptions.InvalidTargetException {
-
-		if (getActionsAvailable() > 0) {
-			setActionsAvailable(getActionsAvailable() - 1);
-			if (!getAttackers().contains(c)) {
-				getAttackers().add(c);
-				c.setCurrentHp(c.getCurrentHp() - (getAttackDmg() / 2));
-			}
-		} else
-			throw new InvalidTargetException("Not Enough Actions Available.");
-
+	public boolean checkDistance() {
+		Point p1 = getLocation();
+		Point p2 = getTarget().getLocation();
+		if (Math.abs(p1.x - p2.x) > 1)
+			return false;
+		else if (Math.abs(p1.y - p2.y) > 1)
+			return false;
+		return true;
 	}
+
+	public void cure() throws NoAvailableResourcesException, InvalidTargetException, NotEnoughActionsException {
+		if (this.vaccineInventory.size() == 0)
+			throw new NoAvailableResourcesException(
+					"You need to have at least 1 vaccine in your inventory to be able to cure zombies.");
+		if (this.actionsAvailable < 1)
+			throw new NotEnoughActionsException("You need to have at least 1 action point in order to cure a zombie.");
+		if (this.getTarget() == null)
+			throw new InvalidTargetException("You need to pick a target to cure first.");
+		if (!checkDistance())
+			throw new InvalidTargetException("You are only able to cure adjacent targets.");
+		if (!(this.getTarget() instanceof Zombie))
+			throw new InvalidTargetException("You can only cure zombies.");
+		this.vaccineInventory.get(0).use(this);
+		actionsAvailable--;
+	}
+
 }
