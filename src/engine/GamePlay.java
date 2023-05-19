@@ -1,7 +1,10 @@
 package engine;
 
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.stage.Stage;
 import model.characters.Explorer;
 import model.characters.Fighter;
@@ -30,6 +33,7 @@ import engine.Game;
 
 public class GamePlay extends Application {
 
+	private static GridPane root = new GridPane();
 //	private double fullScreenHeight = 0;
 //	private double fullScreenWidth = 0;
 
@@ -41,11 +45,10 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-		GridPane root = new GridPane();
 		root.setGridLinesVisible(true);
-		Scene scene1 = new Scene(root, Color.DARKORCHID);
+		Scene scene1 = new Scene(root, Color.BEIGE);
 		root.setPadding(new Insets(10, 10, 10, 10));
-		GridPane.setMargin(root, new Insets(0, 0, 0, 0));
+//		GridPane.setMargin(root, new Insets(0, 0, 0, 0));
 
 //		Text text = new Text();
 //		text.setText("Welcome to the Last of Us - Legacy");
@@ -79,18 +82,17 @@ public class GamePlay extends Application {
 
 		Image image = new Image("icons/logo.png");
 		ImageView imageView = new ImageView(image);
-		imageView.setX(390);
-		imageView.setY(-300);
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
 		imageView.setScaleZ(0.3);
-//		root.getChildren().add(imageView);
+		root.add(imageView, 15, 14, 3, 3);
+		imageView.setOnMouseClicked(event -> controllerEndTurn());
 		// root.add(imageView, 7, 7);
-		Game.loadHeroes("src/test_heros.csv");
-		Game.startGame(Game.availableHeroes.remove(0));
-		updateMap(root);
 //		root.getChildren().add(rect);
 //		root.getChildren().add(line);
+		Game.loadHeroes("src/test_heros.csv");
+		Game.startGame(Game.availableHeroes.remove(0));
+		updateMap();
 		primaryStage.setScene(scene1);
 		primaryStage.show();
 
@@ -107,13 +109,20 @@ public class GamePlay extends Application {
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("F11"));
 	}
 
-	private void updateMap(GridPane root) {
-		for (int x = 0; x < 15; x++) {
+	private void updateMap() {
+
+		for (int x = 0; x < 17; x++) {
 			ColumnConstraints col = new ColumnConstraints();
 			RowConstraints row = new RowConstraints();
+			col.setPercentWidth(100);
+			row.setPercentHeight(100);
+			col.setHalignment(HPos.CENTER);
+			row.setValignment(VPos.CENTER);
 			root.getColumnConstraints().add(col);
 			root.getRowConstraints().add(row);
-			for (int y = 0; y < 15; y++) {
+			for (int y = 0; y < 15 && x < 15; y++) {
+				Text text = new Text("Cell " + " " + x + " " + y);
+//				root.add(text, y, x);
 				if (Game.map[x][y] == null)
 					return;
 				if (Game.map[x][y] instanceof CharacterCell) {
@@ -121,30 +130,40 @@ public class GamePlay extends Application {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 							Image medicImage = new Image("icons/medicImage.png");
 							ImageView medicImageView = new ImageView(medicImage);
-							root.getChildren().add(medicImageView);
+							medicImageView.setScaleX(0.1);
+							medicImageView.setScaleY(0.1);
+							root.add(medicImageView, y, x);
+
+							Text text1 = new Text("Image " + " " );
+//							root.add(text1, x, y);
+
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 							Image fighterImage = new Image("icons/fighterImage.png");
 							ImageView fighterImageView = new ImageView(fighterImage);
-							root.getChildren().add(fighterImageView);
+							fighterImageView.setScaleX(0.1);
+							fighterImageView.setScaleY(0.1);
+							root.add(fighterImageView, y, x);
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-							Image explorerImage = new Image("icons/explorerImage.png");
-							ImageView explorerImageView = new ImageView(explorerImage);
-							root.getChildren().add(explorerImageView);
+//							medicImageView.setScaleX(0.1);
+//							medicImageView.setScaleY(0.1);
+//							root.add(medicImageView, y, x);
 						}
 					} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 						Image zombieImage = new Image("icons/zombieImage.png");
 						ImageView zombieImageView = new ImageView(zombieImage);
-						root.getChildren().add(zombieImageView);
+						zombieImageView.setScaleX(0.1);
+						zombieImageView.setScaleY(0.1);
+						root.add(zombieImageView, y, x);
 					}
 				} else if (Game.map[x][y] instanceof CollectibleCell) {
 					if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-						Image vaccineImage = new Image("icons/vaccineImage.png");
-						ImageView vaccineImageView = new ImageView(vaccineImage);
-						root.getChildren().add(vaccineImageView);
+//						Image vaccineImage = new Image("icons/vaccineImage.png");
+//						ImageView vaccineImageView = new ImageView(vaccineImage);
+//						root.getChildren().add(vaccineImageView);
 					} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-						Image supplyImage = new Image("icons/supplyImage.png");
-						ImageView supplyImageView = new ImageView(supplyImage);
-						root.getChildren().add(supplyImageView);
+//						Image supplyImage = new Image("icons/supplyImage.png");
+//						ImageView supplyImageView = new ImageView(supplyImage);
+//						root.getChildren().add(supplyImageView);
 					}
 				}
 
@@ -157,9 +176,11 @@ public class GamePlay extends Application {
 			}
 //			col.setFillWidth(true);
 //			row.setFillHeight(true);
-			col.setPercentWidth(100);
-			row.setPercentHeight(100);
 		}
 	}
 
+	private void controllerEndTurn() {
+		Game.endTurn();
+		updateMap();
+	}
 }
