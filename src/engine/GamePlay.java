@@ -34,6 +34,7 @@ import engine.Game;
 public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
+	private boolean canHeroMove = false;
 //	private double fullScreenHeight = 0;
 //	private double fullScreenWidth = 0;
 
@@ -45,9 +46,10 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-		root.setGridLinesVisible(true);
+
 		Scene scene1 = new Scene(root, Color.BEIGE);
-		root.setPadding(new Insets(10, 10, 10, 10));
+		initializeGrid();
+
 //		GridPane.setMargin(root, new Insets(0, 0, 0, 0));
 
 //		Text text = new Text();
@@ -85,7 +87,7 @@ public class GamePlay extends Application {
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
 		imageView.setScaleZ(0.3);
-		root.add(imageView, 15, 14, 3, 3);
+		root.add(imageView, 0, 15, 14, 2);
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 		// root.add(imageView, 7, 7);
 //		root.getChildren().add(rect);
@@ -110,21 +112,20 @@ public class GamePlay extends Application {
 	}
 
 	private void updateMap() {
-
-		for (int x = 0; x < 17; x++) {
-			ColumnConstraints col = new ColumnConstraints();
-			RowConstraints row = new RowConstraints();
-			col.setPercentWidth(100);
-			row.setPercentHeight(100);
-			col.setHalignment(HPos.CENTER);
-			row.setValignment(VPos.CENTER);
-			root.getColumnConstraints().add(col);
-			root.getRowConstraints().add(row);
+		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15 && x < 15; y++) {
-				Text text = new Text("Cell " + " " + x + " " + y);
+//				root.getChildren().remove(0);
+//				Text text = new Text("Cell " + " " + x + " " + y);
 //				root.add(text, y, x);
-				if (Game.map[x][y] == null)
+				
+				if (Game.map[x][y] == null) 
 					return;
+				Image emptyCell = new Image("icons/emptyCell.png") ;
+				ImageView emptyCellView = new ImageView(emptyCell);
+				emptyCellView.setScaleX(0.8);
+				emptyCellView.setScaleY(0.295);
+				root.add(emptyCellView, y, x);
+				
 				if (Game.map[x][y] instanceof CharacterCell) {
 					if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
@@ -134,9 +135,6 @@ public class GamePlay extends Application {
 							medicImageView.setScaleY(0.1);
 							root.add(medicImageView, y, x);
 
-							Text text1 = new Text("Image " + " " );
-//							root.add(text1, x, y);
-
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 							Image fighterImage = new Image("icons/fighterImage.png");
 							ImageView fighterImageView = new ImageView(fighterImage);
@@ -144,10 +142,11 @@ public class GamePlay extends Application {
 							fighterImageView.setScaleY(0.1);
 							root.add(fighterImageView, y, x);
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-//							medicImageView.setScaleX(0.1);
-//							medicImageView.setScaleY(0.1);
-//							root.add(medicImageView, y, x);
-						}
+							Image explorerImage = new Image("icons/explorerImage.png");
+							ImageView explorerImageView = new ImageView(explorerImage);
+							explorerImageView.setScaleX(0.1);
+							explorerImageView.setScaleY(0.1);
+							root.add(explorerImageView, y, x);						}
 					} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 						Image zombieImage = new Image("icons/zombieImage.png");
 						ImageView zombieImageView = new ImageView(zombieImage);
@@ -157,13 +156,17 @@ public class GamePlay extends Application {
 					}
 				} else if (Game.map[x][y] instanceof CollectibleCell) {
 					if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-//						Image vaccineImage = new Image("icons/vaccineImage.png");
-//						ImageView vaccineImageView = new ImageView(vaccineImage);
-//						root.getChildren().add(vaccineImageView);
+						Image vaccineImage = new Image("icons/vaccineImage.png");
+						ImageView vaccineImageView = new ImageView(vaccineImage);
+						vaccineImageView.setScaleX(0.2);
+						vaccineImageView.setScaleY(0.2);
+						root.add(vaccineImageView, y, x);
 					} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-//						Image supplyImage = new Image("icons/supplyImage.png");
-//						ImageView supplyImageView = new ImageView(supplyImage);
-//						root.getChildren().add(supplyImageView);
+						Image supplyImage = new Image("icons/supplyImage.png");
+						ImageView supplyImageView = new ImageView(supplyImage);
+						supplyImageView.setScaleX(0.1);
+						supplyImageView.setScaleY(0.1);
+						root.add(supplyImageView, y, x);
 					}
 				}
 
@@ -179,8 +182,40 @@ public class GamePlay extends Application {
 		}
 	}
 
-	private void controllerEndTurn() {
-		Game.endTurn();
-		updateMap();
+	private void initializeGrid() {
+//		root.setGridLinesVisible(true);
+		root.setPadding(new Insets(2, 10, 10, 10));
+		root.setGridLinesVisible(true);
+//		root.setHgap(30);
+//		root.setVgap(30);
+		for (int i = 0; i < 17; i++) {
+			RowConstraints row = new RowConstraints();
+			row.setPercentHeight(100);
+			row.setValignment(VPos.CENTER);
+			root.getRowConstraints().add(row);
+			
+			if(i < 15) {				
+				ColumnConstraints col = new ColumnConstraints();
+				col.setPercentWidth(100);
+				col.setHalignment(HPos.CENTER);
+				root.getColumnConstraints().add(col);
+			}
+		}
 	}
+
+	private void controllerEndTurn() {
+		// remove control form hero
+		canHeroMove = false;
+		Game.zombies.get(0).setCurrentHp(0);
+		Game.zombies.get(0).onCharacterDeath();
+		Game.endTurn();
+		Game.checkWin();
+		Game.checkGameOver();
+		
+		this.updateMap();
+		// set control form hero
+		canHeroMove = true;
+
+	}
+
 }

@@ -163,7 +163,7 @@ public class Game {
 //		}
 		
 
-		// if (zombies.size() < 10) {
+//		 if (zombies.size() < 10) {
 		// Add a Randomized Zombie
 		boolean isZombieAdded = false;
 		Zombie z = new Zombie();
@@ -179,7 +179,7 @@ public class Game {
 				}
 			}
 		} while (!isZombieAdded);
-		// }
+//		 }
 
 
 		for (Zombie zombie : zombies) {
