@@ -53,7 +53,7 @@ public class GamePlay extends Application {
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
 	private Image texturedBar = new Image("icons/texturedBar.png");
 
-//	private Font mineCraftFont = Font.loadFont("fonts/Minecraftia-Regular.ttf", 20);
+	private Font mineCraftFont = Font.loadFont("fonts/Minecraftia-Regular.ttf", 24);
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 
@@ -158,7 +158,7 @@ public class GamePlay extends Application {
 
 	private void updateBar(model.characters.Character chrctr) {
 		Text name = new Text(chrctr.getName());
-//		name.setFont(mineCraftFont);
+		name.setFont(mineCraftFont);
 		root.add(name, 0, 15);
 
 		ProgressBar progressBar = new ProgressBar(1);
