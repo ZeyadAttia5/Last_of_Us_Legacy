@@ -79,7 +79,7 @@ public class GamePlay extends Application {
 				Image emptyCell = new Image("icons/emptyCell.png");
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.8);
-				emptyCellView.setScaleY(0.295);
+				emptyCellView.setScaleY(0.292);
 				root.add(emptyCellView, y, x);
 
 				if (Game.map[x][y].isVisible()) {
@@ -129,10 +129,10 @@ public class GamePlay extends Application {
 					}
 
 				} else if (!Game.map[x][y].isVisible()) {
-					Image invisibleEmptyCell = new Image("icons/invisibleEmptyCell.png");
+					Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
 					invisibleEmptyCellView.setScaleX(0.8);
-					invisibleEmptyCellView.setScaleY(0.3);
+					invisibleEmptyCellView.setScaleY(0.292);
 					root.add(invisibleEmptyCellView, y, x);
 				}
 			}
