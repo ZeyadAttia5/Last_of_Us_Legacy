@@ -40,58 +40,14 @@ public class GamePlay extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-
 		Scene scene1 = new Scene(root, Color.BEIGE);
 		initializeGrid();
-
-//		GridPane.setMargin(root, new Insets(0, 0, 0, 0));
-
-//		Text text = new Text();
-//		text.setText("Welcome to the Last of Us - Legacy");
-//		text.setFont(Font.font("Arial", 20));
-//		text.setX(630);
-//		text.setY(350);
-//		text.setTextAlignment(TextAlignment.CENTER);
-//		text.setFill(Color.ANTIQUEWHITE);
-//
-//		Line line = new Line();
-//		line.setStartX(100);
-//		line.setEndX(1000);
-//		line.setStartY(100);
-//		line.setEndY(600);
-//		line.setStrokeWidth(5);
-//		line.setStroke(Color.DARKORANGE);
-//
-//		Rectangle rect = new Rectangle();
-//		rect.setX(200);
-//		rect.setY(200);
-//		rect.setWidth(100);
-//		rect.setHeight(300);
-//		rect.setStrokeWidth(5);
-//		rect.setStroke(Color.DARKSLATEBLUE);
-//
-//		Circle circ = new Circle();
-//		circ.setRadius(10);
-//		circ.setCenterX(200);
-//		circ.setCenterY(200);
-//		circ.setFill(Color.BLUE);
-
-		Image image = new Image("icons/logo.png");
-		ImageView imageView = new ImageView(image);
-		imageView.setScaleX(0.3);
-		imageView.setScaleY(0.3);
-		imageView.setScaleZ(0.3);
-		root.add(imageView, 0, 15, 14, 2);
-		imageView.setOnMouseClicked(event -> controllerEndTurn());
-		// root.add(imageView, 7, 7);
-//		root.getChildren().add(rect);
-//		root.getChildren().add(line);
+		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap();
@@ -218,4 +174,15 @@ public class GamePlay extends Application {
 
 	}
 
+	private void putEndTurnButton(){
+		Image image = new Image("icons/EndTurnButton.png");
+		ImageView imageView = new ImageView(image);
+		imageView.setScaleX(0.3);
+		imageView.setScaleY(0.3);
+		imageView.setScaleZ(0.3);
+		root.add(imageView, 14, 16);
+		imageView.setTranslateY(-20);
+		imageView.setTranslateX(-30);
+		imageView.setOnMouseClicked(event -> controllerEndTurn());
+	}
 }
