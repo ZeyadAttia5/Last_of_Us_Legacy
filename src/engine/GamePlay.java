@@ -146,8 +146,6 @@ public class GamePlay extends Application {
 					root.add(invisibleEmptyCellView, y, 14 - x);
 				}
 			}
-//			col.setFillWidth(true);
-//			row.setFillHeight(true);
 		}
 	}
 
