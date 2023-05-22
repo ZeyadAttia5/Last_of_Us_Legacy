@@ -50,39 +50,9 @@ public class GamePlay extends Application {
 		Scene scene1 = new Scene(root, Color.BEIGE);
 		initializeGrid();
 
-//		GridPane.setMargin(root, new Insets(0, 0, 0, 0));
 
-//		Text text = new Text();
-//		text.setText("Welcome to the Last of Us - Legacy");
-//		text.setFont(Font.font("Arial", 20));
-//		text.setX(630);
-//		text.setY(350);
-//		text.setTextAlignment(TextAlignment.CENTER);
-//		text.setFill(Color.ANTIQUEWHITE);
-//
-//		Line line = new Line();
-//		line.setStartX(100);
-//		line.setEndX(1000);
-//		line.setStartY(100);
-//		line.setEndY(600);
-//		line.setStrokeWidth(5);
-//		line.setStroke(Color.DARKORANGE);
-//
-//		Rectangle rect = new Rectangle();
-//		rect.setX(200);
-//		rect.setY(200);
-//		rect.setWidth(100);
-//		rect.setHeight(300);
-//		rect.setStrokeWidth(5);
-//		rect.setStroke(Color.DARKSLATEBLUE);
-//
-//		Circle circ = new Circle();
-//		circ.setRadius(10);
-//		circ.setCenterX(200);
-//		circ.setCenterY(200);
-//		circ.setFill(Color.BLUE);
 
-		Image image = new Image("icons/logo.png");
+		Image image = new Image("icons/EndTurnButton.png");
 		ImageView imageView = new ImageView(image);
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
