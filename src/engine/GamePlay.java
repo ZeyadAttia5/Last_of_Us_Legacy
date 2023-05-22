@@ -306,9 +306,8 @@ public class GamePlay extends Application {
 		ImageView imageView = new ImageView(endTurnButtonImage);
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
-//		imageView.setScaleZ(0.3);
-		root.add(imageView, 14, 16);
-		imageView.setTranslateY(-20);
+		root.add(imageView, 14, 17);
+		imageView.setTranslateY(-30);
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
 	}
