@@ -29,6 +29,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
 import javafx.scene.text.TextAlignment;
+
+import java.lang.invoke.WrongMethodTypeException;
+
 import engine.Game;
 
 public class GamePlay extends Application {
@@ -42,6 +45,10 @@ public class GamePlay extends Application {
 	private Image supplyImage = new Image("icons/supplyImage.png");
 	private Image zombieImage = new Image("icons/zombieImage.png");
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
+	private Image texturedBar = new Image("icons/texturedBar.png");
+
+	private Scene scene1 = new Scene(root, Color.BEIGE);
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -49,7 +56,6 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-		Scene scene1 = new Scene(root, Color.BEIGE);
 		initializeGrid();
 		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
@@ -77,8 +83,8 @@ public class GamePlay extends Application {
 					return;
 				
 				ImageView emptyCellView = new ImageView(emptyCell);
-				emptyCellView.setScaleX(0.58);
-				emptyCellView.setScaleY(0.292);
+				emptyCellView.setScaleX(0.7);
+				emptyCellView.setScaleY(0.3);
 				root.add(emptyCellView, y, 14 - x);
 
 				if (Game.map[x][y].isVisible()) {
@@ -128,10 +134,9 @@ public class GamePlay extends Application {
 					}
 
 				} else if (!Game.map[x][y].isVisible()) {
-					
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
-					invisibleEmptyCellView.setScaleX(0.58);
-					invisibleEmptyCellView.setScaleY(0.292);
+					invisibleEmptyCellView.setScaleX(0.7);
+					invisibleEmptyCellView.setScaleY(0.3);
 					root.add(invisibleEmptyCellView, y, 14 - x);
 				}
 			}
@@ -141,8 +146,8 @@ public class GamePlay extends Application {
 	}
 
 	private void initializeGrid() {
-		root.setPadding(new Insets(2, 10, 10, 10));
-		root.setGridLinesVisible(true);
+//		root.setPadding(new Insets(2, 10, 10, 10));
+//		root.setGridLinesVisible(true);
 //		root.setHgap(30);
 //		root.setVgap(30);
 		for (int i = 0; i < 17; i++) {
@@ -156,9 +161,14 @@ public class GamePlay extends Application {
 				col.setPercentWidth(100);
 				col.setHalignment(HPos.CENTER);
 				root.getColumnConstraints().add(col);
+				ImageView texturedBarView = new ImageView(texturedBar);
+//				texturedBarView.setScaleX(0.523);
+//				texturedBarView.setScaleY(0.523);
+//				texturedBarView.setTranslateY(-20);
+				root.add(texturedBarView, i, 16);
 			}
 		}
-		
+
 
 	}
 
@@ -168,7 +178,6 @@ public class GamePlay extends Application {
 		Game.endTurn();
 		Game.checkWin();
 		Game.checkGameOver();
-
 		this.updateMap();
 
 	}
@@ -181,7 +190,7 @@ public class GamePlay extends Application {
 		imageView.setScaleZ(0.3);
 		root.add(imageView, 14, 16);
 		imageView.setTranslateY(-20);
-		imageView.setTranslateX(-30);
+		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
 
