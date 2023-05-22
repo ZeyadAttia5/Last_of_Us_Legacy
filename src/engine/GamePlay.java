@@ -31,10 +31,13 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
+import javafx.scene.effect.Glow;
 import javafx.scene.text.TextAlignment;
 
 import java.awt.Paint;
+import java.io.File;
 import java.lang.invoke.WrongMethodTypeException;
 
 import engine.Game;
@@ -56,9 +59,10 @@ public class GamePlay extends Application {
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
 	private Image texturedBar = new Image("icons/texturedBar.png");
 	private Image fighterProfile = new Image("icons/fighterProfile.png");
+	private Image explorerPrfile = new Image ("icons/explorerProfile.png");
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
 
-	private Font mineCraftFont = Font.loadFont("fonts/Minecraftia-Regular.ttf", 24);
+	private Font mineCraftFont = new Font("fonts/Minecraftia-Regular.ttf", 12);
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -125,16 +129,16 @@ public class GamePlay extends Application {
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 
 								ImageView explorerImageView = new ImageView(explorerImage);
-								explorerImageView.setScaleX(0.03);
-								explorerImageView.setScaleY(0.03);
+								explorerImageView.setScaleX(0.06);
+								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr));
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
-							zombieImageView.setScaleX(0.09);
-							zombieImageView.setScaleY(0.09);
+							zombieImageView.setScaleX(0.08);
+							zombieImageView.setScaleY(0.08);
 							root.add(zombieImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 							zombieImageView.setOnMouseClicked(e -> updateBar(chrctr));
@@ -168,17 +172,16 @@ public class GamePlay extends Application {
 
 	private void updateTexturedWall() {
 		for (int i = 15; i < 18; i++) {
-			RowConstraints row = root.getRowConstraints().get(i);
-			row.setPercentHeight(100);
-			row.setValignment(VPos.TOP);
+//			RowConstraints row = root.getRowConstraints().get(18-i);
+//			row.setPercentHeight(100);
+//			row.setValignment(VPos.TOP);
 //			root.getRowConstraints().add(row);
-			if (i > 14) {
-				for (int j = 0; j < root.getColumnCount(); j++) {
-					ImageView texturedBarView = new ImageView(texturedBar);
-					texturedBarView.setScaleX(0.3);
-					texturedBarView.setScaleY(0.21);
-					root.add(texturedBarView, j, i);
-				}
+			for (int j = 0; j < root.getColumnCount()-3; j++) {
+				ImageView texturedBarView = new ImageView(texturedBar);
+				texturedBarView.setScaleX(0.29);
+				texturedBarView.setScaleY(0.17);
+
+				root.add(texturedBarView, j, i);
 			}
 		}
 	}
@@ -202,9 +205,10 @@ public class GamePlay extends Application {
 		updateTexturedWall();
 		Text name = new Text(chrctr.getName());
 		name.setFont(mineCraftFont);
+		name.setEffect(new DropShadow(5, Color.ANTIQUEWHITE));
 		name.setScaleX(1.1);
 		name.setScaleY(1.1);
-		name.setStroke(Color.BLACK);
+		name.setStroke(Color.WHITESMOKE);
 		root.add(name, 0, 15);
 		if (chrctr instanceof model.characters.Fighter) {
 			ImageView fighterProfileView = new ImageView(fighterProfile);
@@ -213,17 +217,27 @@ public class GamePlay extends Application {
 			root.add(fighterProfileView, 0, 16);
 		}
 		if (chrctr instanceof model.characters.Explorer) {
-
+			ImageView fighterProfileView = new ImageView(explorerPrfile);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
 		}
 		if (chrctr instanceof model.characters.Medic) {
-
+			ImageView fighterProfileView = new ImageView(fighterProfile);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
 		}
 		if (chrctr instanceof model.characters.Zombie) {
-
+			ImageView fighterProfileView = new ImageView(fighterProfile);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
 		}
 		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
-		progressBar.setStyle("-fx-accent: green");
+		progressBar.setStyle("-fx-accent: blue");
 		progressBar.setBorder(Border.EMPTY);
+		progressBar.setPadding(new Insets(15,0,0,8));
 //		root.getRowConstraints().get(17).setValignment(VPos.BOTTOM);
 		root.add(progressBar, 0, 17);
 
@@ -288,11 +302,10 @@ public class GamePlay extends Application {
 
 	private void putEndTurnButton(Stage primaryStage) {
 
-		
 		ImageView imageView = new ImageView(endTurnButtonImage);
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
-		imageView.setScaleZ(0.3);
+//		imageView.setScaleZ(0.3);
 		root.add(imageView, 14, 16);
 		imageView.setTranslateY(-20);
 		imageView.setTranslateX(-50);
