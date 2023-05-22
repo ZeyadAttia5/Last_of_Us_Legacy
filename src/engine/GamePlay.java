@@ -40,28 +40,14 @@ public class GamePlay extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-
 		Scene scene1 = new Scene(root, Color.BEIGE);
 		initializeGrid();
-
-
-
-		Image image = new Image("icons/EndTurnButton.png");
-		ImageView imageView = new ImageView(image);
-		imageView.setScaleX(0.3);
-		imageView.setScaleY(0.3);
-		imageView.setScaleZ(0.3);
-		root.add(imageView, 0, 15, 14, 2);
-		imageView.setOnMouseClicked(event -> controllerEndTurn());
-		// root.add(imageView, 7, 7);
-//		root.getChildren().add(rect);
-//		root.getChildren().add(line);
+		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap();
@@ -188,4 +174,15 @@ public class GamePlay extends Application {
 
 	}
 
+	private void putEndTurnButton(){
+		Image image = new Image("icons/EndTurnButton.png");
+		ImageView imageView = new ImageView(image);
+		imageView.setScaleX(0.3);
+		imageView.setScaleY(0.3);
+		imageView.setScaleZ(0.3);
+		root.add(imageView, 14, 16);
+		imageView.setTranslateY(-20);
+		imageView.setTranslateX(-30);
+		imageView.setOnMouseClicked(event -> controllerEndTurn());
+	}
 }
