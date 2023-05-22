@@ -18,6 +18,8 @@ import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -30,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.scene.control.*;
 import javafx.scene.text.TextAlignment;
 
+import java.awt.Paint;
 import java.lang.invoke.WrongMethodTypeException;
 
 import engine.Game;
@@ -48,7 +51,7 @@ public class GamePlay extends Application {
 	private Image texturedBar = new Image("icons/texturedBar.png");
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -81,7 +84,7 @@ public class GamePlay extends Application {
 
 				if (Game.map[x][y] == null)
 					return;
-				
+
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
 				emptyCellView.setScaleY(0.3);
@@ -91,14 +94,14 @@ public class GamePlay extends Application {
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-								
+
 								ImageView medicImageView = new ImageView(medicImage);
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
-								
+
 								ImageView fighterImageView = new ImageView(fighterImage);
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
@@ -111,21 +114,22 @@ public class GamePlay extends Application {
 								root.add(explorerImageView, y, 14 - x);
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
-							
+
 							ImageView zombieImageView = new ImageView(zombieImage);
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
 						}
+						updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-							
+
 							ImageView vaccineImageView = new ImageView(vaccineImage);
 							vaccineImageView.setScaleX(0.2);
 							vaccineImageView.setScaleY(0.2);
 							root.add(vaccineImageView, y, 14 - x);
 						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-							
+
 							ImageView supplyImageView = new ImageView(supplyImage);
 							supplyImageView.setScaleX(0.1);
 							supplyImageView.setScaleY(0.1);
@@ -143,6 +147,13 @@ public class GamePlay extends Application {
 //			col.setFillWidth(true);
 //			row.setFillHeight(true);
 		}
+	}
+
+	private void updateBar(model.characters.Character chrctr) {
+		ProgressBar progressBar = new ProgressBar(1);
+		progressBar.setStyle("-fx-accent: green");
+		progressBar.setBorder(Border.EMPTY);
+		root.add(progressBar, 0, 15);
 	}
 
 	private void initializeGrid() {
@@ -168,7 +179,6 @@ public class GamePlay extends Application {
 				root.add(texturedBarView, i, 16);
 			}
 		}
-
 
 	}
 
