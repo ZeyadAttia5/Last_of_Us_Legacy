@@ -1,15 +1,11 @@
 package model.collectibles;
 
 import model.characters.Hero;
+import model.world.CharacterCell;
+import engine.Game;
+import model.characters.Character;
 
-public class Supply implements Collectible  {
-
-	
-
-	
-	public Supply() {
-		
-	}
+public class Supply implements Collectible {
 
 	@Override
 	public void pickUp(Hero h) {
@@ -18,14 +14,7 @@ public class Supply implements Collectible  {
 
 	@Override
 	public void use(Hero h) {
-		h.getSupplyInventory().remove(0); //this 
-		h.setSpecialAction(true);
-		
+		h.getSupplyInventory().remove(this);
 	}
-
-
-	
-		
-		
 
 }

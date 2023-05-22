@@ -1,31 +1,49 @@
 package model.characters;
 
+import java.awt.Point;
+
+import model.world.CharacterCell;
 import engine.Game;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
-import model.world.Cell;
-import model.world.CharacterCell;
-
-import java.awt.Point;
-import java.util.ArrayList;
 
 public abstract class Character {
+
 	private String name;
-	private Point location;
 	private int maxHp;
 	private int currentHp;
+	private Point location;
 	private int attackDmg;
 	private Character target;
-	private ArrayList<Character> attackers = new ArrayList<>();
 
-	public Character() {
-	}
-
-	public Character(String name, int maxHp, int attackDmg) {
+	public Character(String name, int maxHp, int attackDamage) {
 		this.name = name;
 		this.maxHp = maxHp;
+		this.attackDmg = attackDamage;
 		this.currentHp = maxHp;
-		this.attackDmg = attackDmg;
+	}
+
+	public int getCurrentHp() {
+		return currentHp;
+	}
+
+	public void setCurrentHp(int currentHp) {
+		if (currentHp <= 0) {
+			this.currentHp = 0;
+			onCharacterDeath();
+			
+		} else if (currentHp > maxHp) {
+			this.currentHp = maxHp;
+		} else
+			this.currentHp = currentHp;
+	}
+
+	public Point getLocation() {
+		return location;
+	}
+
+	public void setLocation(Point location) {
+		this.location = location;
 	}
 
 	public Character getTarget() {
@@ -40,143 +58,34 @@ public abstract class Character {
 		return name;
 	}
 
-	public Point getLocation() {
-		return location;
-	}
-
-	public void setLocation(Point location) {
-		this.location = location;
-	}
-
 	public int getMaxHp() {
 		return maxHp;
-	}
-
-	public int getCurrentHp() {
-		return currentHp;
-	}
-
-	public void setCurrentHp(int currentHp) {
-		if (currentHp < 0)
-			this.currentHp = 0;
-		else if (currentHp > maxHp)
-			this.currentHp = maxHp;
-		else
-			this.currentHp = currentHp;
 	}
 
 	public int getAttackDmg() {
 		return attackDmg;
 	}
 
-	public void attack() throws InvalidTargetException, NotEnoughActionsException {
-
-		getTarget().setCurrentHp(getTarget().getCurrentHp() - this.getAttackDmg());
+	public void attack() throws NotEnoughActionsException,
+			InvalidTargetException {
+		getTarget().setCurrentHp(getTarget().getCurrentHp() - getAttackDmg());
 		getTarget().defend(this);
-		this.onCharacterDeath();
-		getTarget().onCharacterDeath();
 	}
 
-	public void defend(Character c) throws exceptions.InvalidTargetException {
-
+	public void defend(Character c) {
+		c.setCurrentHp(c.getCurrentHp() - getAttackDmg() / 2);
 	}
 
 	public void onCharacterDeath() {
-
-	}
-
-	public ArrayList<Cell> getAdjacentCells() {
-		ArrayList<Cell> adjacentCharList = new ArrayList<Cell>();
-
-		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
-		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
-		// loop over adjacent cells
-		for (int rowOffset : rowOffsets) {
-			for (int colOffset : colOffsets) {
-				// calculate adjacent cell coordinates
-				int adjRow = this.getLocation().x + rowOffset;
-				int adjCol = this.getLocation().y + colOffset;
-
-				if (rowOffset == 0 && colOffset == 0)
-					continue;
-
-				// check if adjacent cell is within the Game.map bounds
-				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
-					adjacentCharList.add(Game.map[adjRow][adjCol]);
-
-				}
-			}
+		Point p = this.getLocation();
+		
+		if (this instanceof Zombie) {
+			Game.zombies.remove(this);
+			Game.spawnNewZombie();
+		} else if (this instanceof Hero) {
+			Game.heroes.remove(this);
 		}
-		return adjacentCharList;
-	}
-
-	public boolean isTargetAdjacent() {
-		boolean targetAdjacent = false;
-		ArrayList<Cell> adjacentCells = this.getAdjacentCells();
-		for (Cell adjCell : adjacentCells) {
-			if (adjCell instanceof CharacterCell) {
-				if (((CharacterCell) adjCell).getCharacter() == this.getTarget()) {
-					// System.out.println("Adjacent Confirm");
-					targetAdjacent = true;
-					break;
-				}
-			}
-		}
-		return targetAdjacent;
-	}
-
-	public ArrayList<Point> getAdjacentIndices() {
-		/*
-		 * getAdjacentIndcies Method: 
-		 * puts the adjacent indices of the adjacent cells
-		 * in an ArrayList adjacentLocations
-		 * 
-		 */
-
-		ArrayList<Point> adjacentLocations = new ArrayList<>();
-		int[] rowOffsets = { -1, 0, 1 }; // offsets for adjacent rows
-		int[] colOffsets = { -1, 0, 1 }; // offsets for adjacent columns
-		// loop over adjacent cells
-		for (int rowOffset : rowOffsets) {
-			for (int colOffset : colOffsets) {
-				// calculate adjacent cell coordinates
-				int adjRow = this.getLocation().x + rowOffset;
-				int adjCol = this.getLocation().y + colOffset;
-
-				if (rowOffset == 0 && colOffset == 0)
-					continue;
-
-				// check if adjacent cell is within the Game.map bounds
-				if (adjRow >= 0 && adjRow < Game.map.length && adjCol >= 0 && adjCol < Game.map[adjRow].length) {
-					adjacentLocations.add(new Point(adjRow, adjCol));
-				}
-			}
-		}
-		return adjacentLocations;
-	}
-
-	
-	public boolean isTargetAdjacentCheckIndex() {
-		/*
-		 * isTargetAdjacentCheckIndex Method: 
-		 * checks if the target of a given character
-		 * is adjacent using the location (x,y) coordinates
-		 */
-		boolean targetAdjacent = false;
-		ArrayList<Point> adjacentLocations = this.getAdjacentIndices();
-		Point targetLocation = this.getTarget().getLocation();
-		if(adjacentLocations.contains(targetLocation)){
-			targetAdjacent = true;
-		}
-		return targetAdjacent;
-	}
-
-	public ArrayList<Character> getAttackers() {
-		return attackers;
-	}
-
-	public void setAttackers(ArrayList<Character> attackers) {
-		this.attackers = attackers;
+		Game.map[p.x][p.y] = new CharacterCell(null);
 	}
 
 }
