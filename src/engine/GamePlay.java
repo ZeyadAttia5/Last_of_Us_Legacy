@@ -63,9 +63,6 @@ public class GamePlay extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
 		initializeGrid();
-
-		Scene scene1 = new Scene(root, Color.BEIGE);
-
 		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
 		Game.startGame(Game.availableHeroes.remove(0));
