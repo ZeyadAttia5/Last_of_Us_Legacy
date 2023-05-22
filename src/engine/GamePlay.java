@@ -269,6 +269,7 @@ public class GamePlay extends Application {
 
 	}
 
+
 	private void controllerEndTurn(Stage primaryStage) {
 		Game.zombies.get(0).setCurrentHp(0);
 		Game.zombies.get(0).onCharacterDeath();
