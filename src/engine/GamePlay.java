@@ -3,7 +3,6 @@ package engine;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.stage.Stage;
 import model.characters.Explorer;
@@ -13,42 +12,30 @@ import model.characters.Medic;
 import model.characters.Zombie;
 import model.collectibles.Supply;
 import model.collectibles.Vaccine;
-import model.world.Cell;
 import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.Glow;
-import javafx.scene.text.TextAlignment;
-
-import java.awt.Paint;
-import java.io.File;
-import java.lang.invoke.WrongMethodTypeException;
-
-import engine.Game;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
+
 
 public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
 	private static BorderPane endGameScene = new BorderPane();
-	Image logo = new Image("icons/logo.png");
+	private Image logo = new Image("icons/logo.png");
 	private Image emptyCell = new Image("icons/emptyCell.png");
 	private Image explorerImage = new Image("icons/explorerImage.png");
 	private Image medicImage = new Image("icons/medicImage.png");
@@ -59,7 +46,7 @@ public class GamePlay extends Application {
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
 	private Image texturedBar = new Image("icons/texturedBar.png");
 	private Image fighterProfile = new Image("icons/fighterProfile.png");
-	private Image explorerPrfile = new Image ("icons/explorerProfile.png");
+	private Image explorerPrfile = new Image("icons/explorerProfile.png");
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
 
 	private Font mineCraftFont = new Font("fonts/Minecraftia-Regular.ttf", 12);
@@ -172,11 +159,7 @@ public class GamePlay extends Application {
 
 	private void updateTexturedWall() {
 		for (int i = 15; i < 18; i++) {
-//			RowConstraints row = root.getRowConstraints().get(18-i);
-//			row.setPercentHeight(100);
-//			row.setValignment(VPos.TOP);
-//			root.getRowConstraints().add(row);
-			for (int j = 0; j < root.getColumnCount()-3; j++) {
+			for (int j = 0; j < root.getColumnCount() - 3; j++) {
 				ImageView texturedBarView = new ImageView(texturedBar);
 				texturedBarView.setScaleX(0.29);
 				texturedBarView.setScaleY(0.17);
@@ -188,20 +171,6 @@ public class GamePlay extends Application {
 
 	private void updateBar(model.characters.Character chrctr) {
 
-//		root.getRowConstraints().get(15).setVgrow(Priority.ALWAYS);
-
-//		for (int i = 0; i < root.getColumnCount(); i++) {
-//		ImageView oldNameCover = new ImageView(texturedBar);
-//		ImageView oldBarCover = new ImageView(texturedBar);
-//		oldNameCover.setScaleX(0.3);
-//		oldNameCover.setScaleY(0.3);
-//		oldBarCover.setScaleX(0.3);
-//		oldBarCover.setScaleY(0.19);
-//		root.getRowConstraints().get(15).setValignment(VPos.TOP);
-//		root.getRowConstraints().get(17).setValignment(VPos.BOTTOM);
-//		root.add(oldNameCover, 0, 15);
-//		root.add(oldBarCover, 0, 17);
-//		}
 		updateTexturedWall();
 		Text name = new Text(chrctr.getName());
 		name.setFont(mineCraftFont);
@@ -237,8 +206,7 @@ public class GamePlay extends Application {
 		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
 		progressBar.setStyle("-fx-accent: blue");
 		progressBar.setBorder(Border.EMPTY);
-		progressBar.setPadding(new Insets(15,0,0,8));
-//		root.getRowConstraints().get(17).setValignment(VPos.BOTTOM);
+		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
 
 	}
@@ -268,7 +236,6 @@ public class GamePlay extends Application {
 		}
 
 	}
-
 
 	private void controllerEndTurn(Stage primaryStage) {
 		Game.zombies.get(0).setCurrentHp(0);
@@ -306,8 +273,7 @@ public class GamePlay extends Application {
 		ImageView imageView = new ImageView(endTurnButtonImage);
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
-//		imageView.setScaleZ(0.3);
-		root.add(imageView, 14, 16);
+		root.add(imageView, 14, 17);
 		imageView.setTranslateY(-20);
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
