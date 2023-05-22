@@ -159,7 +159,7 @@ public class GamePlay extends Application {
 
 	private void updateTexturedWall() {
 		for (int i = 15; i < 18; i++) {
-			for (int j = 0; j < root.getColumnCount() - 3; j++) {
+			for (int j = 0; j < root.getColumnCount()-3; j++) {
 				ImageView texturedBarView = new ImageView(texturedBar);
 				texturedBarView.setScaleX(0.29);
 				texturedBarView.setScaleY(0.17);
@@ -170,7 +170,6 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr) {
-
 		updateTexturedWall();
 		Text name = new Text(chrctr.getName());
 		name.setFont(mineCraftFont);
@@ -238,8 +237,6 @@ public class GamePlay extends Application {
 	}
 
 	private void controllerEndTurn(Stage primaryStage) {
-		Game.zombies.get(0).setCurrentHp(0);
-		Game.zombies.get(0).onCharacterDeath();
 		try {
 			Game.endTurn();
 		} catch (NotEnoughActionsException e) {
@@ -274,7 +271,7 @@ public class GamePlay extends Application {
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
 		root.add(imageView, 14, 17);
-		imageView.setTranslateY(-20);
+		imageView.setTranslateY(-30);
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
 	}
