@@ -61,6 +61,9 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
+
+		Scene scene1 = new Scene(root, Color.BEIGE);
+
 		initializeGrid();
 		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
@@ -87,9 +90,11 @@ public class GamePlay extends Application {
 				if (Game.map[x][y] == null)
 					return;
 
+
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
 				emptyCellView.setScaleY(0.3);
+
 				root.add(emptyCellView, y, 14 - x);
 
 				if (Game.map[x][y].isVisible()) {
@@ -116,15 +121,16 @@ public class GamePlay extends Application {
 								root.add(explorerImageView, y, 14 - x);
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
-
 							ImageView zombieImageView = new ImageView(zombieImage);
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
 						}
+
 						updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
+
 
 							ImageView vaccineImageView = new ImageView(vaccineImage);
 							vaccineImageView.setScaleX(0.2);
@@ -198,7 +204,9 @@ public class GamePlay extends Application {
 
 	}
 
+
 	private void putEndTurnButton() {
+
 		Image image = new Image("icons/EndTurnButton.png");
 		ImageView imageView = new ImageView(image);
 		imageView.setScaleX(0.3);
@@ -209,5 +217,6 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
+
 
 }
