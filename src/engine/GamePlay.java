@@ -70,17 +70,14 @@ public class GamePlay extends Application {
 	private void updateMap() {
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15 && x < 15; y++) {
-//				root.getChildren().remove(0);
-//				Text text = new Text("Cell " + " " + x + " " + y);
-//				root.add(text, y, x);
 
 				if (Game.map[x][y] == null)
 					return;
 				Image emptyCell = new Image("icons/emptyCell.png");
 				ImageView emptyCellView = new ImageView(emptyCell);
-				emptyCellView.setScaleX(0.8);
+				emptyCellView.setScaleX(0.58);
 				emptyCellView.setScaleY(0.292);
-				root.add(emptyCellView, y, x);
+				root.add(emptyCellView, y, 14 - x);
 
 				if (Game.map[x][y].isVisible()) {
 					if (Game.map[x][y] instanceof CharacterCell) {
@@ -88,29 +85,29 @@ public class GamePlay extends Application {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								Image medicImage = new Image("icons/medicImage.png");
 								ImageView medicImageView = new ImageView(medicImage);
-								medicImageView.setScaleX(0.1);
-								medicImageView.setScaleY(0.1);
-								root.add(medicImageView, y, x);
+								medicImageView.setScaleX(0.09);
+								medicImageView.setScaleY(0.09);
+								root.add(medicImageView, y, 14 - x);
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								Image fighterImage = new Image("icons/fighterImage.png");
 								ImageView fighterImageView = new ImageView(fighterImage);
-								fighterImageView.setScaleX(0.1);
-								fighterImageView.setScaleY(0.1);
-								root.add(fighterImageView, y, x);
+								fighterImageView.setScaleX(0.03);
+								fighterImageView.setScaleY(0.03);
+								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								Image explorerImage = new Image("icons/explorerImage.png");
 								ImageView explorerImageView = new ImageView(explorerImage);
-								explorerImageView.setScaleX(0.1);
-								explorerImageView.setScaleY(0.1);
-								root.add(explorerImageView, y, x);
+								explorerImageView.setScaleX(0.03);
+								explorerImageView.setScaleY(0.03);
+								root.add(explorerImageView, y, 14 - x);
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							Image zombieImage = new Image("icons/zombieImage.png");
 							ImageView zombieImageView = new ImageView(zombieImage);
-							zombieImageView.setScaleX(0.1);
-							zombieImageView.setScaleY(0.1);
-							root.add(zombieImageView, y, x);
+							zombieImageView.setScaleX(0.09);
+							zombieImageView.setScaleY(0.09);
+							root.add(zombieImageView, y, 14 - x);
 						}
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
@@ -118,22 +115,22 @@ public class GamePlay extends Application {
 							ImageView vaccineImageView = new ImageView(vaccineImage);
 							vaccineImageView.setScaleX(0.2);
 							vaccineImageView.setScaleY(0.2);
-							root.add(vaccineImageView, y, x);
+							root.add(vaccineImageView, y, 14 - x);
 						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
 							Image supplyImage = new Image("icons/supplyImage.png");
 							ImageView supplyImageView = new ImageView(supplyImage);
 							supplyImageView.setScaleX(0.1);
 							supplyImageView.setScaleY(0.1);
-							root.add(supplyImageView, y, x);
+							root.add(supplyImageView, y, 14 - x);
 						}
 					}
 
 				} else if (!Game.map[x][y].isVisible()) {
 					Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
-					invisibleEmptyCellView.setScaleX(0.8);
+					invisibleEmptyCellView.setScaleX(0.58);
 					invisibleEmptyCellView.setScaleY(0.292);
-					root.add(invisibleEmptyCellView, y, x);
+					root.add(invisibleEmptyCellView, y, 14 - x);
 				}
 			}
 //			col.setFillWidth(true);
@@ -188,4 +185,5 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-30);
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
+
 }
