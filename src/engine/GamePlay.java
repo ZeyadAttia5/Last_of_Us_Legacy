@@ -42,6 +42,7 @@ import exceptions.NotEnoughActionsException;
 public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
+	Image logo = new Image("icons/logo.png");
 	private Image emptyCell = new Image("icons/emptyCell.png");
 	private Image explorerImage = new Image("icons/explorerImage.png");
 	private Image medicImage = new Image("icons/medicImage.png");
@@ -61,10 +62,10 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
+		initializeGrid();
 
 		Scene scene1 = new Scene(root, Color.BEIGE);
 
-		initializeGrid();
 		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
 		Game.startGame(Game.availableHeroes.remove(0));
@@ -76,7 +77,7 @@ public class GamePlay extends Application {
 
 	private void primaryStageInit(Stage primaryStage) {
 		primaryStage.setTitle("Last of Us - Legacy");
-		Image logo = new Image("icons/logo.png");
+
 		primaryStage.getIcons().add(logo);
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitHint("Press F11 to exit fullscreen");
@@ -89,7 +90,6 @@ public class GamePlay extends Application {
 
 				if (Game.map[x][y] == null)
 					return;
-
 
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
@@ -130,7 +130,6 @@ public class GamePlay extends Application {
 						updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-
 
 							ImageView vaccineImageView = new ImageView(vaccineImage);
 							vaccineImageView.setScaleX(0.2);
@@ -204,7 +203,6 @@ public class GamePlay extends Application {
 
 	}
 
-
 	private void putEndTurnButton() {
 
 		Image image = new Image("icons/EndTurnButton.png");
@@ -217,6 +215,5 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
-
 
 }
