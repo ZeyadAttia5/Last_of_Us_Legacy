@@ -73,65 +73,68 @@ public class GamePlay extends Application {
 //				root.getChildren().remove(0);
 //				Text text = new Text("Cell " + " " + x + " " + y);
 //				root.add(text, y, x);
-				
-				if (Game.map[x][y] == null) 
+
+				if (Game.map[x][y] == null)
 					return;
-				Image emptyCell = new Image("icons/emptyCell.png") ;
+				Image emptyCell = new Image("icons/emptyCell.png");
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.8);
 				emptyCellView.setScaleY(0.295);
 				root.add(emptyCellView, y, x);
-				
-				if (Game.map[x][y] instanceof CharacterCell) {
-					if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
-						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-							Image medicImage = new Image("icons/medicImage.png");
-							ImageView medicImageView = new ImageView(medicImage);
-							medicImageView.setScaleX(0.1);
-							medicImageView.setScaleY(0.1);
-							root.add(medicImageView, y, x);
 
-						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
-							Image fighterImage = new Image("icons/fighterImage.png");
-							ImageView fighterImageView = new ImageView(fighterImage);
-							fighterImageView.setScaleX(0.1);
-							fighterImageView.setScaleY(0.1);
-							root.add(fighterImageView, y, x);
-						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-							Image explorerImage = new Image("icons/explorerImage.png");
-							ImageView explorerImageView = new ImageView(explorerImage);
-							explorerImageView.setScaleX(0.1);
-							explorerImageView.setScaleY(0.1);
-							root.add(explorerImageView, y, x);						}
-					} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
-						Image zombieImage = new Image("icons/zombieImage.png");
-						ImageView zombieImageView = new ImageView(zombieImage);
-						zombieImageView.setScaleX(0.1);
-						zombieImageView.setScaleY(0.1);
-						root.add(zombieImageView, y, x);
+				if (Game.map[x][y].isVisible()) {
+					if (Game.map[x][y] instanceof CharacterCell) {
+						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
+							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
+								Image medicImage = new Image("icons/medicImage.png");
+								ImageView medicImageView = new ImageView(medicImage);
+								medicImageView.setScaleX(0.1);
+								medicImageView.setScaleY(0.1);
+								root.add(medicImageView, y, x);
+
+							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
+								Image fighterImage = new Image("icons/fighterImage.png");
+								ImageView fighterImageView = new ImageView(fighterImage);
+								fighterImageView.setScaleX(0.1);
+								fighterImageView.setScaleY(0.1);
+								root.add(fighterImageView, y, x);
+							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
+								Image explorerImage = new Image("icons/explorerImage.png");
+								ImageView explorerImageView = new ImageView(explorerImage);
+								explorerImageView.setScaleX(0.1);
+								explorerImageView.setScaleY(0.1);
+								root.add(explorerImageView, y, x);
+							}
+						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
+							Image zombieImage = new Image("icons/zombieImage.png");
+							ImageView zombieImageView = new ImageView(zombieImage);
+							zombieImageView.setScaleX(0.1);
+							zombieImageView.setScaleY(0.1);
+							root.add(zombieImageView, y, x);
+						}
+					} else if (Game.map[x][y] instanceof CollectibleCell) {
+						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
+							Image vaccineImage = new Image("icons/vaccineImage.png");
+							ImageView vaccineImageView = new ImageView(vaccineImage);
+							vaccineImageView.setScaleX(0.2);
+							vaccineImageView.setScaleY(0.2);
+							root.add(vaccineImageView, y, x);
+						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
+							Image supplyImage = new Image("icons/supplyImage.png");
+							ImageView supplyImageView = new ImageView(supplyImage);
+							supplyImageView.setScaleX(0.1);
+							supplyImageView.setScaleY(0.1);
+							root.add(supplyImageView, y, x);
+						}
 					}
-				} else if (Game.map[x][y] instanceof CollectibleCell) {
-					if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-						Image vaccineImage = new Image("icons/vaccineImage.png");
-						ImageView vaccineImageView = new ImageView(vaccineImage);
-						vaccineImageView.setScaleX(0.2);
-						vaccineImageView.setScaleY(0.2);
-						root.add(vaccineImageView, y, x);
-					} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-						Image supplyImage = new Image("icons/supplyImage.png");
-						ImageView supplyImageView = new ImageView(supplyImage);
-						supplyImageView.setScaleX(0.1);
-						supplyImageView.setScaleY(0.1);
-						root.add(supplyImageView, y, x);
-					}
+
+				} else if (!Game.map[x][y].isVisible()) {
+					Image invisibleEmptyCell = new Image("icons/invisibleEmptyCell.png");
+					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
+					invisibleEmptyCellView.setScaleX(0.8);
+					invisibleEmptyCellView.setScaleY(0.3);
+					root.add(invisibleEmptyCellView, y, x);
 				}
-
-////				Button btn = new Button("Cell\n" + "row: " + x + "\ncol: " + y);
-//				Button btn = new Button();
-//				btn.setStyle("color:#FFFF;");
-////				btn.setPrefWidth(100);
-////				btn.setPrefHeight(80);
-////				root.add(btn, x, y);
 			}
 //			col.setFillWidth(true);
 //			row.setFillHeight(true);
@@ -149,8 +152,8 @@ public class GamePlay extends Application {
 			row.setPercentHeight(100);
 			row.setValignment(VPos.CENTER);
 			root.getRowConstraints().add(row);
-			
-			if(i < 15) {				
+
+			if (i < 15) {
 				ColumnConstraints col = new ColumnConstraints();
 				col.setPercentWidth(100);
 				col.setHalignment(HPos.CENTER);
@@ -167,14 +170,14 @@ public class GamePlay extends Application {
 		Game.endTurn();
 		Game.checkWin();
 		Game.checkGameOver();
-		
+
 		this.updateMap();
 		// set control form hero
 		canHeroMove = true;
 
 	}
 
-	private void putEndTurnButton(){
+	private void putEndTurnButton() {
 		Image image = new Image("icons/EndTurnButton.png");
 		ImageView imageView = new ImageView(image);
 		imageView.setScaleX(0.3);
