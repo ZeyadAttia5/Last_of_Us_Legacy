@@ -62,7 +62,7 @@ public class GamePlay extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
 
-		Scene scene1 = new Scene(root, Color.BEIGE);
+//		Scene scene1 = new Scene(root, Color.BEIGE);
 
 		initializeGrid();
 		putEndTurnButton();
