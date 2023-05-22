@@ -36,6 +36,8 @@ import java.awt.Paint;
 import java.lang.invoke.WrongMethodTypeException;
 
 import engine.Game;
+import exceptions.InvalidTargetException;
+import exceptions.NotEnoughActionsException;
 
 public class GamePlay extends Application {
 
@@ -185,7 +187,13 @@ public class GamePlay extends Application {
 	private void controllerEndTurn() {
 		Game.zombies.get(0).setCurrentHp(0);
 		Game.zombies.get(0).onCharacterDeath();
-		Game.endTurn();
+		try {
+			Game.endTurn();
+		} catch (NotEnoughActionsException e) {
+			// TODO Auto-generated catch block
+		} catch (InvalidTargetException e) {
+			// TODO Auto-generated catch block
+		}
 		Game.checkWin();
 		Game.checkGameOver();
 		this.updateMap();
