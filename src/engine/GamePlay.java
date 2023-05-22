@@ -172,10 +172,6 @@ public class GamePlay extends Application {
 
 	private void updateTexturedWall() {
 		for (int i = 15; i < 18; i++) {
-//			RowConstraints row = root.getRowConstraints().get(18-i);
-//			row.setPercentHeight(100);
-//			row.setValignment(VPos.TOP);
-//			root.getRowConstraints().add(row);
 			for (int j = 0; j < root.getColumnCount()-3; j++) {
 				ImageView texturedBarView = new ImageView(texturedBar);
 				texturedBarView.setScaleX(0.29);
@@ -187,21 +183,6 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr) {
-
-//		root.getRowConstraints().get(15).setVgrow(Priority.ALWAYS);
-
-//		for (int i = 0; i < root.getColumnCount(); i++) {
-//		ImageView oldNameCover = new ImageView(texturedBar);
-//		ImageView oldBarCover = new ImageView(texturedBar);
-//		oldNameCover.setScaleX(0.3);
-//		oldNameCover.setScaleY(0.3);
-//		oldBarCover.setScaleX(0.3);
-//		oldBarCover.setScaleY(0.19);
-//		root.getRowConstraints().get(15).setValignment(VPos.TOP);
-//		root.getRowConstraints().get(17).setValignment(VPos.BOTTOM);
-//		root.add(oldNameCover, 0, 15);
-//		root.add(oldBarCover, 0, 17);
-//		}
 		updateTexturedWall();
 		Text name = new Text(chrctr.getName());
 		name.setFont(mineCraftFont);
@@ -238,7 +219,6 @@ public class GamePlay extends Application {
 		progressBar.setStyle("-fx-accent: blue");
 		progressBar.setBorder(Border.EMPTY);
 		progressBar.setPadding(new Insets(15,0,0,8));
-//		root.getRowConstraints().get(17).setValignment(VPos.BOTTOM);
 		root.add(progressBar, 0, 17);
 
 	}
@@ -271,8 +251,6 @@ public class GamePlay extends Application {
 
 
 	private void controllerEndTurn(Stage primaryStage) {
-		Game.zombies.get(0).setCurrentHp(0);
-		Game.zombies.get(0).onCharacterDeath();
 		try {
 			Game.endTurn();
 		} catch (NotEnoughActionsException e) {
