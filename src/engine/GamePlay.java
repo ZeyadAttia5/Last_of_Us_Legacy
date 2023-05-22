@@ -42,6 +42,7 @@ import exceptions.NotEnoughActionsException;
 public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
+	Image logo = new Image("icons/logo.png");
 	private Image emptyCell = new Image("icons/emptyCell.png");
 	private Image explorerImage = new Image("icons/explorerImage.png");
 	private Image medicImage = new Image("icons/medicImage.png");
@@ -52,6 +53,8 @@ public class GamePlay extends Application {
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
 	private Image texturedBar = new Image("icons/texturedBar.png");
 
+//	private Font mineCraftFont = Font.loadFont("fonts/Minecraftia-Regular.ttf", 20);
+
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 
 	public static void main(String[] args) {
@@ -61,9 +64,6 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-
-//		Scene scene1 = new Scene(root, Color.BEIGE);
-
 		initializeGrid();
 		putEndTurnButton();
 		Game.loadHeroes("src/test_heros.csv");
@@ -76,11 +76,11 @@ public class GamePlay extends Application {
 
 	private void primaryStageInit(Stage primaryStage) {
 		primaryStage.setTitle("Last of Us - Legacy");
-		Image logo = new Image("icons/logo.png");
+
 		primaryStage.getIcons().add(logo);
 		primaryStage.setFullScreen(true);
-		primaryStage.setFullScreenExitHint("Press F11 to exit fullscreen");
-		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("F11"));
+		primaryStage.setFullScreenExitHint("");
+		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("Alt + Enter"));
 	}
 
 	private void updateMap() {
@@ -89,7 +89,6 @@ public class GamePlay extends Application {
 
 				if (Game.map[x][y] == null)
 					return;
-
 
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
@@ -106,6 +105,7 @@ public class GamePlay extends Application {
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
+								updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 
@@ -113,24 +113,25 @@ public class GamePlay extends Application {
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
 								root.add(fighterImageView, y, 14 - x);
+								updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 
 								ImageView explorerImageView = new ImageView(explorerImage);
 								explorerImageView.setScaleX(0.03);
 								explorerImageView.setScaleY(0.03);
 								root.add(explorerImageView, y, 14 - x);
+								updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
+							updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 						}
 
-						updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-
 
 							ImageView vaccineImageView = new ImageView(vaccineImage);
 							vaccineImageView.setScaleX(0.2);
@@ -156,10 +157,14 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr) {
+		Text name = new Text(chrctr.getName());
+//		name.setFont(mineCraftFont);
+		root.add(name, 0, 15);
+
 		ProgressBar progressBar = new ProgressBar(1);
 		progressBar.setStyle("-fx-accent: green");
 		progressBar.setBorder(Border.EMPTY);
-		root.add(progressBar, 0, 15);
+		root.add(progressBar, 0, 16);
 	}
 
 	private void initializeGrid() {
@@ -204,7 +209,6 @@ public class GamePlay extends Application {
 
 	}
 
-
 	private void putEndTurnButton() {
 
 		Image image = new Image("icons/EndTurnButton.png");
@@ -217,6 +221,5 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
-
 
 }
