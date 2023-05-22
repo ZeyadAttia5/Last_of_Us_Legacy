@@ -21,7 +21,6 @@ import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
 
 public class Game {
-
 	public static ArrayList<Hero> availableHeroes = new ArrayList<Hero>();
 	public static ArrayList<Hero> heroes = new ArrayList<Hero>();
 	public static ArrayList<Zombie> zombies = new ArrayList<Zombie>();
@@ -121,6 +120,7 @@ public class Game {
 			for (Hero hero : heroes) {
 				if (hero.getVaccineInventory().size() > 0)
 					return false;
+
 			}
 		}
 		return true;
