@@ -105,7 +105,8 @@ public class GamePlay extends Application {
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
-								updateBar(((CharacterCell) Game.map[x][y]).getCharacter());
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								medicImageView.setOnMouseClicked(e -> updateBar(chrctr));
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 
@@ -158,7 +159,11 @@ public class GamePlay extends Application {
 
 	private void updateBar(model.characters.Character chrctr) {
 		Text name = new Text(chrctr.getName());
+		System.out.println(mineCraftFont);
 		name.setFont(mineCraftFont);
+		name.setScaleX(1.1);
+		name.setScaleY(1.1);
+		name.setStroke(Color.ALICEBLUE);
 		root.add(name, 0, 15);
 
 		ProgressBar progressBar = new ProgressBar(1);
