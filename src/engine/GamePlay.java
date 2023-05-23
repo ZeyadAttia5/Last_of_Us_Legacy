@@ -49,6 +49,8 @@ public class GamePlay extends Application {
 	private Image fighterProfile = new Image("icons/fighterProfile.png");
 	private Image explorerPrfile = new Image("icons/explorerProfile.png");
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
+	private Image medicProfile = new Image("icons/medicProfile.png");
+	private Image zombieProfile = new Image("icons/zombieProfile.png");
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -190,13 +192,13 @@ public class GamePlay extends Application {
 			root.add(fighterProfileView, 0, 16);
 		}
 		if (chrctr instanceof model.characters.Medic) {
-			ImageView fighterProfileView = new ImageView(fighterProfile);
+			ImageView fighterProfileView = new ImageView(medicProfile);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
 		}
 		if (chrctr instanceof model.characters.Zombie) {
-			ImageView fighterProfileView = new ImageView(fighterProfile);
+			ImageView fighterProfileView = new ImageView(zombieProfile);
 			name.setStroke(Color.ORANGERED);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
