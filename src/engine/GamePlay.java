@@ -5,6 +5,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -21,6 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
@@ -31,10 +33,16 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.web.WebView;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import javafx.animation.PauseTransition;
 
 public class GamePlay extends Application {
 
@@ -55,14 +63,13 @@ public class GamePlay extends Application {
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
 	private Image medicProfile = new Image("icons/medicProfile.png");
 	private Image zombieProfile = new Image("icons/zombieProfile.png");
-
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
-	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
+//	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -73,7 +80,6 @@ public class GamePlay extends Application {
 		primaryStageInit(primaryStage);
 		initializeGrid();
 		putEndTurnButton(primaryStage);
-
 		loadResources();
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap();
@@ -249,7 +255,6 @@ public class GamePlay extends Application {
 				root.add(supplyImageView, 3, 17);
 			}
 
-			// TODO put explorer images
 			if (chrctr instanceof Explorer) {
 				ImageView supplyImageView = new ImageView(explorerSupplyImages.get(suppliesNum));
 				supplyImageView.setScaleX(0.22);
@@ -299,6 +304,27 @@ public class GamePlay extends Application {
 		} catch (NotEnoughActionsException e) {
 		} catch (InvalidTargetException e) {
 		}
+		StackPane stackPane = new StackPane();
+		MediaPlayer player = new MediaPlayer(
+				new Media(getClass().getResource("../videos/ZombieAttack.mp4").toExternalForm()));
+		MediaView mediaView = new MediaView(player);
+		mediaView.setScaleX(0.9);
+		mediaView.setScaleY(0.9);
+		stackPane.getChildren().add(mediaView);
+		Scene scene2 = new Scene(stackPane);
+		primaryStage.setScene(scene2);
+		primaryStage.setFullScreen(true);
+		primaryStage.show();
+		player.play();
+		PauseTransition delay = new PauseTransition(Duration.seconds(6));
+		delay.setOnFinished(e -> {
+		    primaryStage.setScene(scene1); // Set the old scene
+		    primaryStage.setFullScreen(true);
+		    primaryStage.show();
+		});
+		delay.play();
+
+
 		if (Game.checkWin()) {
 			Text txt = new Text("You Won!");
 			txt.setFont(Font.font("Yu Gothic Regular", 5));
@@ -306,7 +332,7 @@ public class GamePlay extends Application {
 			txt.setScaleX(2);
 			txt.setScaleY(2);
 			endGameScene.getChildren().add(txt);
-			primaryStage.setScene(scene2);
+//			primaryStage.setScene(scene2);
 			primaryStage.show();
 		}
 		if (Game.checkGameOver()) {
@@ -315,7 +341,7 @@ public class GamePlay extends Application {
 			txt.setFill(Color.BLACK);
 			txt.setScaleX(2);
 			txt.setScaleY(2);
-			primaryStage.setScene(scene2);
+//			primaryStage.setScene(scene2);
 			primaryStage.show();
 		}
 		this.updateMap();
@@ -328,6 +354,7 @@ public class GamePlay extends Application {
 		root.add(imageView, 14, 17);
 		imageView.setTranslateY(-30);
 		imageView.setTranslateX(-50);
+		imageView.setOnMouseEntered(event -> imageView.setCursor(Cursor.CLOSED_HAND));
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
 	}
 
@@ -335,9 +362,8 @@ public class GamePlay extends Application {
 		try {
 			Game.loadHeroes("src/test_heros.csv");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 		}
-		
+
 		Image explorerSupply0 = new Image("icons/ExplorerSupply0.png");
 		Image explorerSupply1 = new Image("icons/ExplorerSupply1.png");
 		Image explorerSupply2 = new Image("icons/ExplorerSupply2.png");
