@@ -1,11 +1,13 @@
 package engine;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.stage.Stage;
+import model.characters.Character;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -18,6 +20,7 @@ import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -52,6 +55,8 @@ public class GamePlay extends Application {
 		Scene scene1 = new Scene(root, Color.BEIGE);
 		initializeGrid();
 		putEndTurnButton();
+		Image image = new Image("icons/cursor.png");
+		root.setCursor(new ImageCursor(image));
 		Game.loadHeroes("src/test_heros.csv");
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap();
@@ -72,10 +77,11 @@ public class GamePlay extends Application {
 	private void updateMap() {
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15 && x < 15; y++) {
-
+				
 				if (Game.map[x][y] == null)
 					return;
-				
+				int g = x;
+				int h = y;
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.58);
 				emptyCellView.setScaleY(0.292);
@@ -85,41 +91,39 @@ public class GamePlay extends Application {
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-								
 								ImageView medicImageView = new ImageView(medicImage);
+								medicImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
-								
 								ImageView fighterImageView = new ImageView(fighterImage);
+								fighterImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
 								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-
 								ImageView explorerImageView = new ImageView(explorerImage);
+								explorerImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 								explorerImageView.setScaleX(0.03);
 								explorerImageView.setScaleY(0.03);
 								root.add(explorerImageView, y, 14 - x);
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
-							
 							ImageView zombieImageView = new ImageView(zombieImage);
+							zombieImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
 						}
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-							
 							ImageView vaccineImageView = new ImageView(vaccineImage);
 							vaccineImageView.setScaleX(0.2);
 							vaccineImageView.setScaleY(0.2);
 							root.add(vaccineImageView, y, 14 - x);
 						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-							
 							ImageView supplyImageView = new ImageView(supplyImage);
 							supplyImageView.setScaleX(0.1);
 							supplyImageView.setScaleY(0.1);
@@ -185,4 +189,21 @@ public class GamePlay extends Application {
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
 
+	private void move() {
+
+		
+	}
+	private void cursor(Character character) {
+		if(character instanceof Medic) {
+			if(!character.isTargetAdjacent()) {
+				Image image = new Image("icons/arrowD.png");
+				root.setCursor(new ImageCursor(image));
+			}
+			else {
+				Image image = new Image("icons/swordImage.png");
+				root.setCursor(new ImageCursor(image));
+			}
+		}
+		
+	}
 }
