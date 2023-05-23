@@ -58,6 +58,7 @@ public class GamePlay extends Application {
 
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
+	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
@@ -107,7 +108,8 @@ public class GamePlay extends Application {
 					if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 						// TODO DELETE the 2 next lines
 						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
-						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory().add(new Vaccine());
+						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory()
+								.add(new Vaccine());
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 							ImageView medicImageView = new ImageView(medicImage);
 							medicImageView.setScaleX(0.08);
@@ -226,7 +228,7 @@ public class GamePlay extends Application {
 			supplyText.setFill(Color.WHITE);
 			supplyText.setStroke(Color.WHITE);
 			root.add(supplyText, 2, 17);
-			
+
 			Text vaccineText = new Text("Vaccines");
 			vaccineText.setFont(Font.font("Monospaced", 14));
 			vaccineText.setFill(Color.WHITE);
@@ -249,7 +251,7 @@ public class GamePlay extends Application {
 
 			// TODO put explorer images
 			if (chrctr instanceof Explorer) {
-				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
+				ImageView supplyImageView = new ImageView(explorerSupplyImages.get(suppliesNum));
 				supplyImageView.setScaleX(0.22);
 				supplyImageView.setScaleY(0.2);
 				root.add(supplyImageView, 3, 17);
@@ -335,6 +337,13 @@ public class GamePlay extends Application {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
+		
+		Image explorerSupply0 = new Image("icons/ExplorerSupply0.png");
+		Image explorerSupply1 = new Image("icons/ExplorerSupply1.png");
+		Image explorerSupply2 = new Image("icons/ExplorerSupply2.png");
+		Image explorerSupply3 = new Image("icons/ExplorerSupply3.png");
+		Image explorerSupply4 = new Image("icons/ExplorerSupply4.png");
+		Image explorerSupply5 = new Image("icons/ExplorerSupply5.png");
 		Image fighterSupply0 = new Image("icons/FighterSupply0.png");
 		Image fighterSupply1 = new Image("icons/FighterSupply1.png");
 		Image fighterSupply2 = new Image("icons/FighterSupply2.png");
@@ -353,6 +362,12 @@ public class GamePlay extends Application {
 		Image vaccine3 = new Image("icons/3Vaccine.png");
 		Image vaccine4 = new Image("icons/4Vaccine.png");
 		Image vaccine5 = new Image("icons/5Vaccine.png");
+		explorerSupplyImages.add(explorerSupply0);
+		explorerSupplyImages.add(explorerSupply1);
+		explorerSupplyImages.add(explorerSupply2);
+		explorerSupplyImages.add(explorerSupply3);
+		explorerSupplyImages.add(explorerSupply4);
+		explorerSupplyImages.add(explorerSupply5);
 		fighterSupplyImages.add(fighterSupply0);
 		fighterSupplyImages.add(fighterSupply1);
 		fighterSupplyImages.add(fighterSupply2);
