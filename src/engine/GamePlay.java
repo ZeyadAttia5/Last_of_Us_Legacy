@@ -31,6 +31,8 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -53,15 +55,10 @@ public class GamePlay extends Application {
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
 	private Image medicProfile = new Image("icons/medicProfile.png");
 	private Image zombieProfile = new Image("icons/zombieProfile.png");
-	private Image fighterSupply0 = new Image("icons/FighterSupplyNull.png");
-	private Image fighterSupply1 = new Image("icons/FighterSupply1.png");
-	private Image fighterSupply2 = new Image("icons/FighterSupply2.png");
-	private Image fighterSupply3 = new Image("icons/FighterSupply3.png");
-	private Image fighterSupply4 = new Image("icons/FighterSupply4.png");
-	private Image fighterSupply5 = new Image("icons/FighterSupplyFull.png");
-	
+
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
-	
+	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
+	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -72,16 +69,11 @@ public class GamePlay extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		fighterSupplyImages.add(fighterSupply0);
-		fighterSupplyImages.add(fighterSupply1);
-		fighterSupplyImages.add(fighterSupply2);
-		fighterSupplyImages.add(fighterSupply3);
-		fighterSupplyImages.add(fighterSupply4);
-		fighterSupplyImages.add(fighterSupply5);
 		primaryStageInit(primaryStage);
 		initializeGrid();
 		putEndTurnButton(primaryStage);
-		Game.loadHeroes("src/test_heros.csv");
+
+		loadResources();
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap();
 		primaryStage.setScene(scene1);
@@ -111,61 +103,62 @@ public class GamePlay extends Application {
 				root.add(emptyCellView, y, 14 - x);
 
 //				if (Game.map[x][y].isVisible()) {
-					if (Game.map[x][y] instanceof CharacterCell) {
-						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
-							//TODO DELETE
-							((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
-							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-								ImageView medicImageView = new ImageView(medicImage);
-								medicImageView.setScaleX(0.08);
-								medicImageView.setScaleY(0.08);
-								root.add(medicImageView, y, 14 - x);
-								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(Cursor.HAND));
-								medicImageView.setOnMouseClicked(e -> updateBar(chrctr));
-
-							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
-								ImageView fighterImageView = new ImageView(fighterImage);
-								fighterImageView.setScaleX(0.09);
-								fighterImageView.setScaleY(0.09);
-								root.add(fighterImageView, y, 14 - x);
-								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(Cursor.HAND));
-								fighterImageView.setOnMouseClicked(e -> updateBar(chrctr));
-							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-								ImageView explorerImageView = new ImageView(explorerImage);
-								explorerImageView.setScaleX(0.06);
-								explorerImageView.setScaleY(0.06);
-								root.add(explorerImageView, y, 14 - x);
-								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(Cursor.HAND));
-								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr));
-							}
-						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
-							ImageView zombieImageView = new ImageView(zombieImage);
-							zombieImageView.setScaleX(0.08);
-							zombieImageView.setScaleY(0.08);
-							root.add(zombieImageView, y, 14 - x);
+				if (Game.map[x][y] instanceof CharacterCell) {
+					if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
+						// TODO DELETE the 2 next lines
+						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
+						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory().add(new Vaccine());
+						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
+							ImageView medicImageView = new ImageView(medicImage);
+							medicImageView.setScaleX(0.08);
+							medicImageView.setScaleY(0.08);
+							root.add(medicImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(Cursor.HAND));
-							zombieImageView.setOnMouseClicked(e -> updateBar(chrctr));
+							medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(Cursor.HAND));
+							medicImageView.setOnMouseClicked(e -> updateBar(chrctr));
+
+						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
+							ImageView fighterImageView = new ImageView(fighterImage);
+							fighterImageView.setScaleX(0.09);
+							fighterImageView.setScaleY(0.09);
+							root.add(fighterImageView, y, 14 - x);
+							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+							fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(Cursor.HAND));
+							fighterImageView.setOnMouseClicked(e -> updateBar(chrctr));
+						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
+							ImageView explorerImageView = new ImageView(explorerImage);
+							explorerImageView.setScaleX(0.06);
+							explorerImageView.setScaleY(0.06);
+							root.add(explorerImageView, y, 14 - x);
+							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+							explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(Cursor.HAND));
+							explorerImageView.setOnMouseClicked(e -> updateBar(chrctr));
 						}
-
-					} else if (Game.map[x][y] instanceof CollectibleCell) {
-						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-
-							ImageView vaccineImageView = new ImageView(vaccineImage);
-							vaccineImageView.setScaleX(0.2);
-							vaccineImageView.setScaleY(0.2);
-							root.add(vaccineImageView, y, 14 - x);
-						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-
-							ImageView supplyImageView = new ImageView(supplyImage);
-							supplyImageView.setScaleX(0.1);
-							supplyImageView.setScaleY(0.1);
-							root.add(supplyImageView, y, 14 - x);
-						}
+					} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
+						ImageView zombieImageView = new ImageView(zombieImage);
+						zombieImageView.setScaleX(0.08);
+						zombieImageView.setScaleY(0.08);
+						root.add(zombieImageView, y, 14 - x);
+						model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+						zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(Cursor.HAND));
+						zombieImageView.setOnMouseClicked(e -> updateBar(chrctr));
 					}
+
+				} else if (Game.map[x][y] instanceof CollectibleCell) {
+					if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
+
+						ImageView vaccineImageView = new ImageView(vaccineImage);
+						vaccineImageView.setScaleX(0.2);
+						vaccineImageView.setScaleY(0.2);
+						root.add(vaccineImageView, y, 14 - x);
+					} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
+
+						ImageView supplyImageView = new ImageView(supplyImage);
+						supplyImageView.setScaleX(0.1);
+						supplyImageView.setScaleY(0.1);
+						root.add(supplyImageView, y, 14 - x);
+					}
+				}
 
 //				} else if (!Game.map[x][y].isVisible()) {
 //					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
@@ -234,32 +227,40 @@ public class GamePlay extends Application {
 			supplyText.setStroke(Color.WHITE);
 			root.add(supplyText, 2, 17);
 			
+			Text vaccineText = new Text("Vaccines");
+			vaccineText.setFont(Font.font("Monospaced", 14));
+			vaccineText.setFill(Color.WHITE);
+			vaccineText.setStroke(Color.WHITE);
+			root.add(vaccineText, 2, 16);
+
 			int suppliesNum = ((Hero) chrctr).getSupplyInventory().size();
-			if(chrctr instanceof Fighter) {				
+			if (chrctr instanceof Fighter) {
 				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
 				supplyImageView.setScaleX(0.22);
 				supplyImageView.setScaleY(0.2);
 				root.add(supplyImageView, 3, 17);
 			}
-			if(chrctr instanceof Medic) {				
+			if (chrctr instanceof Medic) {
+				ImageView supplyImageView = new ImageView(medicSupplyImages.get(suppliesNum));
+				supplyImageView.setScaleX(0.22);
+				supplyImageView.setScaleY(0.2);
+				root.add(supplyImageView, 3, 17);
+			}
+
+			// TODO put explorer images
+			if (chrctr instanceof Explorer) {
 				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
 				supplyImageView.setScaleX(0.22);
 				supplyImageView.setScaleY(0.2);
 				root.add(supplyImageView, 3, 17);
 			}
-			if(chrctr instanceof Explorer) {				
-				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
-				supplyImageView.setScaleX(0.22);
-				supplyImageView.setScaleY(0.2);
-				root.add(supplyImageView, 3, 17);
-			}
-			//TODO put Vaccines
-			if(chrctr instanceof Fighter) {				
-				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
-				supplyImageView.setScaleX(0.22);
-				supplyImageView.setScaleY(0.2);
-				root.add(supplyImageView, 3, 17);
-			}
+			// TODO put Vaccines
+			int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
+			ImageView vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
+			vaccineImageView.setScaleX(0.22);
+			vaccineImageView.setScaleY(0.2);
+			root.add(vaccineImageView, 3, 16);
+
 		}
 
 	}
@@ -326,5 +327,50 @@ public class GamePlay extends Application {
 		imageView.setTranslateY(-30);
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
+	}
+
+	private void loadResources() {
+		try {
+			Game.loadHeroes("src/test_heros.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		Image fighterSupply0 = new Image("icons/FighterSupply0.png");
+		Image fighterSupply1 = new Image("icons/FighterSupply1.png");
+		Image fighterSupply2 = new Image("icons/FighterSupply2.png");
+		Image fighterSupply3 = new Image("icons/FighterSupply3.png");
+		Image fighterSupply4 = new Image("icons/FighterSupply4.png");
+		Image fighterSupply5 = new Image("icons/FighterSupply5.png");
+		Image medicSupply0 = new Image("icons/MedicSupply0.png");
+		Image medicSupply1 = new Image("icons/MedicSupply1.png");
+		Image medicSupply2 = new Image("icons/MedicSupply2.png");
+		Image medicSupply3 = new Image("icons/MedicSupply3.png");
+		Image medicSupply4 = new Image("icons/MedicSupply4.png");
+		Image medicSupply5 = new Image("icons/MedicSupply5.png");
+		Image vaccine0 = new Image("icons/0Vaccine.png");
+		Image vaccine1 = new Image("icons/1Vaccine.png");
+		Image vaccine2 = new Image("icons/2Vaccine.png");
+		Image vaccine3 = new Image("icons/3Vaccine.png");
+		Image vaccine4 = new Image("icons/4Vaccine.png");
+		Image vaccine5 = new Image("icons/5Vaccine.png");
+		fighterSupplyImages.add(fighterSupply0);
+		fighterSupplyImages.add(fighterSupply1);
+		fighterSupplyImages.add(fighterSupply2);
+		fighterSupplyImages.add(fighterSupply3);
+		fighterSupplyImages.add(fighterSupply4);
+		fighterSupplyImages.add(fighterSupply5);
+		medicSupplyImages.add(medicSupply0);
+		medicSupplyImages.add(medicSupply1);
+		medicSupplyImages.add(medicSupply2);
+		medicSupplyImages.add(medicSupply3);
+		medicSupplyImages.add(medicSupply4);
+		medicSupplyImages.add(medicSupply5);
+		vaccineImages.add(vaccine0);
+		vaccineImages.add(vaccine1);
+		vaccineImages.add(vaccine2);
+		vaccineImages.add(vaccine3);
+		vaccineImages.add(vaccine4);
+		vaccineImages.add(vaccine5);
+
 	}
 }
