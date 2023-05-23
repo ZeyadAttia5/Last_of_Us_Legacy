@@ -31,6 +31,8 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class GamePlay extends Application {
 
@@ -51,6 +53,15 @@ public class GamePlay extends Application {
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
 	private Image medicProfile = new Image("icons/medicProfile.png");
 	private Image zombieProfile = new Image("icons/zombieProfile.png");
+	private Image fighterSupply0 = new Image("icons/FighterSupplyNull.png");
+	private Image fighterSupply1 = new Image("icons/FighterSupply1.png");
+	private Image fighterSupply2 = new Image("icons/FighterSupply2.png");
+	private Image fighterSupply3 = new Image("icons/FighterSupply3.png");
+	private Image fighterSupply4 = new Image("icons/FighterSupply4.png");
+	private Image fighterSupply5 = new Image("icons/FighterSupplyFull.png");
+	
+	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
+	
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -61,6 +72,12 @@ public class GamePlay extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		fighterSupplyImages.add(fighterSupply0);
+		fighterSupplyImages.add(fighterSupply1);
+		fighterSupplyImages.add(fighterSupply2);
+		fighterSupplyImages.add(fighterSupply3);
+		fighterSupplyImages.add(fighterSupply4);
+		fighterSupplyImages.add(fighterSupply5);
 		primaryStageInit(primaryStage);
 		initializeGrid();
 		putEndTurnButton(primaryStage);
@@ -74,7 +91,6 @@ public class GamePlay extends Application {
 
 	private void primaryStageInit(Stage primaryStage) {
 		primaryStage.setTitle("Last of Us - Legacy");
-
 		primaryStage.getIcons().add(logo);
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitHint("");
@@ -94,9 +110,11 @@ public class GamePlay extends Application {
 
 				root.add(emptyCellView, y, 14 - x);
 
-				if (Game.map[x][y].isVisible()) {
+//				if (Game.map[x][y].isVisible()) {
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
+							//TODO DELETE
+							((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
 								medicImageView.setScaleX(0.08);
@@ -149,12 +167,12 @@ public class GamePlay extends Application {
 						}
 					}
 
-				} else if (!Game.map[x][y].isVisible()) {
-					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
-					invisibleEmptyCellView.setScaleX(0.7);
-					invisibleEmptyCellView.setScaleY(0.3);
-					root.add(invisibleEmptyCellView, y, 14 - x);
-				}
+//				} else if (!Game.map[x][y].isVisible()) {
+//					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
+//					invisibleEmptyCellView.setScaleX(0.7);
+//					invisibleEmptyCellView.setScaleY(0.3);
+//					root.add(invisibleEmptyCellView, y, 14 - x);
+//				}
 			}
 		}
 	}
@@ -165,7 +183,6 @@ public class GamePlay extends Application {
 				ImageView texturedBarView = new ImageView(texturedBar);
 				texturedBarView.setScaleX(0.29);
 				texturedBarView.setScaleY(0.17);
-
 				root.add(texturedBarView, j, i);
 			}
 		}
@@ -209,6 +226,41 @@ public class GamePlay extends Application {
 		progressBar.setBorder(Border.EMPTY);
 		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
+
+		if ((chrctr) instanceof Hero) {
+			Text supplyText = new Text("Supplies");
+			supplyText.setFont(Font.font("Monospaced", 14));
+			supplyText.setFill(Color.WHITE);
+			supplyText.setStroke(Color.WHITE);
+			root.add(supplyText, 2, 17);
+			
+			int suppliesNum = ((Hero) chrctr).getSupplyInventory().size();
+			if(chrctr instanceof Fighter) {				
+				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
+				supplyImageView.setScaleX(0.22);
+				supplyImageView.setScaleY(0.2);
+				root.add(supplyImageView, 3, 17);
+			}
+			if(chrctr instanceof Medic) {				
+				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
+				supplyImageView.setScaleX(0.22);
+				supplyImageView.setScaleY(0.2);
+				root.add(supplyImageView, 3, 17);
+			}
+			if(chrctr instanceof Explorer) {				
+				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
+				supplyImageView.setScaleX(0.22);
+				supplyImageView.setScaleY(0.2);
+				root.add(supplyImageView, 3, 17);
+			}
+			//TODO put Vaccines
+			if(chrctr instanceof Fighter) {				
+				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
+				supplyImageView.setScaleX(0.22);
+				supplyImageView.setScaleY(0.2);
+				root.add(supplyImageView, 3, 17);
+			}
+		}
 
 	}
 
