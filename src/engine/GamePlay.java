@@ -23,13 +23,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
-
 
 public class GamePlay extends Application {
 
@@ -48,8 +49,6 @@ public class GamePlay extends Application {
 	private Image fighterProfile = new Image("icons/fighterProfile.png");
 	private Image explorerPrfile = new Image("icons/explorerProfile.png");
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
-
-	private Font mineCraftFont = new Font("fonts/Minecraftia-Regular.ttf", 12);
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -97,29 +96,29 @@ public class GamePlay extends Application {
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-
 								ImageView medicImageView = new ImageView(medicImage);
 								medicImageView.setScaleX(0.08);
 								medicImageView.setScaleY(0.08);
 								root.add(medicImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(Cursor.HAND));
 								medicImageView.setOnMouseClicked(e -> updateBar(chrctr));
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
-
 								ImageView fighterImageView = new ImageView(fighterImage);
 								fighterImageView.setScaleX(0.09);
 								fighterImageView.setScaleY(0.09);
 								root.add(fighterImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(Cursor.HAND));
 								fighterImageView.setOnMouseClicked(e -> updateBar(chrctr));
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-
 								ImageView explorerImageView = new ImageView(explorerImage);
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(Cursor.HAND));
 								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr));
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
@@ -128,6 +127,7 @@ public class GamePlay extends Application {
 							zombieImageView.setScaleY(0.08);
 							root.add(zombieImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(Cursor.HAND));
 							zombieImageView.setOnMouseClicked(e -> updateBar(chrctr));
 						}
 
@@ -159,7 +159,7 @@ public class GamePlay extends Application {
 
 	private void updateTexturedWall() {
 		for (int i = 15; i < 18; i++) {
-			for (int j = 0; j < root.getColumnCount()-3; j++) {
+			for (int j = 0; j < root.getColumnCount() - 3; j++) {
 				ImageView texturedBarView = new ImageView(texturedBar);
 				texturedBarView.setScaleX(0.29);
 				texturedBarView.setScaleY(0.17);
@@ -172,11 +172,10 @@ public class GamePlay extends Application {
 	private void updateBar(model.characters.Character chrctr) {
 		updateTexturedWall();
 		Text name = new Text(chrctr.getName());
-		name.setFont(mineCraftFont);
-		name.setEffect(new DropShadow(5, Color.ANTIQUEWHITE));
-		name.setScaleX(1.1);
-		name.setScaleY(1.1);
-		name.setStroke(Color.WHITESMOKE);
+		name.setFont(Font.font("Monospaced", 18));
+		name.setFill(Color.WHITE);
+		name.setStroke(Color.WHITE);
+
 		root.add(name, 0, 15);
 		if (chrctr instanceof model.characters.Fighter) {
 			ImageView fighterProfileView = new ImageView(fighterProfile);
@@ -198,6 +197,7 @@ public class GamePlay extends Application {
 		}
 		if (chrctr instanceof model.characters.Zombie) {
 			ImageView fighterProfileView = new ImageView(fighterProfile);
+			name.setStroke(Color.ORANGERED);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
@@ -244,7 +244,7 @@ public class GamePlay extends Application {
 		}
 		if (Game.checkWin()) {
 			Text txt = new Text("You Won!");
-			txt.setFont(mineCraftFont);
+			txt.setFont(Font.font("Yu Gothic Regular", 5));
 			txt.setFill(Color.BLACK);
 			txt.setScaleX(2);
 			txt.setScaleY(2);
@@ -262,11 +262,9 @@ public class GamePlay extends Application {
 			primaryStage.show();
 		}
 		this.updateMap();
-
 	}
 
 	private void putEndTurnButton(Stage primaryStage) {
-
 		ImageView imageView = new ImageView(endTurnButtonImage);
 		imageView.setScaleX(0.3);
 		imageView.setScaleY(0.3);
@@ -275,5 +273,4 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
 	}
-
 }
