@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javafx.animation.PauseTransition;
+import javafx.animation.FadeTransition;
 
 public class GamePlay extends Application {
 
@@ -112,62 +113,62 @@ public class GamePlay extends Application {
 				root.add(emptyCellView, y, 14 - x);
 
 				if (Game.map[x][y].isVisible()) {
-				if (Game.map[x][y] instanceof CharacterCell) {
-					if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
+					if (Game.map[x][y] instanceof CharacterCell) {
+						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 //						// TODO DELETE the 2 next lines
 //						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
 //						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory().add(new Vaccine());
-						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-							ImageView medicImageView = new ImageView(medicImage);
-							medicImageView.setScaleX(0.08);
-							medicImageView.setScaleY(0.08);
-							root.add(medicImageView, y, 14 - x);
-							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
-							medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
+								ImageView medicImageView = new ImageView(medicImage);
+								medicImageView.setScaleX(0.08);
+								medicImageView.setScaleY(0.08);
+								root.add(medicImageView, y, 14 - x);
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
+								medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 
-						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
-							ImageView fighterImageView = new ImageView(fighterImage);
-							fighterImageView.setScaleX(0.09);
-							fighterImageView.setScaleY(0.09);
-							root.add(fighterImageView, y, 14 - x);
+							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
+								ImageView fighterImageView = new ImageView(fighterImage);
+								fighterImageView.setScaleX(0.09);
+								fighterImageView.setScaleY(0.09);
+								root.add(fighterImageView, y, 14 - x);
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
+								fighterImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
+								ImageView explorerImageView = new ImageView(explorerImage);
+								explorerImageView.setScaleX(0.06);
+								explorerImageView.setScaleY(0.06);
+								root.add(explorerImageView, y, 14 - x);
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
+								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+							}
+						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
+							ImageView zombieImageView = new ImageView(zombieImage);
+							zombieImageView.setScaleX(0.08);
+							zombieImageView.setScaleY(0.08);
+							root.add(zombieImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
-							fighterImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
-						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
-							ImageView explorerImageView = new ImageView(explorerImage);
-							explorerImageView.setScaleX(0.06);
-							explorerImageView.setScaleY(0.06);
-							root.add(explorerImageView, y, 14 - x);
-							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
-							explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
+							zombieImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 						}
-					} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
-						ImageView zombieImageView = new ImageView(zombieImage);
-						zombieImageView.setScaleX(0.08);
-						zombieImageView.setScaleY(0.08);
-						root.add(zombieImageView, y, 14 - x);
-						model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-						zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
-						zombieImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+
+					} else if (Game.map[x][y] instanceof CollectibleCell) {
+						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
+
+							ImageView vaccineImageView = new ImageView(vaccineImage);
+							vaccineImageView.setScaleX(0.2);
+							vaccineImageView.setScaleY(0.2);
+							root.add(vaccineImageView, y, 14 - x);
+						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
+
+							ImageView supplyImageView = new ImageView(supplyImage);
+							supplyImageView.setScaleX(0.1);
+							supplyImageView.setScaleY(0.1);
+							root.add(supplyImageView, y, 14 - x);
+						}
 					}
-
-				} else if (Game.map[x][y] instanceof CollectibleCell) {
-					if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
-
-						ImageView vaccineImageView = new ImageView(vaccineImage);
-						vaccineImageView.setScaleX(0.2);
-						vaccineImageView.setScaleY(0.2);
-						root.add(vaccineImageView, y, 14 - x);
-					} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-
-						ImageView supplyImageView = new ImageView(supplyImage);
-						supplyImageView.setScaleX(0.1);
-						supplyImageView.setScaleY(0.1);
-						root.add(supplyImageView, y, 14 - x);
-					}
-				}
 
 				} else if (!Game.map[x][y].isVisible()) {
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
@@ -253,7 +254,7 @@ public class GamePlay extends Application {
 
 				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
-				} else if(suppliesNum > 5){
+				} else if (suppliesNum > 5) {
 					supplyImageView = new ImageView(fighterSupplyImages.get(5));
 				}
 				supplyImageView.setScaleX(0.25);
@@ -267,7 +268,7 @@ public class GamePlay extends Application {
 
 				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(medicSupplyImages.get(suppliesNum));
-				} else if(suppliesNum > 5) {
+				} else if (suppliesNum > 5) {
 					supplyImageView = new ImageView(medicSupplyImages.get(5));
 				}
 				supplyImageView.setScaleX(0.25);
@@ -280,7 +281,7 @@ public class GamePlay extends Application {
 				ImageView supplyImageView = new ImageView(explorerSupplyImages.get(0));
 				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(explorerSupplyImages.get(suppliesNum));
-				} else if (suppliesNum > 5){
+				} else if (suppliesNum > 5) {
 					supplyImageView = new ImageView(explorerSupplyImages.get(5));
 				}
 				supplyImageView.setScaleX(0.3);
@@ -292,7 +293,7 @@ public class GamePlay extends Application {
 			ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
 			if (vaccinesNum <= 5 && vaccinesNum > 0) {
 				vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
-			} else if(vaccinesNum > 5) {
+			} else if (vaccinesNum > 5) {
 				vaccineImageView = new ImageView(vaccineImages.get(5));
 			}
 			vaccineImageView.setScaleX(0.3);
@@ -327,24 +328,75 @@ public class GamePlay extends Application {
 		} catch (NotEnoughActionsException e) {
 		} catch (InvalidTargetException e) {
 		}
+
+		// Create the fade transition
 		StackPane stackPane = new StackPane();
-		MediaPlayer player = new MediaPlayer(
-				new Media(getClass().getResource("../videos/ZombieAttack.mp4").toExternalForm()));
-		MediaView mediaView = new MediaView(player);
-		mediaView.setScaleX(0.9);
-		mediaView.setScaleY(0.9);
-		stackPane.getChildren().add(mediaView);
 		Scene scene2 = new Scene(stackPane);
-		primaryStage.setScene(scene2);
-		primaryStage.setFullScreen(true);
-		primaryStage.show();
-		PauseTransition delay = new PauseTransition(Duration.seconds(6));
-		delay.setOnFinished(e -> {
-			primaryStage.setScene(scene1); // Set the old scene
+		FadeTransition fadeOut = new FadeTransition(Duration.seconds(1));
+		fadeOut.setFromValue(1.0);
+		fadeOut.setToValue(0.0);
+		fadeOut.setOnFinished(event -> {
+			// This code will run after the fade out transition completes
+
+			// Create and play the cutscene media player
+			MediaPlayer player = new MediaPlayer(
+					new Media(getClass().getResource("../videos/ZombieAttack.mp4").toExternalForm()));
+			MediaView mediaView = new MediaView(player);
+			player.setStartTime(Duration.millis(800));
+			mediaView.setScaleX(0.9);
+			mediaView.setScaleY(0.9);
+			player.play();
+
+			// Create the cutscene scene
+			stackPane.getChildren().add(mediaView);
+
+			// Set the cutscene scene as the active scene
+			primaryStage.setScene(scene2);
 			primaryStage.setFullScreen(true);
-			primaryStage.show();
+
+			// Create the fade in transition
+			FadeTransition fadeIn = new FadeTransition(Duration.seconds(1));
+			fadeIn.setFromValue(0.0);
+			fadeIn.setToValue(1.0);
+
+			// Apply the fade in transition to the root of the cutscene scene
+			scene2.getRoot().setOpacity(0.0);
+			fadeIn.setNode(scene2.getRoot());
+			fadeIn.play();
 		});
-		player.play();
+
+		// Apply the fade out transition to the root of the current scene
+		scene1.getRoot().setOpacity(1.0);
+		fadeOut.setNode(scene1.getRoot());
+		fadeOut.play();
+
+		PauseTransition delay = new PauseTransition(Duration.millis(5200));
+		delay.setOnFinished(e -> {
+			FadeTransition fadeOut2 = new FadeTransition(Duration.seconds(1));
+			fadeOut2.setFromValue(1.0);
+			fadeOut2.setToValue(0.0);
+			fadeOut2.setOnFinished(event -> {
+
+				// Set the old scene as the active scene
+				primaryStage.setScene(scene1);
+				primaryStage.setFullScreen(true);
+
+				// Create the fade in transition
+				FadeTransition fadeIn = new FadeTransition(Duration.seconds(1));
+				fadeIn.setFromValue(0.0);
+				fadeIn.setToValue(1.0);
+
+				// Apply the fade in transition to the root of the cutscene scene
+				scene1.getRoot().setOpacity(0.0);
+				fadeIn.setNode(scene1.getRoot());
+				fadeIn.play();
+			});
+
+			// Apply the fade out transition to the root of the current scene
+			scene2.getRoot().setOpacity(1.0);
+			fadeOut2.setNode(scene2.getRoot());
+			fadeOut2.play();
+		});
 		delay.play();
 
 		if (Game.checkWin()) {
