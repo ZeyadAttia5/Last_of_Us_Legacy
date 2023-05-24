@@ -37,6 +37,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import engine.Game;
+import exceptions.InvalidTargetException;
+import exceptions.NotEnoughActionsException;
 
 public class GamePlay extends Application {
 
@@ -181,7 +183,15 @@ public class GamePlay extends Application {
 	private void controllerEndTurn() {
 		Game.zombies.get(0).setCurrentHp(0);
 		Game.zombies.get(0).onCharacterDeath();
-		Game.endTurn();
+		try {
+			Game.endTurn();
+		} catch (NotEnoughActionsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Game.checkWin();
 		Game.checkGameOver();
 
@@ -207,7 +217,7 @@ public class GamePlay extends Application {
 	}
 	private void cursor(Character character) {
 		if(character instanceof Medic) {
-			if(!character.isTargetAdjacent()) {
+			if(!((Character) character).isTargetAdjacent()) {
 				check(character);
 				Image image = new Image("icons/arrowD.png");
 				root.setCursor(new ImageCursor(image));
@@ -221,7 +231,7 @@ public class GamePlay extends Application {
 	}
 	
 	private boolean check(Character character) {
-		ArrayList<Point> x = character.getAdjacentIndices();
+		ArrayList<Point> x = ((model.characters.Character) character).getAdjacentIndices();
 		ArrayList<Hero> h = Game.heroes;
 		ArrayList<Zombie> z = Game.zombies;
 //		ArrayList<Point> hx = new ArrayList<>();
