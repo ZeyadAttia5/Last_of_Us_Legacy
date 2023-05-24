@@ -25,23 +25,16 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughActionsException;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.web.WebView;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 import javafx.animation.PauseTransition;
 import javafx.animation.FadeTransition;
 
@@ -109,10 +102,11 @@ public class GamePlay extends Application {
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
 				emptyCellView.setScaleY(0.3);
-
 				root.add(emptyCellView, y, 14 - x);
-
 				if (Game.map[x][y].isVisible()) {
+					Image imaged = new Image("icons/move.png");
+					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
+					emptyCellView.setOnMouseClicked(e -> move());
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 //						// TODO DELETE the 2 next lines
@@ -146,8 +140,14 @@ public class GamePlay extends Application {
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
+
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
+
+							Image image = new Image("icons/swordImage.png");
+							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(new ImageCursor(image)));
+							zombieImageView.setScaleX(0.09);
+							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
@@ -158,12 +158,15 @@ public class GamePlay extends Application {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
 
 							ImageView vaccineImageView = new ImageView(vaccineImage);
+							Image image = new Image("icons/Hand.png");
+							vaccineImageView.setOnMouseEntered(e -> vaccineImageView.setCursor(new ImageCursor(image)));
 							vaccineImageView.setScaleX(0.2);
 							vaccineImageView.setScaleY(0.2);
 							root.add(vaccineImageView, y, 14 - x);
 						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
-
 							ImageView supplyImageView = new ImageView(supplyImage);
+							Image image = new Image("icons/Hand.png");
+							supplyImageView.setOnMouseEntered(e -> supplyImageView.setCursor(new ImageCursor(image)));
 							supplyImageView.setScaleX(0.1);
 							supplyImageView.setScaleY(0.1);
 							root.add(supplyImageView, y, 14 - x);
@@ -172,6 +175,9 @@ public class GamePlay extends Application {
 
 				} else if (!Game.map[x][y].isVisible()) {
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
+					Image image = new Image("icons/cross.png");
+					invisibleEmptyCellView
+							.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
 					invisibleEmptyCellView.setScaleX(0.7);
 					invisibleEmptyCellView.setScaleY(0.3);
 					root.add(invisibleEmptyCellView, y, 14 - x);
@@ -306,6 +312,7 @@ public class GamePlay extends Application {
 	}
 
 	private void initializeGrid(Stage primaryStage) {
+
 		root.setGridLinesVisible(true);
 		for (int i = 0; i < 18; i++) {
 			RowConstraints row = new RowConstraints();
@@ -337,7 +344,6 @@ public class GamePlay extends Application {
 		fadeOut.setToValue(0.0);
 		fadeOut.setOnFinished(event -> {
 			// This code will run after the fade out transition completes
-
 			// Create and play the cutscene media player
 			MediaPlayer player = new MediaPlayer(
 					new Media(getClass().getResource("../videos/ZombieAttack.mp4").toExternalForm()));
@@ -486,6 +492,10 @@ public class GamePlay extends Application {
 		vaccineImages.add(vaccine3);
 		vaccineImages.add(vaccine4);
 		vaccineImages.add(vaccine5);
+
+	}
+
+	private void move() {
 
 	}
 }
