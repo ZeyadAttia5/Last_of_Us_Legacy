@@ -526,7 +526,35 @@ public class GamePlay extends Application {
 		vaccineImages.add(vaccine5);
 
 	}
+	private void moveGUI(Direction x) {
+		if (selected instanceof Hero) {
+			try {
+				((Hero) selected).move(x);
+			} catch (MovementException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotEnoughActionsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (x == Direction.UP)
 
+		{
+			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x + 1));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		} else if (x == Direction.DOWN) {
+			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x - 1));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		} else if (x == Direction.RIGHT) {
+			root.add(selectedImage, selected.getLocation().y + 1, (14 - selected.getLocation().x));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		} else if (x == Direction.LEFT) {
+			root.add(selectedImage, selected.getLocation().y - 1, (14 - selected.getLocation().x));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		}
+
+	}
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Popup popup = new Popup();
 		popup.getContent().add(new Text(popUpContent));
