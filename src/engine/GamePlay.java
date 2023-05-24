@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -72,14 +73,13 @@ public class GamePlay extends Application {
 	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
 	private Image availableActionsText = new Image("icons/ActionsAvialable.png");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
-	private Character selected = null;
+//	private Character selected = null;
 	private ImageView selectedImage;
 	private ImageView emptyCellView = new ImageView(emptyCell);
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
-
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 //	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
 
@@ -95,7 +95,7 @@ public class GamePlay extends Application {
 		loadResources();
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap(primaryStage);
-		moveHelper();
+//		moveHelper();
 		primaryStage.setScene(scene1);
 		primaryStage.show();
 
@@ -125,6 +125,8 @@ public class GamePlay extends Application {
 					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
+//							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+//							System.out.println(chrctr.getName());
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
 								medicImageView.setScaleX(0.08);
@@ -132,7 +134,6 @@ public class GamePlay extends Application {
 								root.add(medicImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								medicImageView.setOnMouseEntered(e -> {
-									selected = chrctr;
 								});
 								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
 								medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
@@ -145,24 +146,27 @@ public class GamePlay extends Application {
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
 								fighterImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								//TODO delete TEST
+								// TODO delete TEST
 								Button btn = new Button("help");
 								root.add(btn, 9, 16);
 								btn.setOnMouseClicked(e -> {
 									showPopUp("Homos Emotion", primaryStage);
 								});
 								;
+								// TODO here edit
 								explorerImageView.setOnMouseClicked(e -> {
-									System.out.println(selected.getName());
+									moveHelper(chrctr, primaryStage);
+									updateBar(chrctr, primaryStage);
 								});
-//								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
-								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(Cursor.WAIT));
+//								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
@@ -538,57 +542,83 @@ public class GamePlay extends Application {
 
 	}
 
-	private void moveHelper() {
+	private void moveHelper(Character chrctr, Stage primaryStage) {
 		root.setFocusTraversable(true);
 		root.setOnKeyPressed(e -> {
 			root.requestFocus();
-			if (selected == null) {
+			if (chrctr == null) {
 //				System.out.println(selected);				
 				return;
-			}
-			else if (selected instanceof Hero) {
+			} else if (chrctr instanceof Hero) {
 				if (e.getCode() == KeyCode.W) {
-					moveSelected(Direction.UP);
+					try {
+						((Hero) chrctr).move(Direction.UP);
+					} catch (MovementException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NotEnoughActionsException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				} else if (e.getCode() == KeyCode.D)
-					moveSelected(Direction.RIGHT);
+					try {
+						((Hero) chrctr).move(Direction.RIGHT);
+					} catch (MovementException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NotEnoughActionsException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				else if (e.getCode() == KeyCode.A)
-					moveSelected(Direction.LEFT);
+					try {
+						((Hero) chrctr).move(Direction.LEFT);
+					} catch (MovementException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NotEnoughActionsException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				else if (e.getCode() == KeyCode.S)
-					moveSelected(Direction.DOWN);
+					try {
+						((Hero) chrctr).move(Direction.DOWN);
+					} catch (MovementException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NotEnoughActionsException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				else
 					return;
+				updateMap(primaryStage);
+				updateBar(chrctr, primaryStage);
 			}
 		});
+		
 
 	}
 
-	private void moveSelected(Direction x) {
-		if (selected instanceof Hero) {
-			try {
-				((Hero) selected).move(x);
-			} catch (MovementException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Movement Exception");
-			} catch (NotEnoughActionsException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Actions Exception");
-			}
-		}
-		if (x == Direction.UP) {
-			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x + 1));
-			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
-		} else if (x == Direction.DOWN) {
-			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x - 1));
-			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
-		} else if (x == Direction.RIGHT) {
-			root.add(selectedImage, selected.getLocation().y + 1, (14 - selected.getLocation().x));
-			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
-		} else if (x == Direction.LEFT) {
-			root.add(selectedImage, selected.getLocation().y - 1, (14 - selected.getLocation().x));
-			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
-		}
-
-	}
+//	private void selectCharacter(Character chrctr) {
+//		if (chrctr instanceof Zombie) {
+//			selectedZombie = (Zombie) chrctr;
+//		} else if (chrctr instanceof Fighter) {
+//			selectedFighter = (Fighter) chrctr;
+//			selectedExplorer = null;
+//			selectedMedic = null;
+//		}
+//		else if (chrctr instanceof Medic) {
+//			selectedFighter = null;
+//			selectedExplorer = null;
+//			selectedMedic = (Medic) chrctr;
+//		}
+//		else if (chrctr instanceof Explorer) {
+//			selectedFighter = null;
+//			selectedExplorer = (Explorer) chrctr;
+//			selectedMedic = null;
+//		}
+//	}
 
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Text content = new Text(popUpContent);
@@ -610,7 +640,7 @@ public class GamePlay extends Application {
 		delay.play();
 	}
 
-	private void selectedSetter(Character newSelection) {
-		this.selected = newSelection;
-	}
+//	private void selectedSetter(Character newSelection) {
+//		this.selected = newSelection;
+//	}
 }
