@@ -84,13 +84,10 @@ public class GamePlay extends Application {
 				
 				if (Game.map[x][y] == null)
 					return;
-				int g = x;
-				int h = y;
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.58);
 				emptyCellView.setScaleY(0.292);
 				root.add(emptyCellView, y, 14 - x);
-
 				if (Game.map[x][y].isVisible()) {
 					Image imaged = new Image("icons/move.png");
 					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
