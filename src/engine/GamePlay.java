@@ -559,5 +559,10 @@ public class GamePlay extends Application {
 		}
 
 	}
+	private void select(ImageView v, Character character) {
+		selected = character;
+		root.setCursor(new ImageCursor(imaged));
+		selectedImage = v;
+	}
 
 }
