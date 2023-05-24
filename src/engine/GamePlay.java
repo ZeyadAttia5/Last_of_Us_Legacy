@@ -38,6 +38,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import engine.Game;
+import exceptions.MovementException;
+import exceptions.NotEnoughActionsException;
 
 public class GamePlay extends Application {
 
@@ -54,6 +56,7 @@ public class GamePlay extends Application {
 	private Image imaged = new Image("icons/move.png");
 	private ImageView selectedImage;
 	private ImageView emptyCellView = new ImageView(emptyCell);
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -98,7 +101,7 @@ public class GamePlay extends Application {
 
 				root.add(emptyCellView, y, 14 - x);
 				root.getColumnConstraints().get(x);
-				
+
 				if (Game.map[x][y].isVisible()) {
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
@@ -106,19 +109,22 @@ public class GamePlay extends Application {
 							int h = y;
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
-								medicImageView.setOnMouseClicked(e -> select(medicImageView, ((CharacterCell)Game.map[g][h]).getCharacter()));
+								medicImageView.setOnMouseClicked(
+										e -> select(medicImageView, ((CharacterCell) Game.map[g][h]).getCharacter()));
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
-								fighterImageView.setOnMouseClicked(e -> select(fighterImageView, ((CharacterCell)Game.map[g][h]).getCharacter()));
+								fighterImageView.setOnMouseClicked(
+										e -> select(fighterImageView, ((CharacterCell) Game.map[g][h]).getCharacter()));
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
 								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
-								explorerImageView.setOnMouseClicked(e -> select(explorerImageView, ((CharacterCell)Game.map[g][h]).getCharacter()));
+								explorerImageView.setOnMouseClicked(e -> select(explorerImageView,
+										((CharacterCell) Game.map[g][h]).getCharacter()));
 								explorerImageView.setScaleX(0.03);
 								explorerImageView.setScaleY(0.03);
 								root.add(explorerImageView, y, 14 - x);
@@ -152,7 +158,8 @@ public class GamePlay extends Application {
 				} else if (!Game.map[x][y].isVisible()) {
 					Image image = new Image("icons/cross.png");
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
-					invisibleEmptyCellView.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
+					invisibleEmptyCellView
+							.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
 					invisibleEmptyCellView.setScaleX(0.7);
 					invisibleEmptyCellView.setScaleY(0.3);
 					root.add(invisibleEmptyCellView, y, 14 - x);
@@ -178,7 +185,6 @@ public class GamePlay extends Application {
 				root.getColumnConstraints().add(col);
 			}
 		}
-		
 
 	}
 
@@ -204,31 +210,39 @@ public class GamePlay extends Application {
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
 
-	private void move(Direction x) {
-		if(x==Direction.UP ) {
-			root.add(selectedImage, selected.getLocation().y, (14-selected.getLocation().x+1));
-	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
+	private void moveGUI(Direction x) {
+		if (selected instanceof Hero) {
+			try {
+				((Hero) selected).move(x);
+			} catch (MovementException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotEnoughActionsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		if(x==Direction.DOWN ) {
-			root.add(selectedImage, selected.getLocation().y, (14-selected.getLocation().x-1));
-	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
+		if (x == Direction.UP)
+
+		{
+			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x + 1));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		} else if (x == Direction.DOWN) {
+			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x - 1));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		} else if (x == Direction.RIGHT) {
+			root.add(selectedImage, selected.getLocation().y + 1, (14 - selected.getLocation().x));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
+		} else if (x == Direction.LEFT) {
+			root.add(selectedImage, selected.getLocation().y - 1, (14 - selected.getLocation().x));
+			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
 		}
-		if(x==Direction.RIGHT ) {
-			root.add(selectedImage, selected.getLocation().y+1, (14-selected.getLocation().x+1));
-	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
-		}
-		if(x==Direction.LEFT ) {
-			root.add(selectedImage, selected.getLocation().y-1, (14-selected.getLocation().x));
-	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
-		}
-		
-        
+
 	}
-	
-	private void select(ImageView v,Character character) {
+
+	private void select(ImageView v, Character character) {
 		selected = character;
 		root.setCursor(new ImageCursor(imaged));
-		selectedImage = v; 
+		selectedImage = v;
 	}
 }
-	
