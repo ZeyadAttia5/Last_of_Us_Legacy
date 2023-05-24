@@ -63,6 +63,8 @@ public class GamePlay extends Application {
 	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
 	private Image medicProfile = new Image("icons/medicProfile.png");
 	private Image zombieProfile = new Image("icons/zombieProfile.png");
+	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
+	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
@@ -121,7 +123,7 @@ public class GamePlay extends Application {
 							medicImageView.setScaleY(0.08);
 							root.add(medicImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(Cursor.HAND));
+							medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
 							medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
@@ -130,7 +132,7 @@ public class GamePlay extends Application {
 							fighterImageView.setScaleY(0.09);
 							root.add(fighterImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(Cursor.HAND));
+							fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
 							fighterImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 							ImageView explorerImageView = new ImageView(explorerImage);
@@ -138,7 +140,7 @@ public class GamePlay extends Application {
 							explorerImageView.setScaleY(0.06);
 							root.add(explorerImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-							explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(Cursor.HAND));
+							explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
 							explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 						}
 					} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
@@ -147,7 +149,7 @@ public class GamePlay extends Application {
 						zombieImageView.setScaleY(0.08);
 						root.add(zombieImageView, y, 14 - x);
 						model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-						zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(Cursor.HAND));
+						zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
 						zombieImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 					}
 
@@ -374,7 +376,7 @@ public class GamePlay extends Application {
 		root.add(imageView, 14, 17);
 		imageView.setTranslateY(-30);
 		imageView.setTranslateX(-50);
-		imageView.setOnMouseEntered(event -> imageView.setCursor(Cursor.CLOSED_HAND));
+		imageView.setOnMouseEntered(event -> imageView.setCursor(handCursor));
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
 	}
 
