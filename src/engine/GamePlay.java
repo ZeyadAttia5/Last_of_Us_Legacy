@@ -151,6 +151,9 @@ public class GamePlay extends Application {
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								Button btn = new Button("help");
+								root.add(btn, 9, 16);
+								btn.setOnMouseClicked(e->{showPopUp("Homos Emotion", primaryStage);});;
 								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
 								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 							}
@@ -470,9 +473,6 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseEntered(event -> imageView.setCursor(handCursor));
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
-		Button btn = new Button("help!");
-		//TODO fix this
-//		btn.onMouseClickedProperty(e->{showPopUp("Homos Emotion", primaryStage);});
 	}
 
 	private void loadResources() {
@@ -560,4 +560,28 @@ public class GamePlay extends Application {
 
 	}
 
+	private void showPopUp(String popUpContent, Stage primaryStage) {
+		Popup popup = new Popup();
+		popup.getContent().add(new Text(popUpContent));
+
+		// Create the popup content
+		VBox popupContent = new VBox();
+		popupContent.setStyle("-fx-background-color: white; -fx-padding: 10px;");
+		popupContent.getChildren().add(new Text("3enba 3al maree5"));
+
+		// Set the button's action to show the popup
+//	        showPopupButton.setOnAction(e -> {
+//	            if (!popup.isShowing()) {
+//	                popup.show(primaryStage);
+//	            }
+//	        });
+
+		// Create the scene and set it on the stage
+		VBox popUpScene = new VBox();
+		popUpScene.getChildren().add(popUpScene);
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Popup Window Example");
+		primaryStage.show();
+	}
 }
