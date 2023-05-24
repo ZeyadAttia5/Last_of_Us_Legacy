@@ -105,7 +105,7 @@ public class GamePlay extends Application {
 
 				if (Game.map[x][y] == null)
 					return;
-
+//asdad
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
 				emptyCellView.setScaleY(0.3);
