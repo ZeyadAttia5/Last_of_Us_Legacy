@@ -151,19 +151,18 @@ public class GamePlay extends Application {
 	}
 
 	private void updateTexturedWall() {
-		for (int i = 15; i < 18; i++) {
+		for (int i = 16; i < root.getRowCount(); i++) {
 			for (int j = 0; j < root.getColumnCount() - 3; j++) {
 				ImageView texturedBarView = new ImageView(texturedBar);
-				texturedBarView.setScaleX(0.29);
-				texturedBarView.setScaleY(0.17);
-
 				root.add(texturedBarView, j, i);
 			}
 		}
+		updateMap();
 	}
 
 	private void updateBar(model.characters.Character chrctr) {
 		updateTexturedWall();
+//		initializeGrid();
 		Text name = new Text(chrctr.getName());
 		name.setFont(Font.font("Monospaced", 18));
 		name.setFill(Color.WHITE);
@@ -220,8 +219,8 @@ public class GamePlay extends Application {
 			if (i > 14) {
 				for (int j = 0; j < root.getColumnCount(); j++) {
 					ImageView texturedBarView = new ImageView(texturedBar);
-					texturedBarView.setScaleX(0.3);
-					texturedBarView.setScaleY(0.21);
+//					texturedBarView.setScaleX(0.3);
+//					texturedBarView.setScaleY(0.21);
 					root.add(texturedBarView, j, i);
 				}
 			}
