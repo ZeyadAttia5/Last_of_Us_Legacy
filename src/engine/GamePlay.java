@@ -418,7 +418,7 @@ public class GamePlay extends Application {
 //			primaryStage.setScene(scene2);
 			primaryStage.show();
 		}
-		this.updateMap(primaryStage);
+		updateTexturedWall(primaryStage);
 	}
 
 	private void putEndTurnButton(Stage primaryStage) {
