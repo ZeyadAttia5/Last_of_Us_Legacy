@@ -88,8 +88,14 @@ public class GamePlay extends Application {
 			for (int y = 0; y < 15 && x < 15; y++) {
 				if (Game.map[x][y] == null)
 					return;
+<<<<<<< HEAD
 				emptyCellView.setScaleX(0.58);
 				emptyCellView.setScaleY(0.292);
+=======
+				ImageView emptyCellView = new ImageView(emptyCell);
+				emptyCellView.setScaleX(0.7);
+				emptyCellView.setScaleY(0.3);
+>>>>>>> 566cb0a5778237920a986221dcf358d7cb99402a
 				root.add(emptyCellView, y, 14 - x);
 				root.getColumnConstraints().get(x);
 				
@@ -147,8 +153,8 @@ public class GamePlay extends Application {
 					Image image = new Image("icons/cross.png");
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
 					invisibleEmptyCellView.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
-					invisibleEmptyCellView.setScaleX(0.58);
-					invisibleEmptyCellView.setScaleY(0.292);
+					invisibleEmptyCellView.setScaleX(0.7);
+					invisibleEmptyCellView.setScaleY(0.3);
 					root.add(invisibleEmptyCellView, y, 14 - x);
 				}
 			}
@@ -156,7 +162,6 @@ public class GamePlay extends Application {
 	}
 
 	private void initializeGrid() {
-		root.setPadding(new Insets(2, 10, 10, 10));
 		root.setGridLinesVisible(true);
 //		root.setHgap(30);
 //		root.setVgap(30);
