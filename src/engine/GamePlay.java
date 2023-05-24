@@ -209,13 +209,138 @@ public class GamePlay extends Application {
 //			row.setFillHeight(true);
 		}
 	}
+	
+	private void updateTexturedWall(Stage primaryStage) {
+		for (int i = 15; i < root.getRowCount(); i++) {
+			for (int j = 0; j < root.getColumnCount(); j++) {
+				ImageView texturedBarView = new ImageView(texturedBar);
+				root.add(texturedBarView, j, i);
+			}
+		}
+		updateMap(primaryStage);
+		putEndTurnButton(primaryStage);
+	}
+
+	private void updateBar(model.characters.Character chrctr, Stage primaryStage) {
+		updateTexturedWall(primaryStage);
+		Text name = new Text(chrctr.getName());
+		name.setFont(Font.font("Monospaced", 18));
+		name.setFill(Color.WHITE);
+		name.setStroke(Color.WHITE);
+
+		root.add(name, 0, 15);
+		if (chrctr instanceof model.characters.Fighter) {
+			ImageView fighterProfileView = new ImageView(fighterProfile);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
+		}
+		if (chrctr instanceof model.characters.Explorer) {
+			ImageView fighterProfileView = new ImageView(explorerPrfile);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
+		}
+		if (chrctr instanceof model.characters.Medic) {
+			ImageView fighterProfileView = new ImageView(medicProfile);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
+		}
+		if (chrctr instanceof model.characters.Zombie) {
+			ImageView fighterProfileView = new ImageView(zombieProfile);
+			name.setStroke(Color.ORANGERED);
+			fighterProfileView.setScaleX(0.2);
+			fighterProfileView.setScaleY(0.2);
+			root.add(fighterProfileView, 0, 16);
+		}
+		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
+		progressBar.setStyle("-fx-accent: blue");
+		progressBar.setBorder(Border.EMPTY);
+		progressBar.setPadding(new Insets(15, 0, 0, 8));
+		root.add(progressBar, 0, 17);
+
+		if ((chrctr) instanceof Hero) {
+
+			Text vaccineText = new Text("Vaccines");
+			vaccineText.setFont(Font.font("Monospaced", 14));
+			vaccineText.setFill(Color.WHITE);
+			vaccineText.setStroke(Color.WHITE);
+			vaccineText.setTranslateX(-10);
+			vaccineText.setTranslateY(-10);
+			root.add(vaccineText, 2, 16);
+
+			Text supplyText = new Text("Supplies");
+			supplyText.setFont(Font.font("Monospaced", 14));
+			supplyText.setFill(Color.WHITE);
+			supplyText.setStroke(Color.WHITE);
+			supplyText.setTranslateX(-10);
+			supplyText.setTranslateY(-7);
+			root.add(supplyText, 2, 17);
+
+			int suppliesNum = ((Hero) chrctr).getSupplyInventory().size();
+			if (chrctr instanceof Fighter) {
+				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(0));
+
+				if (suppliesNum <= 5 && suppliesNum > 0) {
+					supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
+				} else if (suppliesNum > 5) {
+					supplyImageView = new ImageView(fighterSupplyImages.get(5));
+				}
+				supplyImageView.setScaleX(0.25);
+				supplyImageView.setScaleY(0.25);
+				supplyImageView.setTranslateY(-15);
+				root.add(supplyImageView, 3, 17);
+			}
+
+			if (chrctr instanceof Medic) {
+				ImageView supplyImageView = new ImageView(medicSupplyImages.get(0));
+
+				if (suppliesNum <= 5 && suppliesNum > 0) {
+					supplyImageView = new ImageView(medicSupplyImages.get(suppliesNum));
+				} else if (suppliesNum > 5) {
+					supplyImageView = new ImageView(medicSupplyImages.get(5));
+				}
+				supplyImageView.setScaleX(0.25);
+				supplyImageView.setScaleY(0.25);
+				supplyImageView.setTranslateY(-15);
+				root.add(supplyImageView, 3, 17);
+			}
+
+			if (chrctr instanceof Explorer) {
+				ImageView supplyImageView = new ImageView(explorerSupplyImages.get(0));
+				if (suppliesNum <= 5 && suppliesNum > 0) {
+					supplyImageView = new ImageView(explorerSupplyImages.get(suppliesNum));
+				} else if (suppliesNum > 5) {
+					supplyImageView = new ImageView(explorerSupplyImages.get(5));
+				}
+				supplyImageView.setScaleX(0.3);
+				supplyImageView.setScaleY(0.3);
+				supplyImageView.setTranslateY(-20);
+				root.add(supplyImageView, 3, 17);
+			}
+			int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
+			ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
+			if (vaccinesNum <= 5 && vaccinesNum > 0) {
+				vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
+			} else if (vaccinesNum > 5) {
+				vaccineImageView = new ImageView(vaccineImages.get(5));
+			}
+			vaccineImageView.setScaleX(0.3);
+			vaccineImageView.setScaleY(0.3);
+			vaccineImageView.setTranslateY(-20);
+			root.add(vaccineImageView, 3, 16);
+
+		}
+
+	}
 
 	private void initializeGrid(Stage primaryStage) {
 		root.setPadding(new Insets(2, 10, 10, 10));
 		root.setGridLinesVisible(true);
 //		root.setHgap(30);
 //		root.setVgap(30);
-		for (int i = 0; i < 17; i++) {
+		for (int i = 0; i < root.getColumnCount(); i++) {
 			RowConstraints row = new RowConstraints();
 			row.setPercentHeight(100);
 			row.setValignment(VPos.CENTER);
@@ -228,7 +353,7 @@ public class GamePlay extends Application {
 				root.getColumnConstraints().add(col);
 			}
 		}
-
+		updateTexturedWall(primaryStage);
 	}
 
 	private void controllerEndTurn() {
