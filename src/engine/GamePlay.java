@@ -1,11 +1,40 @@
 package engine;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import exceptions.InvalidTargetException;
+import exceptions.NotEnoughActionsException;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.ImageCursor;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.characters.Character;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -15,28 +44,7 @@ import model.collectibles.Supply;
 import model.collectibles.Vaccine;
 import model.world.CharacterCell;
 import model.world.CollectibleCell;
-import javafx.scene.image.*;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.control.*;
-import exceptions.InvalidTargetException;
-import exceptions.NotEnoughActionsException;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import java.io.IOException;
-import java.util.ArrayList;
-import javafx.animation.PauseTransition;
-import javafx.animation.FadeTransition;
+import javafx.stage.Popup;
 
 public class GamePlay extends Application {
 
@@ -58,11 +66,13 @@ public class GamePlay extends Application {
 	private Image medicProfile = new Image("icons/medicProfile.png");
 	private Image zombieProfile = new Image("icons/zombieProfile.png");
 	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
+	private Image availableActionsText = new Image("icons/ActionsAvialable.png");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
+	private Character selected;
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 //	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -106,7 +116,6 @@ public class GamePlay extends Application {
 				if (Game.map[x][y].isVisible()) {
 					Image imaged = new Image("icons/move.png");
 					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
-					emptyCellView.setOnMouseClicked(e -> move());
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 //						// TODO DELETE the 2 next lines
@@ -118,6 +127,9 @@ public class GamePlay extends Application {
 								medicImageView.setScaleY(0.08);
 								root.add(medicImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								medicImageView.setOnMouseEntered(e -> {
+									selected = chrctr;
+								});
 								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
 								medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 
@@ -203,8 +215,26 @@ public class GamePlay extends Application {
 		name.setFont(Font.font("Monospaced", 18));
 		name.setFill(Color.WHITE);
 		name.setStroke(Color.WHITE);
-
 		root.add(name, 0, 15);
+		// TODO add available actions
+		if (chrctr instanceof Hero) {
+			ImageView actionsAvailableView = new ImageView(availableActionsText);
+			actionsAvailableView.setScaleX(0.27);
+			actionsAvailableView.setScaleY(0.27);
+			root.add(actionsAvailableView, 5, 16);
+			Text actionsAvailable = new Text(((Hero) chrctr).getActionsAvailable() + "");
+			actionsAvailable.setFont(Font.font("Monospaced", 20));
+			actionsAvailable.setFill(Color.WHITE);
+			actionsAvailable.setStroke(Color.WHITE);
+			actionsAvailable.setTranslateX(5);
+			actionsAvailable.setTranslateY(4.8);
+//			SegmentedBar progressBarActions = new SegmentedBar();
+//	        progressBarActions.setStyle("-fx-accent: transparent; -fx-background-color: blue;");
+//	        progressBarActions.setPrefWidth(200);
+//	        progressBarActions.setPrefHeight(20);
+//	        progressBarActions.setProgress(3.0 / 5.0);
+			root.add(actionsAvailable, 6, 16);
+		}
 		if (chrctr instanceof model.characters.Fighter) {
 			ImageView fighterProfileView = new ImageView(fighterProfile);
 			fighterProfileView.setScaleX(0.2);
@@ -436,6 +466,9 @@ public class GamePlay extends Application {
 		imageView.setTranslateX(-50);
 		imageView.setOnMouseEntered(event -> imageView.setCursor(handCursor));
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
+		Button btn = new Button("help!");
+		//TODO fix this
+		btn.onMouseClickedProperty(e->{showPopUp("Homos Emotion", primaryStage);});
 	}
 
 	private void loadResources() {
@@ -443,7 +476,6 @@ public class GamePlay extends Application {
 			Game.loadHeroes("src/test_heros.csv");
 		} catch (IOException e) {
 		}
-
 		Image explorerSupply0 = new Image("icons/ExplorerSupply0.png");
 		Image explorerSupply1 = new Image("icons/ExplorerSupply1.png");
 		Image explorerSupply2 = new Image("icons/ExplorerSupply2.png");
@@ -495,7 +527,28 @@ public class GamePlay extends Application {
 
 	}
 
-	private void move() {
+	private void showPopUp(String popUpContent, Stage primaryStage) {
+		Popup popup = new Popup();
+		popup.getContent().add(new Text(popUpContent));
 
+		// Create the popup content
+		VBox popupContent = new VBox();
+		popupContent.setStyle("-fx-background-color: white; -fx-padding: 10px;");
+		popupContent.getChildren().add(new Text("3enba 3al maree5"));
+
+		// Set the button's action to show the popup
+//	        showPopupButton.setOnAction(e -> {
+//	            if (!popup.isShowing()) {
+//	                popup.show(primaryStage);
+//	            }
+//	        });
+
+		// Create the scene and set it on the stage
+		VBox popUpScene = new VBox();
+		popUpScene.getChildren().add(popUpScene);
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Popup Window Example");
+		primaryStage.show();
 	}
 }
