@@ -11,12 +11,15 @@ import model.characters.Character;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
+import javafx.util.Duration;
 import model.characters.Medic;
 import model.characters.Zombie;
 import model.collectibles.Supply;
 import model.collectibles.Vaccine;
 import model.world.Cell;
 import model.world.CharacterCell;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import model.world.CollectibleCell;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyCombination;
@@ -25,12 +28,27 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.control.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.web.WebView;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import javafx.animation.PauseTransition;
+import javafx.animation.FadeTransition;
 import javafx.scene.text.TextAlignment;
 
 import java.awt.Point;
@@ -51,6 +69,23 @@ public class GamePlay extends Application {
 	private Image supplyImage = new Image("icons/supplyImage.png");
 	private Image zombieImage = new Image("icons/zombieImage.png");
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
+	private Image texturedBar = new Image("icons/texturedBar.png");
+	private Image fighterProfile = new Image("icons/fighterProfile.png");
+	private Image explorerPrfile = new Image("icons/explorerProfile.png");
+	private Image endTurnButtonImage = new Image("icons/endTurnButtonImage.png");
+	private Image medicProfile = new Image("icons/medicProfile.png");
+	private Image zombieProfile = new Image("icons/zombieProfile.png");
+	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
+	private ImageCursor handCursor = new ImageCursor(handCursorImage);
+	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
+	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
+	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
+	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
+
+	private Scene scene1 = new Scene(root, Color.BEIGE);
+	private static BorderPane endGameScene = new BorderPane();
+	private Image logo = new Image("icons/logo.png");
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -58,14 +93,14 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-		Scene scene1 = new Scene(root, Color.BEIGE);
-		initializeGrid();
-		putEndTurnButton();
+		initializeGrid(primaryStage);
+		putEndTurnButton(primaryStage);
+		loadResources();
 		Image image = new Image("icons/cursor.png");
 		root.setCursor(new ImageCursor(image));
 		Game.loadHeroes("src/test_heros.csv");
 		Game.startGame(Game.availableHeroes.remove(0));
-		updateMap();
+		updateMap(primaryStage);
 		primaryStage.setScene(scene1);
 		primaryStage.show();
 
@@ -76,14 +111,14 @@ public class GamePlay extends Application {
 		Image logo = new Image("icons/logo.png");
 		primaryStage.getIcons().add(logo);
 		primaryStage.setFullScreen(true);
-		primaryStage.setFullScreenExitHint("Press F11 to exit fullscreen");
-		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("F11"));
+		primaryStage.setFullScreenExitHint("");
+		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("Alt + Enter"));
 	}
 
-	private void updateMap() {
+	private void updateMap(Stage primaryStage) {
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15 && x < 15; y++) {
-				
+
 				if (Game.map[x][y] == null)
 					return;
 				int g = x;
@@ -91,8 +126,8 @@ public class GamePlay extends Application {
 				ImageView emptyCellView = new ImageView(emptyCell);
 				Image imaged = new Image("icons/arrowD.png");
 				emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
-				emptyCellView.setScaleX(0.58);
-				emptyCellView.setScaleY(0.292);
+				emptyCellView.setScaleX(0.7);
+				emptyCellView.setScaleY(0.3);
 				root.add(emptyCellView, y, 14 - x);
 
 				if (Game.map[x][y].isVisible()) {
@@ -100,20 +135,32 @@ public class GamePlay extends Application {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
-								medicImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
-								medicImageView.setScaleX(0.09);
-								medicImageView.setScaleY(0.09);
+								medicImageView.setOnMouseClicked(
+										event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
+								medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+								medicImageView.setScaleX(0.08);
+								medicImageView.setScaleY(0.08);
 								root.add(medicImageView, y, 14 - x);
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
-								fighterImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+								fighterImageView.setOnMouseClicked(
+										event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
+								fighterImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
 								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
-								explorerImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+								explorerImageView.setOnMouseClicked(
+										event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
+								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 								explorerImageView.setScaleX(0.03);
 								explorerImageView.setScaleY(0.03);
 								root.add(explorerImageView, y, 14 - x);
@@ -121,7 +168,12 @@ public class GamePlay extends Application {
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							Image image = new Image("icons/swordImage.png");
-							zombieImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+							zombieImageView.setOnMouseClicked(
+									event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+							chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
+							zombieImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(new ImageCursor(image)));
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
@@ -146,7 +198,7 @@ public class GamePlay extends Application {
 					}
 
 				} else if (!Game.map[x][y].isVisible()) {
-					
+
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
 					invisibleEmptyCellView.setScaleX(0.58);
 					invisibleEmptyCellView.setScaleY(0.292);
@@ -158,7 +210,7 @@ public class GamePlay extends Application {
 		}
 	}
 
-	private void initializeGrid() {
+	private void initializeGrid(Stage primaryStage) {
 		root.setPadding(new Insets(2, 10, 10, 10));
 		root.setGridLinesVisible(true);
 //		root.setHgap(30);
@@ -176,7 +228,6 @@ public class GamePlay extends Application {
 				root.getColumnConstraints().add(col);
 			}
 		}
-		
 
 	}
 
@@ -195,11 +246,11 @@ public class GamePlay extends Application {
 		Game.checkWin();
 		Game.checkGameOver();
 
-		this.updateMap();
+		this.updateMap(primaryStage);
 
 	}
 
-	private void putEndTurnButton() {
+	private void putEndTurnButton(Stage primaryStage) {
 		Image image = new Image("icons/EndTurnButton.png");
 		ImageView imageView = new ImageView(image);
 		imageView.setScaleX(0.3);
@@ -213,23 +264,22 @@ public class GamePlay extends Application {
 
 	private void move() {
 
-		
 	}
+
 	private void cursor(Character character) {
-		if(character instanceof Medic) {
-			if(!((Character) character).isTargetAdjacent()) {
+		if (character instanceof Medic) {
+			if (!((Character) character).isTargetAdjacent()) {
 				check(character);
 				Image image = new Image("icons/arrowD.png");
 				root.setCursor(new ImageCursor(image));
-			}
-			else {
+			} else {
 				Image image = new Image("icons/swordImage.png");
 				root.setCursor(new ImageCursor(image));
 			}
 		}
-		
+
 	}
-	
+
 	private boolean check(Character character) {
 		ArrayList<Point> x = ((model.characters.Character) character).getAdjacentIndices();
 		ArrayList<Hero> h = Game.heroes;
@@ -240,12 +290,12 @@ public class GamePlay extends Application {
 //		for(i = 0; i<h.size();i++) {
 //			hx.add((h.get(i)).getLocation());
 //		}
-		for(i = 0;i<z.size();i++) {
+		for (i = 0; i < z.size(); i++) {
 			zx.add((h.get(i)).getLocation());
 		}
-		for(i = 0;i<x.size();i++) {
-			for(int j = 0;j<zx.size();j++) {
-				if((x.get(i)).equals(zx.get(j)))
+		for (i = 0; i < x.size(); i++) {
+			for (int j = 0; j < zx.size(); j++) {
+				if ((x.get(i)).equals(zx.get(j)))
 					return true;
 			}
 		}
