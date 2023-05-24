@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.stage.Stage;
 import model.characters.Character;
+import model.characters.Direction;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -49,6 +50,10 @@ public class GamePlay extends Application {
 	private Image supplyImage = new Image("icons/supplyImage.png");
 	private Image zombieImage = new Image("icons/zombieImage.png");
 	private Image invisibleEmptyCell = new Image("icons/darkInvisibleEmptyCell.png");
+	private Character selected;
+	private Image imaged = new Image("icons/move.png");
+	private ImageView selectedImage;
+	private ImageView emptyCellView = new ImageView(emptyCell);
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -81,32 +86,33 @@ public class GamePlay extends Application {
 	private void updateMap() {
 		for (int x = 0; x < 15; x++) {
 			for (int y = 0; y < 15 && x < 15; y++) {
-				
 				if (Game.map[x][y] == null)
 					return;
-				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.58);
 				emptyCellView.setScaleY(0.292);
 				root.add(emptyCellView, y, 14 - x);
+				root.getColumnConstraints().get(x);
+				
 				if (Game.map[x][y].isVisible()) {
-					Image imaged = new Image("icons/move.png");
-					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
-					emptyCellView.setOnMouseClicked(e -> move());
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
+							int g = x;
+							int h = y;
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
+								medicImageView.setOnMouseClicked(e -> select(medicImageView, ((CharacterCell)Game.map[g][h]).getCharacter()));
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
-
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
+								fighterImageView.setOnMouseClicked(e -> select(fighterImageView, ((CharacterCell)Game.map[g][h]).getCharacter()));
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
 								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
+								explorerImageView.setOnMouseClicked(e -> select(explorerImageView, ((CharacterCell)Game.map[g][h]).getCharacter()));
 								explorerImageView.setScaleX(0.03);
 								explorerImageView.setScaleY(0.03);
 								root.add(explorerImageView, y, 14 - x);
@@ -193,8 +199,31 @@ public class GamePlay extends Application {
 		imageView.setOnMouseClicked(event -> controllerEndTurn());
 	}
 
-	private void move() {
+	private void move(Direction x) {
+		if(x==Direction.UP ) {
+			root.add(selectedImage, selected.getLocation().y, (14-selected.getLocation().x+1));
+	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
+		}
+		if(x==Direction.DOWN ) {
+			root.add(selectedImage, selected.getLocation().y, (14-selected.getLocation().x-1));
+	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
+		}
+		if(x==Direction.RIGHT ) {
+			root.add(selectedImage, selected.getLocation().y+1, (14-selected.getLocation().x+1));
+	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
+		}
+		if(x==Direction.LEFT ) {
+			root.add(selectedImage, selected.getLocation().y-1, (14-selected.getLocation().x));
+	        root.add(emptyCellView, selected.getLocation().y, (14-selected.getLocation().x));
+		}
 		
+        
+	}
+	
+	private void select(ImageView v,Character character) {
+		selected = character;
+		root.setCursor(new ImageCursor(imaged));
+		selectedImage = v; 
 	}
 }
 	
