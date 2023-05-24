@@ -88,14 +88,14 @@ public class GamePlay extends Application {
 			for (int y = 0; y < 15 && x < 15; y++) {
 				if (Game.map[x][y] == null)
 					return;
-<<<<<<< HEAD
+
 				emptyCellView.setScaleX(0.58);
 				emptyCellView.setScaleY(0.292);
-=======
+
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
 				emptyCellView.setScaleY(0.3);
->>>>>>> 566cb0a5778237920a986221dcf358d7cb99402a
+
 				root.add(emptyCellView, y, 14 - x);
 				root.getColumnConstraints().get(x);
 				
