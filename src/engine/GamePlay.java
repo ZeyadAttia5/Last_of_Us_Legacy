@@ -3,7 +3,6 @@ package engine;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 import exceptions.InvalidTargetException;
 import exceptions.MovementException;
 import exceptions.NotEnoughActionsException;
@@ -21,7 +20,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -71,7 +72,7 @@ public class GamePlay extends Application {
 	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
 	private Image availableActionsText = new Image("icons/ActionsAvialable.png");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
-	private Character selected;
+	private Character selected = null;
 	private ImageView selectedImage;
 	private ImageView emptyCellView = new ImageView(emptyCell);
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
@@ -94,6 +95,7 @@ public class GamePlay extends Application {
 		loadResources();
 		Game.startGame(Game.availableHeroes.remove(0));
 		updateMap(primaryStage);
+		moveHelper();
 		primaryStage.setScene(scene1);
 		primaryStage.show();
 
@@ -123,9 +125,6 @@ public class GamePlay extends Application {
 					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
-//						// TODO DELETE the 2 next lines
-//						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
-//						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory().add(new Vaccine());
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
 								medicImageView.setScaleX(0.08);
@@ -152,10 +151,17 @@ public class GamePlay extends Application {
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
+								//TODO delete TEST
 								Button btn = new Button("help");
 								root.add(btn, 9, 16);
-								btn.setOnMouseClicked(e->{showPopUp("Homos Emotion", primaryStage);});;
-								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
+								btn.setOnMouseClicked(e -> {
+									showPopUp("Homos Emotion", primaryStage);
+								});
+								;
+								explorerImageView.setOnMouseClicked(e -> {
+									System.out.println(selected.getName());
+								});
+//								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
 								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
@@ -531,21 +537,44 @@ public class GamePlay extends Application {
 		vaccineImages.add(vaccine5);
 
 	}
-	private void moveGUI(Direction x) {
+
+	private void moveHelper() {
+		root.setFocusTraversable(true);
+		root.setOnKeyPressed(e -> {
+			root.requestFocus();
+			if (selected == null) {
+//				System.out.println(selected);				
+				return;
+			}
+			else if (selected instanceof Hero) {
+				if (e.getCode() == KeyCode.W) {
+					moveSelected(Direction.UP);
+				} else if (e.getCode() == KeyCode.D)
+					moveSelected(Direction.RIGHT);
+				else if (e.getCode() == KeyCode.A)
+					moveSelected(Direction.LEFT);
+				else if (e.getCode() == KeyCode.S)
+					moveSelected(Direction.DOWN);
+				else
+					return;
+			}
+		});
+
+	}
+
+	private void moveSelected(Direction x) {
 		if (selected instanceof Hero) {
 			try {
 				((Hero) selected).move(x);
 			} catch (MovementException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Movement Exception");
 			} catch (NotEnoughActionsException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Actions Exception");
 			}
 		}
-		if (x == Direction.UP)
-
-		{
+		if (x == Direction.UP) {
 			root.add(selectedImage, selected.getLocation().y, (14 - selected.getLocation().x + 1));
 			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
 		} else if (x == Direction.DOWN) {
@@ -563,32 +592,25 @@ public class GamePlay extends Application {
 
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Text content = new Text(popUpContent);
-		content.setFont(Font.font("Monospaced",20));
+		content.setFont(Font.font("Monospaced", 20));
 		content.setFill(Color.ANTIQUEWHITE);
 		Popup popup = new Popup();
 		popup.getContent().add(content);
 		// Create the popup content
 		VBox popupContent = new VBox();
 		popup.getContent().add(popupContent);
-		if(!popup.isShowing()) {
+		if (!popup.isShowing()) {
 			popup.show(primaryStage);
 		}
-		
+
 		PauseTransition delay = new PauseTransition(Duration.seconds(5));
 		delay.setOnFinished(e -> {
 			popup.hide();
 		});
 		delay.play();
+	}
 
-
-		
-		// Set the button's action to show the popup
-//	        showPopupButton.setOnAction(e -> {
-//	            if (!popup.isShowing()) {
-//	                popup.show(primaryStage);
-//	            }
-//	        });
-
-		// Create the scene and set it on the stage
+	private void selectedSetter(Character newSelection) {
+		this.selected = newSelection;
 	}
 }
