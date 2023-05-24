@@ -77,6 +77,7 @@ public class GamePlay extends Application {
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
+	private Image imaged = new Image("icons/move.png");
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 //	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -121,6 +122,8 @@ public class GamePlay extends Application {
 					Image imaged = new Image("icons/move.png");
 					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
 					if (Game.map[x][y] instanceof CharacterCell) {
+						int g = x;
+						int h = y;
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 //						// TODO DELETE the 2 next lines
 //						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
@@ -162,6 +165,14 @@ public class GamePlay extends Application {
 
 							Image image = new Image("icons/swordImage.png");
 							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(new ImageCursor(image)));
+							zombieImageView.setOnMouseClicked(e -> {
+								try {
+									attackUI(((CharacterCell) Game.map[g][h]).getCharacter());
+								} catch (NotEnoughActionsException | InvalidTargetException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							});
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
@@ -558,6 +569,10 @@ public class GamePlay extends Application {
 			root.add(emptyCellView, selected.getLocation().y, (14 - selected.getLocation().x));
 		}
 
+	}
+	private void attackUI(Character zombie) throws NotEnoughActionsException, InvalidTargetException {
+		selected.setTarget(zombie);
+		selected.attack();
 	}
 	private void select(ImageView v, Character character) {
 		selected = character;
