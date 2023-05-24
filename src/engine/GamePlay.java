@@ -32,6 +32,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
 import javafx.scene.text.TextAlignment;
+
+import java.awt.Point;
+import java.util.ArrayList;
+
 import engine.Game;
 
 public class GamePlay extends Application {
@@ -88,31 +92,32 @@ public class GamePlay extends Application {
 				root.add(emptyCellView, y, 14 - x);
 
 				if (Game.map[x][y].isVisible()) {
+					Image imaged = new Image("icons/move.png");
+					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
+					emptyCellView.setOnMouseClicked(e -> move());
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
-								medicImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 								medicImageView.setScaleX(0.09);
 								medicImageView.setScaleY(0.09);
 								root.add(medicImageView, y, 14 - x);
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
-								fighterImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 								fighterImageView.setScaleX(0.03);
 								fighterImageView.setScaleY(0.03);
 								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
-								explorerImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
 								explorerImageView.setScaleX(0.03);
 								explorerImageView.setScaleY(0.03);
 								root.add(explorerImageView, y, 14 - x);
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
-							zombieImageView.setOnMouseClicked(event -> cursor(((CharacterCell) Game.map[g][h]).getCharacter()));
+							Image image = new Image("icons/swordImage.png");
+							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(new ImageCursor(image)));
 							zombieImageView.setScaleX(0.09);
 							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
@@ -120,11 +125,15 @@ public class GamePlay extends Application {
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
 						if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Vaccine) {
 							ImageView vaccineImageView = new ImageView(vaccineImage);
+							Image image = new Image("icons/Hand.png");
+							vaccineImageView.setOnMouseEntered(e -> vaccineImageView.setCursor(new ImageCursor(image)));
 							vaccineImageView.setScaleX(0.2);
 							vaccineImageView.setScaleY(0.2);
 							root.add(vaccineImageView, y, 14 - x);
 						} else if (((CollectibleCell) Game.map[x][y]).getCollectible() instanceof Supply) {
 							ImageView supplyImageView = new ImageView(supplyImage);
+							Image image = new Image("icons/Hand.png");
+							supplyImageView.setOnMouseEntered(e -> supplyImageView.setCursor(new ImageCursor(image)));
 							supplyImageView.setScaleX(0.1);
 							supplyImageView.setScaleY(0.1);
 							root.add(supplyImageView, y, 14 - x);
@@ -132,15 +141,14 @@ public class GamePlay extends Application {
 					}
 
 				} else if (!Game.map[x][y].isVisible()) {
-					
+					Image image = new Image("icons/cross.png");
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
+					invisibleEmptyCellView.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
 					invisibleEmptyCellView.setScaleX(0.58);
 					invisibleEmptyCellView.setScaleY(0.292);
 					root.add(invisibleEmptyCellView, y, 14 - x);
 				}
 			}
-//			col.setFillWidth(true);
-//			row.setFillHeight(true);
 		}
 	}
 
@@ -172,7 +180,6 @@ public class GamePlay extends Application {
 		Game.endTurn();
 		Game.checkWin();
 		Game.checkGameOver();
-
 		this.updateMap();
 
 	}
@@ -190,20 +197,7 @@ public class GamePlay extends Application {
 	}
 
 	private void move() {
-
-		
-	}
-	private void cursor(Character character) {
-		if(character instanceof Medic) {
-			if(!character.isTargetAdjacent()) {
-				Image image = new Image("icons/arrowD.png");
-				root.setCursor(new ImageCursor(image));
-			}
-			else {
-				Image image = new Image("icons/swordImage.png");
-				root.setCursor(new ImageCursor(image));
-			}
-		}
 		
 	}
 }
+	
