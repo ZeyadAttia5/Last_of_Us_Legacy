@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import exceptions.InvalidTargetException;
+import exceptions.MovementException;
 import exceptions.NotEnoughActionsException;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -35,6 +36,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.characters.Character;
+import model.characters.Direction;
 import model.characters.Explorer;
 import model.characters.Fighter;
 import model.characters.Hero;
@@ -68,11 +70,13 @@ public class GamePlay extends Application {
 	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
 	private Image availableActionsText = new Image("icons/ActionsAvialable.png");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
+	private Character selected;
+	private ImageView selectedImage;
+	private ImageView emptyCellView = new ImageView(emptyCell);
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
-	private Character selected;
 
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 //	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
@@ -468,7 +472,7 @@ public class GamePlay extends Application {
 		imageView.setOnMouseClicked(event -> controllerEndTurn(primaryStage));
 		Button btn = new Button("help!");
 		//TODO fix this
-		btn.onMouseClickedProperty(e->{showPopUp("Homos Emotion", primaryStage);});
+//		btn.onMouseClickedProperty(e->{showPopUp("Homos Emotion", primaryStage);});
 	}
 
 	private void loadResources() {
@@ -555,28 +559,5 @@ public class GamePlay extends Application {
 		}
 
 	}
-	private void showPopUp(String popUpContent, Stage primaryStage) {
-		Popup popup = new Popup();
-		popup.getContent().add(new Text(popUpContent));
 
-		// Create the popup content
-		VBox popupContent = new VBox();
-		popupContent.setStyle("-fx-background-color: white; -fx-padding: 10px;");
-		popupContent.getChildren().add(new Text("3enba 3al maree5"));
-
-		// Set the button's action to show the popup
-//	        showPopupButton.setOnAction(e -> {
-//	            if (!popup.isShowing()) {
-//	                popup.show(primaryStage);
-//	            }
-//	        });
-
-		// Create the scene and set it on the stage
-		VBox popUpScene = new VBox();
-		popUpScene.getChildren().add(popUpScene);
-		Scene scene = new Scene(root, 300, 200);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Popup Window Example");
-		primaryStage.show();
-	}
 }
