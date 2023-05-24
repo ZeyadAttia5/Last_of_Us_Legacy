@@ -109,13 +109,12 @@ public class GamePlay extends Application {
 
 				root.add(emptyCellView, y, 14 - x);
 
-//				if (Game.map[x][y].isVisible()) {
+				if (Game.map[x][y].isVisible()) {
 				if (Game.map[x][y] instanceof CharacterCell) {
 					if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
-						// TODO DELETE the 2 next lines
-						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
-						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory()
-								.add(new Vaccine());
+//						// TODO DELETE the 2 next lines
+//						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory().add(new Supply());
+//						((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory().add(new Vaccine());
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 							ImageView medicImageView = new ImageView(medicImage);
 							medicImageView.setScaleX(0.08);
@@ -168,12 +167,12 @@ public class GamePlay extends Application {
 					}
 				}
 
-//				} else if (!Game.map[x][y].isVisible()) {
-//					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
-//					invisibleEmptyCellView.setScaleX(0.7);
-//					invisibleEmptyCellView.setScaleY(0.3);
-//					root.add(invisibleEmptyCellView, y, 14 - x);
-//				}
+				} else if (!Game.map[x][y].isVisible()) {
+					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
+					invisibleEmptyCellView.setScaleX(0.7);
+					invisibleEmptyCellView.setScaleY(0.3);
+					root.add(invisibleEmptyCellView, y, 14 - x);
+				}
 			}
 		}
 	}
@@ -250,9 +249,9 @@ public class GamePlay extends Application {
 			if (chrctr instanceof Fighter) {
 				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(0));
 
-				if (suppliesNum < 5 && suppliesNum > 0) {
+				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(fighterSupplyImages.get(suppliesNum));
-				} else {
+				} else if(suppliesNum > 5){
 					supplyImageView = new ImageView(fighterSupplyImages.get(5));
 				}
 				supplyImageView.setScaleX(0.25);
@@ -264,9 +263,9 @@ public class GamePlay extends Application {
 			if (chrctr instanceof Medic) {
 				ImageView supplyImageView = new ImageView(medicSupplyImages.get(0));
 
-				if (suppliesNum < 5 && suppliesNum > 0) {
+				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(medicSupplyImages.get(suppliesNum));
-				} else {
+				} else if(suppliesNum > 5) {
 					supplyImageView = new ImageView(medicSupplyImages.get(5));
 				}
 				supplyImageView.setScaleX(0.25);
@@ -279,7 +278,7 @@ public class GamePlay extends Application {
 				ImageView supplyImageView = new ImageView(explorerSupplyImages.get(0));
 				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(explorerSupplyImages.get(suppliesNum));
-				} else {
+				} else if (suppliesNum > 5){
 					supplyImageView = new ImageView(explorerSupplyImages.get(5));
 				}
 				supplyImageView.setScaleX(0.3);
@@ -289,14 +288,11 @@ public class GamePlay extends Application {
 			}
 			int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
 			ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
-			if (vaccinesNum < 0)
-				vaccineImageView = new ImageView(vaccineImages.get(0));
-			else if (vaccinesNum < 5 && vaccinesNum > 0) {
+			if (vaccinesNum <= 5 && vaccinesNum > 0) {
 				vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
-			} else {
+			} else if(vaccinesNum > 5) {
 				vaccineImageView = new ImageView(vaccineImages.get(5));
 			}
-
 			vaccineImageView.setScaleX(0.3);
 			vaccineImageView.setScaleY(0.3);
 			vaccineImageView.setTranslateY(-20);
@@ -340,13 +336,13 @@ public class GamePlay extends Application {
 		primaryStage.setScene(scene2);
 		primaryStage.setFullScreen(true);
 		primaryStage.show();
-		player.play();
-		PauseTransition delay = new PauseTransition(Duration.seconds(5));
+		PauseTransition delay = new PauseTransition(Duration.seconds(6));
 		delay.setOnFinished(e -> {
 			primaryStage.setScene(scene1); // Set the old scene
 			primaryStage.setFullScreen(true);
 			primaryStage.show();
 		});
+		player.play();
 		delay.play();
 
 		if (Game.checkWin()) {
