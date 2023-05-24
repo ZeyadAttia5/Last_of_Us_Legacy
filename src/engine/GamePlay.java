@@ -3,6 +3,7 @@ package engine;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 import exceptions.InvalidTargetException;
 import exceptions.MovementException;
 import exceptions.NotEnoughActionsException;
@@ -561,14 +562,26 @@ public class GamePlay extends Application {
 	}
 
 	private void showPopUp(String popUpContent, Stage primaryStage) {
+		Text content = new Text(popUpContent);
+		content.setFont(Font.font("Monospaced",20));
+		content.setFill(Color.ANTIQUEWHITE);
 		Popup popup = new Popup();
-		popup.getContent().add(new Text(popUpContent));
-
+		popup.getContent().add(content);
 		// Create the popup content
 		VBox popupContent = new VBox();
-		popupContent.setStyle("-fx-background-color: white; -fx-padding: 10px;");
-		popupContent.getChildren().add(new Text("3enba 3al maree5"));
+		popup.getContent().add(popupContent);
+		if(!popup.isShowing()) {
+			popup.show(primaryStage);
+		}
+		
+		PauseTransition delay = new PauseTransition(Duration.seconds(5));
+		delay.setOnFinished(e -> {
+			popup.hide();
+		});
+		delay.play();
 
+
+		
 		// Set the button's action to show the popup
 //	        showPopupButton.setOnAction(e -> {
 //	            if (!popup.isShowing()) {
@@ -577,11 +590,5 @@ public class GamePlay extends Application {
 //	        });
 
 		// Create the scene and set it on the stage
-		VBox popUpScene = new VBox();
-		popUpScene.getChildren().add(popUpScene);
-		Scene scene = new Scene(root, 300, 200);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Popup Window Example");
-		primaryStage.show();
 	}
 }
