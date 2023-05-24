@@ -125,8 +125,6 @@ public class GamePlay extends Application {
 					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
-//							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-//							System.out.println(chrctr.getName());
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
 								medicImageView.setScaleX(0.08);
@@ -136,7 +134,10 @@ public class GamePlay extends Application {
 								medicImageView.setOnMouseEntered(e -> {
 								});
 								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
-								medicImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+								medicImageView.setOnMouseClicked(e -> {
+									moveHelper(chrctr, primaryStage);
+									updateBar(chrctr, primaryStage);
+								});
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
@@ -145,7 +146,10 @@ public class GamePlay extends Application {
 								root.add(fighterImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
-								fighterImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+								fighterImageView.setOnMouseClicked(e -> {
+									moveHelper(chrctr, primaryStage);
+									updateBar(chrctr, primaryStage);
+								});
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
@@ -554,49 +558,40 @@ public class GamePlay extends Application {
 					try {
 						((Hero) chrctr).move(Direction.UP);
 					} catch (MovementException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					} catch (NotEnoughActionsException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					}
-				} else if (e.getCode() == KeyCode.D)
+				} else if (e.getCode() == KeyCode.D) {
 					try {
 						((Hero) chrctr).move(Direction.RIGHT);
 					} catch (MovementException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					} catch (NotEnoughActionsException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					}
-				else if (e.getCode() == KeyCode.A)
+				} else if (e.getCode() == KeyCode.A) {
 					try {
 						((Hero) chrctr).move(Direction.LEFT);
 					} catch (MovementException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					} catch (NotEnoughActionsException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					}
-				else if (e.getCode() == KeyCode.S)
+				} else if (e.getCode() == KeyCode.S) {
 					try {
 						((Hero) chrctr).move(Direction.DOWN);
 					} catch (MovementException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					} catch (NotEnoughActionsException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						showPopUp(e1.getMessage(), primaryStage);
 					}
-				else
+				} else
 					return;
-				updateMap(primaryStage);
+//				updateMap(primaryStage);
 				updateBar(chrctr, primaryStage);
 			}
 		});
-		
 
 	}
 
