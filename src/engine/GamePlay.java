@@ -253,20 +253,6 @@ public class GamePlay extends Application {
 			actionsAvailable.setTranslateX(5);
 			actionsAvailable.setTranslateY(4.8);
 			root.add(actionsAvailable, 6, 16);
-			
-			ImageView attackImageView = new ImageView(attackModeImage);
-			showPopUp("Select Zombie before pressing attack or cure",primaryStage);
-			attackImageView.setOnMouseClicked(e -> attackUI());
-			ImageView cureImageView = new ImageView(cureModeImage);
-			cureImageView.setOnMouseClicked(e -> cureUI());
-			attackImageView.setScaleX(0.4);
-			attackImageView.setScaleY(0.4);
-			attackImageView.setTranslateX(-20);
-			cureImageView.setScaleX(0.4);
-			cureImageView.setScaleY(0.4);
-			cureImageView.setTranslateX(20);
-			root.add(cureImageView, 10, 16);
-			root.add(attackImageView, 8, 16);
 		}
 		if (chrctr instanceof model.characters.Fighter) {
 			ImageView fighterProfileView = new ImageView(fighterProfile);
@@ -292,6 +278,19 @@ public class GamePlay extends Application {
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
+			ImageView attackImageView = new ImageView(attackModeImage);
+			showPopUp("Select Zombie before pressing attack or cure",primaryStage);
+			attackImageView.setOnMouseClicked(e -> attackUI());
+			ImageView cureImageView = new ImageView(cureModeImage);
+			cureImageView.setOnMouseClicked(e -> cureUI());
+			attackImageView.setScaleX(0.4);
+			attackImageView.setScaleY(0.4);
+			attackImageView.setTranslateX(-20);
+			cureImageView.setScaleX(0.4);
+			cureImageView.setScaleY(0.4);
+			cureImageView.setTranslateX(20);
+			root.add(cureImageView, 10, 16);
+			root.add(attackImageView, 8, 16);
 		}
 		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
 		progressBar.setStyle("-fx-accent: blue");
