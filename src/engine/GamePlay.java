@@ -50,9 +50,9 @@ public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
 	private static BorderPane endGameScene = new BorderPane();
-	
-//	private ImageLoader imageLoader = ImageLoader.loadImageLoader();
-	
+
+//	private ImageLoader imageLoader = ImageLoader.loadImageLoader();ِ
+
 	private Image logo = ImageLoader.loadImage("icons/logo.png");
 	private Image emptyCell = new Image("icons/emptyCell.png");
 	private Image explorerImage = new Image("icons/explorerImage.png");
@@ -168,7 +168,7 @@ public class GamePlay extends Application {
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
 								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
-								explorerImageView.setOnMouseClicked(e ->  select(explorerImageView, h));
+								explorerImageView.setOnMouseClicked(e -> select(explorerImageView, h));
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
@@ -186,8 +186,8 @@ public class GamePlay extends Application {
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							Zombie h = (Zombie) ((CharacterCell) Game.map[x][y]).getCharacter();
-							if(AttackMode) {
-							zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
+							if (AttackMode) {
+								zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
 							}
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
@@ -283,15 +283,15 @@ public class GamePlay extends Application {
 			actionsAvailable.setTranslateX(5);
 			actionsAvailable.setTranslateY(4.8);
 			root.add(actionsAvailable, 6, 16);
-			
+
 			ImageView attackImageView = new ImageView(attackModeImage);
-			//attackImageView.setOnMouseClicked(e -> attackUI(primaryStage, attackImageView));
+			// attackImageView.setOnMouseClicked(e -> attackUI(primaryStage,
+			// attackImageView));
 			attackImageView.setOnMouseClicked(e -> {
-				if(!AttackMode) { 
+				if (!AttackMode) {
 					AttackMode = true;
 					root.setCursor(GunCursor);
-				}
-				else {
+				} else {
 					AttackMode = false;
 					root.setCursor(Cursor.DEFAULT);
 				}
@@ -299,13 +299,13 @@ public class GamePlay extends Application {
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
 //			attackImageView.setTranslateX(-20);
-			
+
 			ImageView cureImageView = new ImageView(cureModeImage);
 			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage, cureImageView));
 			cureImageView.setScaleX(0.4);
 			cureImageView.setScaleY(0.4);
 //			cureImageView.setTranslateX(20);
-			
+
 			root.add(cureImageView, 7, 16);
 			root.add(attackImageView, 11, 16);
 
@@ -404,7 +404,11 @@ public class GamePlay extends Application {
 		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
 
-		int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
+		int vaccinesNum = 0;
+		try {
+			vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
+		} catch (Exception e) {
+		}
 		ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
 		if (vaccinesNum <= 5 && vaccinesNum > 0) {
 			vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
@@ -515,33 +519,33 @@ public class GamePlay extends Application {
 			Game.loadHeroes("src/Heroes.csv");
 		} catch (IOException e) {
 		}
-		Image useSpecialExplorer = new Image("icons/UseSpecialExplorer.png");
-		Image useSpecialFighter = new Image("icons/UseSpecialFighter.png");
-		Image useSpecialMedic = new Image("icons/UseSpecialMedic.png");
-		Image explorerSupply0 = new Image("icons/ExplorerSupply0.png");
-		Image explorerSupply1 = new Image("icons/ExplorerSupply1.png");
-		Image explorerSupply2 = new Image("icons/ExplorerSupply2.png");
-		Image explorerSupply3 = new Image("icons/ExplorerSupply3.png");
-		Image explorerSupply4 = new Image("icons/ExplorerSupply4.png");
-		Image explorerSupply5 = new Image("icons/ExplorerSupply5.png");
-		Image fighterSupply0 = new Image("icons/FighterSupply0.png");
-		Image fighterSupply1 = new Image("icons/FighterSupply1.png");
-		Image fighterSupply2 = new Image("icons/FighterSupply2.png");
-		Image fighterSupply3 = new Image("icons/FighterSupply3.png");
-		Image fighterSupply4 = new Image("icons/FighterSupply4.png");
-		Image fighterSupply5 = new Image("icons/FighterSupply5.png");
-		Image medicSupply0 = new Image("icons/MedicSupply0.png");
-		Image medicSupply1 = new Image("icons/MedicSupply1.png");
-		Image medicSupply2 = new Image("icons/MedicSupply2.png");
-		Image medicSupply3 = new Image("icons/MedicSupply3.png");
-		Image medicSupply4 = new Image("icons/MedicSupply4.png");
-		Image medicSupply5 = new Image("icons/MedicSupply5.png");
-		Image vaccine0 = new Image("icons/0Vaccine.png");
-		Image vaccine1 = new Image("icons/1Vaccine.png");
-		Image vaccine2 = new Image("icons/2Vaccine.png");
-		Image vaccine3 = new Image("icons/3Vaccine.png");
-		Image vaccine4 = new Image("icons/4Vaccine.png");
-		Image vaccine5 = new Image("icons/5Vaccine.png");
+		Image useSpecialExplorer = ImageLoader.loadImage("icons/UseSpecialExplorer.png");
+		Image useSpecialFighter = ImageLoader.loadImage("icons/UseSpecialFighter.png");
+		Image useSpecialMedic = ImageLoader.loadImage("icons/UseSpecialMedic.png");
+		Image explorerSupply0 = ImageLoader.loadImage("icons/ExplorerSupply0.png");
+		Image explorerSupply1 = ImageLoader.loadImage("icons/ExplorerSupply1.png");
+		Image explorerSupply2 = ImageLoader.loadImage("icons/ExplorerSupply2.png");
+		Image explorerSupply3 = ImageLoader.loadImage("icons/ExplorerSupply3.png");
+		Image explorerSupply4 = ImageLoader.loadImage("icons/ExplorerSupply4.png");
+		Image explorerSupply5 = ImageLoader.loadImage("icons/ExplorerSupply5.png");
+		Image fighterSupply0 = ImageLoader.loadImage("icons/FighterSupply0.png");
+		Image fighterSupply1 = ImageLoader.loadImage("icons/FighterSupply1.png");
+		Image fighterSupply2 = ImageLoader.loadImage("icons/FighterSupply2.png");
+		Image fighterSupply3 = ImageLoader.loadImage("icons/FighterSupply3.png");
+		Image fighterSupply4 = ImageLoader.loadImage("icons/FighterSupply4.png");
+		Image fighterSupply5 = ImageLoader.loadImage("icons/FighterSupply5.png");
+		Image medicSupply0 = ImageLoader.loadImage("icons/MedicSupply0.png");
+		Image medicSupply1 = ImageLoader.loadImage("icons/MedicSupply1.png");
+		Image medicSupply2 = ImageLoader.loadImage("icons/MedicSupply2.png");
+		Image medicSupply3 = ImageLoader.loadImage("icons/MedicSupply3.png");
+		Image medicSupply4 = ImageLoader.loadImage("icons/MedicSupply4.png");
+		Image medicSupply5 = ImageLoader.loadImage("icons/MedicSupply5.png");
+		Image vaccine0 = ImageLoader.loadImage("icons/0Vaccine.png");
+		Image vaccine1 = ImageLoader.loadImage("icons/1Vaccine.png");
+		Image vaccine2 = ImageLoader.loadImage("icons/2Vaccine.png");
+		Image vaccine3 = ImageLoader.loadImage("icons/3Vaccine.png");
+		Image vaccine4 = ImageLoader.loadImage("icons/4Vaccine.png");
+		Image vaccine5 = ImageLoader.loadImage("icons/5Vaccine.png");
 		useSpecialImages.add(useSpecialExplorer);
 		useSpecialImages.add(useSpecialFighter);
 		useSpecialImages.add(useSpecialMedic);
@@ -649,19 +653,19 @@ public class GamePlay extends Application {
 	private void attackUI(Stage primaryStage, ImageView attackImgView) {
 		int column = GridPane.getColumnIndex(attackImgView);
 		int row = GridPane.getRowIndex(attackImgView);
-		
+
 		ImageView cureHighlightedImgView = new ImageView(AttackModeHighlighted);
 		cureHighlightedImgView.setScaleX(0.4);
 		cureHighlightedImgView.setScaleY(0.4);
 		root.add(cureHighlightedImgView, column, row);
-		
+
 		PauseTransition delayClick = new PauseTransition(Duration.millis(100));
-		delayClick.setOnFinished(e->{
+		delayClick.setOnFinished(e -> {
 			root.getChildren().remove(cureHighlightedImgView);
 			root.add(attackImgView, column, row);
 		});
 		delayClick.play();
-		
+
 		try {
 			selected.setTarget(selectedZombie);
 			selected.attack();
@@ -683,8 +687,9 @@ public class GamePlay extends Application {
 			showPopUp(e.getMessage(), primaryStage);
 		}
 	}
+
 	private void attackUI(Stage primaryStage) {
-		
+
 		try {
 			selected.setTarget(selectedZombie);
 			selected.attack();
@@ -710,19 +715,19 @@ public class GamePlay extends Application {
 	private void cureUI(Stage primaryStage, ImageView cureImgView) {
 		int column = GridPane.getColumnIndex(cureImgView);
 		int row = GridPane.getRowIndex(cureImgView);
-		
+
 		ImageView cureHighlightedImgView = new ImageView(CureModeHighlighted);
 		cureHighlightedImgView.setScaleX(0.4);
 		cureHighlightedImgView.setScaleY(0.4);
 		root.add(cureHighlightedImgView, column, row);
-		
+
 		PauseTransition delay = new PauseTransition(Duration.millis(100));
-		delay.setOnFinished(e->{
+		delay.setOnFinished(e -> {
 			root.getChildren().remove(cureHighlightedImgView);
-			root.add(cureImgView, column, row);	
+			root.add(cureImgView, column, row);
 		});
 		delay.play();
-		
+
 		try {
 			selected.setTarget(selectedZombie);
 			selected.cure();
@@ -741,6 +746,5 @@ public class GamePlay extends Application {
 		selectedZombie = h;
 		selectedZombieImage = v;
 	}
-	
 
 }
