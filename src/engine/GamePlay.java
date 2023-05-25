@@ -256,9 +256,9 @@ public class GamePlay extends Application {
 			
 			ImageView attackImageView = new ImageView(attackModeImage);
 			showPopUp("Select Zombie before pressing attack or cure",primaryStage);
-			attackImageView.setOnMouseClicked(e -> attackUI(selectedZombie));
+			attackImageView.setOnMouseClicked(e -> attackUI());
 			ImageView cureImageView = new ImageView(cureModeImage);
-			cureImageView.setOnMouseClicked(e -> cureUI(selectedZombie));
+			cureImageView.setOnMouseClicked(e -> cureUI());
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
 			attackImageView.setTranslateX(-20);
@@ -299,7 +299,7 @@ public class GamePlay extends Application {
 		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
 
-		if ((chrctr) instanceof Character) {
+		if ((chrctr) instanceof Hero) {
 
 			Text vaccineText = new Text("Vaccines");
 			vaccineText.setFont(Font.font("Monospaced", 14));
@@ -668,8 +668,8 @@ public class GamePlay extends Application {
 		delay.play();
 	}
 	
-	private void attackUI(Character zombie) {
-		selected.setTarget(zombie);
+	private void attackUI() {
+		selected.setTarget(selectedZombie);
 		try {
 			selected.attack();
 		} catch (NotEnoughActionsException | InvalidTargetException e) {
@@ -677,8 +677,8 @@ public class GamePlay extends Application {
 			e.printStackTrace();
 		}
 	}
-	private void cureUI(Character zombie){
-		selected.setTarget(zombie);
+	private void cureUI(){
+		selected.setTarget(selectedZombie);
 		try {
 			selected.cure();
 		} catch (NoAvailableResourcesException | InvalidTargetException | NotEnoughActionsException e) {
