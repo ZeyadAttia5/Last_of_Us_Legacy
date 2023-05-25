@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import exceptions.InvalidTargetException;
 import exceptions.MovementException;
+import exceptions.NoAvailableResourcesException;
 import exceptions.NotEnoughActionsException;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -72,6 +73,8 @@ public class GamePlay extends Application {
 	private Image zombieProfile = new Image("icons/zombieProfile.png");
 	private Image handCursorImage = new Image("icons/cursors/handCursor.png");
 	private Image availableActionsText = new Image("icons/ActionsAvialable.png");
+	private Image attackModeImage = new Image("icons/AttackMode.png");
+	private Image cureModeImage = new Image("icons/CureMode.png");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 //	private Character selected = null;
 	private ImageView selectedImage;
@@ -80,6 +83,7 @@ public class GamePlay extends Application {
 	private ArrayList<Image> medicSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> explorerSupplyImages = new ArrayList<Image>();
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
+	private ArrayList<Image> useSpecialImages = new ArrayList<Image>();
 	private Scene scene1 = new Scene(root, Color.BEIGE);
 //	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
 
@@ -131,10 +135,9 @@ public class GamePlay extends Application {
 								medicImageView.setScaleY(0.08);
 								root.add(medicImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								medicImageView.setOnMouseEntered(e -> {
-								});
 								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
 								medicImageView.setOnMouseClicked(e -> {
+									root.requestFocus();
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
 								});
@@ -147,6 +150,7 @@ public class GamePlay extends Application {
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								fighterImageView.setOnMouseEntered(e -> fighterImageView.setCursor(handCursor));
 								fighterImageView.setOnMouseClicked(e -> {
+									root.requestFocus();
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
 								});
@@ -158,14 +162,8 @@ public class GamePlay extends Application {
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								// TODO delete TEST
-								Button btn = new Button("help");
-								root.add(btn, 9, 16);
-								btn.setOnMouseClicked(e -> {
-									showPopUp("Homos Emotion", primaryStage);
-								});
-								;
-								// TODO here edit
 								explorerImageView.setOnMouseClicked(e -> {
+									root.requestFocus();
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
 								});
@@ -174,14 +172,10 @@ public class GamePlay extends Application {
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
-
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
-
 							Image image = new Image("icons/swordImage.png");
 							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(new ImageCursor(image)));
-							zombieImageView.setScaleX(0.09);
-							zombieImageView.setScaleY(0.09);
 							root.add(zombieImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
@@ -250,12 +244,18 @@ public class GamePlay extends Application {
 			actionsAvailable.setStroke(Color.WHITE);
 			actionsAvailable.setTranslateX(5);
 			actionsAvailable.setTranslateY(4.8);
-//			SegmentedBar progressBarActions = new SegmentedBar();
-//	        progressBarActions.setStyle("-fx-accent: transparent; -fx-background-color: blue;");
-//	        progressBarActions.setPrefWidth(200);
-//	        progressBarActions.setPrefHeight(20);
-//	        progressBarActions.setProgress(3.0 / 5.0);
 			root.add(actionsAvailable, 6, 16);
+			
+			ImageView attackImageView = new ImageView(attackModeImage);
+			ImageView cureImageView = new ImageView(cureModeImage);
+			attackImageView.setScaleX(0.4);
+			attackImageView.setScaleY(0.4);
+			attackImageView.setTranslateX(-20);
+			cureImageView.setScaleX(0.4);
+			cureImageView.setScaleY(0.4);
+			cureImageView.setTranslateX(20);
+			root.add(cureImageView, 10, 16);
+			root.add(attackImageView, 8, 16);
 		}
 		if (chrctr instanceof model.characters.Fighter) {
 			ImageView fighterProfileView = new ImageView(fighterProfile);
@@ -319,6 +319,11 @@ public class GamePlay extends Application {
 				supplyImageView.setScaleY(0.25);
 				supplyImageView.setTranslateY(-15);
 				root.add(supplyImageView, 3, 17);
+				
+				ImageView useSpecialView = new ImageView(useSpecialImages.get(1));
+				useSpecialView.setScaleX(0.4);
+				useSpecialView.setScaleY(0.4);
+				root.add(useSpecialView, 9, 16);
 			}
 
 			if (chrctr instanceof Medic) {
@@ -333,6 +338,11 @@ public class GamePlay extends Application {
 				supplyImageView.setScaleY(0.25);
 				supplyImageView.setTranslateY(-15);
 				root.add(supplyImageView, 3, 17);
+				
+				ImageView useSpecialView = new ImageView(useSpecialImages.get(2));
+				useSpecialView.setScaleX(0.4);
+				useSpecialView.setScaleY(0.4);
+				root.add(useSpecialView, 9, 16);
 			}
 
 			if (chrctr instanceof Explorer) {
@@ -346,6 +356,15 @@ public class GamePlay extends Application {
 				supplyImageView.setScaleY(0.3);
 				supplyImageView.setTranslateY(-20);
 				root.add(supplyImageView, 3, 17);
+
+				// TODO editing
+				ImageView useSpecialView = new ImageView(useSpecialImages.get(0));
+				useSpecialView.setScaleX(0.4);
+				useSpecialView.setScaleY(0.4);
+				root.add(useSpecialView, 9, 16);
+				useSpecialView.setOnMouseClicked(e -> {
+					useSpecialAction(chrctr, primaryStage);
+				});
 			}
 			int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
 			ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
@@ -359,6 +378,22 @@ public class GamePlay extends Application {
 			vaccineImageView.setTranslateY(-20);
 			root.add(vaccineImageView, 3, 16);
 
+		}
+
+	}
+
+	private void useSpecialAction(Character chrctr, Stage primaryStage) {
+		if (chrctr instanceof Explorer) {
+			try {
+				((Explorer) chrctr).useSpecial();
+				updateMap(primaryStage);
+			} catch (NoAvailableResourcesException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -495,6 +530,9 @@ public class GamePlay extends Application {
 			Game.loadHeroes("src/test_heros.csv");
 		} catch (IOException e) {
 		}
+		Image useSpecialExplorer = new Image("icons/UseSpecialExplorer.png");
+		Image useSpecialFighter = new Image("icons/UseSpecialFighter.png");
+		Image useSpecialMedic = new Image("icons/UseSpecialMedic.png");
 		Image explorerSupply0 = new Image("icons/ExplorerSupply0.png");
 		Image explorerSupply1 = new Image("icons/ExplorerSupply1.png");
 		Image explorerSupply2 = new Image("icons/ExplorerSupply2.png");
@@ -519,6 +557,9 @@ public class GamePlay extends Application {
 		Image vaccine3 = new Image("icons/3Vaccine.png");
 		Image vaccine4 = new Image("icons/4Vaccine.png");
 		Image vaccine5 = new Image("icons/5Vaccine.png");
+		useSpecialImages.add(useSpecialExplorer);
+		useSpecialImages.add(useSpecialFighter);
+		useSpecialImages.add(useSpecialMedic);
 		explorerSupplyImages.add(explorerSupply0);
 		explorerSupplyImages.add(explorerSupply1);
 		explorerSupplyImages.add(explorerSupply2);
@@ -595,25 +636,6 @@ public class GamePlay extends Application {
 
 	}
 
-//	private void selectCharacter(Character chrctr) {
-//		if (chrctr instanceof Zombie) {
-//			selectedZombie = (Zombie) chrctr;
-//		} else if (chrctr instanceof Fighter) {
-//			selectedFighter = (Fighter) chrctr;
-//			selectedExplorer = null;
-//			selectedMedic = null;
-//		}
-//		else if (chrctr instanceof Medic) {
-//			selectedFighter = null;
-//			selectedExplorer = null;
-//			selectedMedic = (Medic) chrctr;
-//		}
-//		else if (chrctr instanceof Explorer) {
-//			selectedFighter = null;
-//			selectedExplorer = (Explorer) chrctr;
-//			selectedMedic = null;
-//		}
-//	}
 
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Text content = new Text(popUpContent);
