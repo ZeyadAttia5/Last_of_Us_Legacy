@@ -655,6 +655,15 @@ public class GamePlay extends Application {
 		});
 		delay.play();
 	}
+	private void attackUI(Character zombie) throws NotEnoughActionsException, InvalidTargetException {
+		selected.setTarget(zombie);
+		selected.attack();
+	}
+	private void select(ImageView v, Character character) {
+		selected = character;
+		root.setCursor(new ImageCursor(imaged));
+		selectedImage = v;
+	}
 
 //	private void selectedSetter(Character newSelection) {
 //		this.selected = newSelection;
