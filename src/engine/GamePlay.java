@@ -161,7 +161,6 @@ public class GamePlay extends Application {
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								// TODO delete TEST
 								explorerImageView.setOnMouseClicked(e -> {
 									root.requestFocus();
 									moveHelper(chrctr, primaryStage);
@@ -232,7 +231,7 @@ public class GamePlay extends Application {
 		name.setFill(Color.WHITE);
 		name.setStroke(Color.WHITE);
 		root.add(name, 0, 15);
-		// TODO add available actions
+
 		if (chrctr instanceof Hero) {
 			ImageView actionsAvailableView = new ImageView(availableActionsText);
 			actionsAvailableView.setScaleX(0.27);
@@ -379,7 +378,6 @@ public class GamePlay extends Application {
 			root.add(vaccineImageView, 3, 16);
 
 		}
-
 	}
 
 	private void useSpecialAction(Character chrctr, Stage primaryStage) {
@@ -388,18 +386,24 @@ public class GamePlay extends Application {
 				((Explorer) chrctr).useSpecial();
 				updateMap(primaryStage);
 			} catch (NoAvailableResourcesException e) {
-				// TODO Auto-generated catch block
+				showPopUp(e.getMessage(), primaryStage);
 				e.printStackTrace();
 			} catch (InvalidTargetException e) {
-				// TODO Auto-generated catch block
+				showPopUp(e.getMessage(), primaryStage);
 				e.printStackTrace();
 			}
+		}
+		else if(chrctr instanceof Medic) {
+			//TODO
+		}
+		else if(chrctr instanceof Explorer) {
+			//TODO
 		}
 
 	}
 
 	private void initializeGrid(Stage primaryStage) {
-
+		root.requestFocus();
 		root.setGridLinesVisible(true);
 		for (int i = 0; i < 18; i++) {
 			RowConstraints row = new RowConstraints();
@@ -417,12 +421,6 @@ public class GamePlay extends Application {
 	}
 
 	private void controllerEndTurn(Stage primaryStage) {
-		try {
-			Game.endTurn();
-		} catch (NotEnoughActionsException e) {
-		} catch (InvalidTargetException e) {
-		}
-
 		// Create the fade transition
 		StackPane stackPane = new StackPane();
 		Scene scene2 = new Scene(stackPane);
@@ -491,7 +489,11 @@ public class GamePlay extends Application {
 			fadeOut2.play();
 		});
 		delay.play();
-
+		try {
+			Game.endTurn();
+		} catch (NotEnoughActionsException e) {
+		} catch (InvalidTargetException e) {
+		}
 		if (Game.checkWin()) {
 			Text txt = new Text("You Won!");
 			txt.setFont(Font.font("Yu Gothic Regular", 5));
@@ -641,8 +643,10 @@ public class GamePlay extends Application {
 		Text content = new Text(popUpContent);
 		content.setFont(Font.font("Monospaced", 20));
 		content.setFill(Color.ANTIQUEWHITE);
+		
 		Popup popup = new Popup();
 		popup.getContent().add(content);
+		
 		// Create the popup content
 		VBox popupContent = new VBox();
 		popup.getContent().add(popupContent);
