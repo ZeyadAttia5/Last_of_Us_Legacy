@@ -70,6 +70,13 @@ public class GamePlay extends Application {
 	private Image attackModeImage = new Image("icons/AttackMode.png");
 	private Image cureModeImage = new Image("icons/CureMode.png");
 	private Image ZombieAttackImg = new Image("endTurnResources/ZombieAttackImg.jpg");
+	private Image CureModeHighlighted = new Image("icons/CureModeHighlighted.png");
+	private Image AttackModeHighlighted = new Image("icons/AttackModeHighlighted.png");
+	private Image zombieHighlighted = new Image("icons/zombieHighlighted.png");
+	private Image UseSpecialFighterHighlighted = new Image("icons/UseSpecialFighterHighlighted.png");
+	private Image UseSpecialMedicHighlighted = new Image("icons/UseSpecialMedicHighlighted.png");
+	private Image UseSpecialExplorerHighlighted = new Image("icons/UseSpecialExplorerHighlighted.png");
+
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 //	private Character selected = null;
 	private Hero selected;
@@ -99,7 +106,6 @@ public class GamePlay extends Application {
 //		moveHelper();
 		primaryStage.setScene(scene1);
 		primaryStage.show();
-
 	}
 
 	private void primaryStageInit(Stage primaryStage) {
@@ -116,7 +122,6 @@ public class GamePlay extends Application {
 
 				if (Game.map[x][y] == null)
 					return;
-
 				ImageView emptyCellView = new ImageView(emptyCell);
 				emptyCellView.setScaleX(0.7);
 				emptyCellView.setScaleY(0.3);
@@ -127,8 +132,6 @@ public class GamePlay extends Application {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
 								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
-								// TODO delete next line
-								h.getVaccineInventory().add(new Vaccine());
 								medicImageView.setOnMouseClicked(e -> select(medicImageView, h));
 								medicImageView.setScaleX(0.08);
 								medicImageView.setScaleY(0.08);
@@ -171,7 +174,7 @@ public class GamePlay extends Application {
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
 								});
-								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(Cursor.WAIT));
+								explorerImageView.setOnMouseEntered(e -> explorerImageView.setCursor(handCursor));
 //								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
@@ -232,75 +235,14 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr, Stage primaryStage) {
+		root.getChildren().clear();
 		updateTexturedWall(primaryStage);
 		Text name = new Text(chrctr.getName());
-		name.setFont(Font.font("Monospaced", 18));
+		name.setFont(Font.font("Monospaced", 14));
 		name.setFill(Color.WHITE);
 		name.setStroke(Color.WHITE);
 		root.add(name, 0, 15);
-		// TODO add available actions
 		if (chrctr instanceof Hero) {
-			ImageView actionsAvailableView = new ImageView(availableActionsText);
-			actionsAvailableView.setScaleX(0.27);
-			actionsAvailableView.setScaleY(0.27);
-			root.add(actionsAvailableView, 5, 16);
-			Text actionsAvailable = new Text(((Hero) chrctr).getActionsAvailable() + "");
-			actionsAvailable.setFont(Font.font("Monospaced", 20));
-			actionsAvailable.setFill(Color.WHITE);
-			actionsAvailable.setStroke(Color.WHITE);
-			actionsAvailable.setTranslateX(5);
-			actionsAvailable.setTranslateY(4.8);
-			root.add(actionsAvailable, 6, 16);
-		}
-		if (chrctr instanceof model.characters.Fighter) {
-			ImageView fighterProfileView = new ImageView(fighterProfile);
-			fighterProfileView.setScaleX(0.2);
-			fighterProfileView.setScaleY(0.2);
-			root.add(fighterProfileView, 0, 16);
-			select(new ImageView(fighterImage), (Hero) chrctr);
-		}
-		if (chrctr instanceof model.characters.Explorer) {
-			ImageView fighterProfileView = new ImageView(explorerPrfile);
-			fighterProfileView.setScaleX(0.2);
-			fighterProfileView.setScaleY(0.2);
-			root.add(fighterProfileView, 0, 16);
-			select(new ImageView(explorerImage), (Hero) chrctr);
-		}
-		if (chrctr instanceof model.characters.Medic) {
-			ImageView fighterProfileView = new ImageView(medicProfile);
-			fighterProfileView.setScaleX(0.2);
-			fighterProfileView.setScaleY(0.2);
-			root.add(fighterProfileView, 0, 16);
-			select(new ImageView(medicImage), (Hero) chrctr);
-		}
-		if (chrctr instanceof model.characters.Zombie) {
-			name.setStroke(Color.ORANGERED);
-			ImageView zombieProfileView = new ImageView(zombieProfile);
-			selectZombie(zombieProfileView, (Zombie) chrctr);
-			zombieProfileView.setScaleX(0.2);
-			zombieProfileView.setScaleY(0.2);
-			root.add(zombieProfileView, 0, 16);
-			ImageView attackImageView = new ImageView(attackModeImage);
-			showPopUp("Select Zombie before pressing attack or cure", primaryStage);
-			attackImageView.setOnMouseClicked(e -> attackUI(primaryStage));
-			ImageView cureImageView = new ImageView(cureModeImage);
-			attackImageView.setScaleX(0.4);
-			attackImageView.setScaleY(0.4);
-			attackImageView.setTranslateX(-20);
-			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage));
-			cureImageView.setScaleX(0.4);
-			cureImageView.setScaleY(0.4);
-			cureImageView.setTranslateX(20);
-			root.add(cureImageView, 8, 16);
-			root.add(attackImageView, 10, 16);
-		}
-		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
-		progressBar.setStyle("-fx-accent: blue");
-		progressBar.setBorder(Border.EMPTY);
-		progressBar.setPadding(new Insets(15, 0, 0, 8));
-		root.add(progressBar, 0, 17);
-
-		if ((chrctr) instanceof Hero) {
 
 			Text vaccineText = new Text("Vaccines");
 			vaccineText.setFont(Font.font("Monospaced", 14));
@@ -318,8 +260,45 @@ public class GamePlay extends Application {
 			supplyText.setTranslateY(-7);
 			root.add(supplyText, 2, 17);
 
+			ImageView actionsAvailableView = new ImageView(availableActionsText);
+			actionsAvailableView.setScaleX(0.27);
+			actionsAvailableView.setScaleY(0.27);
+			root.add(actionsAvailableView, 5, 16);
+			Text actionsAvailable = new Text(((Hero) chrctr).getActionsAvailable() + "");
+			actionsAvailable.setFont(Font.font("Monospaced", 20));
+			actionsAvailable.setFill(Color.WHITE);
+			actionsAvailable.setStroke(Color.WHITE);
+			actionsAvailable.setTranslateX(5);
+			actionsAvailable.setTranslateY(4.8);
+			root.add(actionsAvailable, 6, 16);
+			ImageView attackImageView = new ImageView(attackModeImage);
+			// showPopUp("Select Zombie before pressing attack or cure", primaryStage);
+			attackImageView.setOnMouseClicked(e -> attackUI(primaryStage));
+			ImageView cureImageView = new ImageView(cureModeImage);
+			attackImageView.setScaleX(0.4);
+			attackImageView.setScaleY(0.4);
+			attackImageView.setTranslateX(-20);
+			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage));
+			cureImageView.setScaleX(0.4);
+			cureImageView.setScaleY(0.4);
+			cureImageView.setTranslateX(20);
+			ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
+			progressBar.setStyle("-fx-accent: blue");
+			progressBar.setBorder(Border.EMPTY);
+			progressBar.setPadding(new Insets(15, 0, 0, 8));
+			root.add(progressBar, 0, 17);
+			root.add(cureImageView, 7, 16);
+			root.add(attackImageView, 11, 16);
+
 			int suppliesNum = ((Hero) chrctr).getSupplyInventory().size();
-			if (chrctr instanceof Fighter) {
+
+			if (chrctr instanceof model.characters.Fighter) {
+				ImageView fighterProfileView = new ImageView(fighterProfile);
+				fighterProfileView.setScaleX(0.2);
+				fighterProfileView.setScaleY(0.2);
+				root.add(fighterProfileView, 0, 16);
+				select(new ImageView(fighterImage), (Hero) chrctr);
+
 				ImageView supplyImageView = new ImageView(fighterSupplyImages.get(0));
 
 				if (suppliesNum <= 5 && suppliesNum > 0) {
@@ -336,28 +315,17 @@ public class GamePlay extends Application {
 				useSpecialView.setScaleX(0.4);
 				useSpecialView.setScaleY(0.4);
 				root.add(useSpecialView, 9, 16);
+				useSpecialView.setOnMouseClicked(e -> {
+					useSpecialAction(chrctr, primaryStage);
+				});
 			}
+			if (chrctr instanceof model.characters.Explorer) {
+				ImageView fighterProfileView = new ImageView(explorerPrfile);
+				fighterProfileView.setScaleX(0.2);
+				fighterProfileView.setScaleY(0.2);
+				root.add(fighterProfileView, 0, 16);
+				select(new ImageView(explorerImage), (Hero) chrctr);
 
-			if (chrctr instanceof Medic) {
-				ImageView supplyImageView = new ImageView(medicSupplyImages.get(0));
-
-				if (suppliesNum <= 5 && suppliesNum > 0) {
-					supplyImageView = new ImageView(medicSupplyImages.get(suppliesNum));
-				} else if (suppliesNum > 5) {
-					supplyImageView = new ImageView(medicSupplyImages.get(5));
-				}
-				supplyImageView.setScaleX(0.25);
-				supplyImageView.setScaleY(0.25);
-				supplyImageView.setTranslateY(-15);
-				root.add(supplyImageView, 3, 17);
-
-				ImageView useSpecialView = new ImageView(useSpecialImages.get(2));
-				useSpecialView.setScaleX(0.4);
-				useSpecialView.setScaleY(0.4);
-				root.add(useSpecialView, 9, 16);
-			}
-
-			if (chrctr instanceof Explorer) {
 				ImageView supplyImageView = new ImageView(explorerSupplyImages.get(0));
 				if (suppliesNum <= 5 && suppliesNum > 0) {
 					supplyImageView = new ImageView(explorerSupplyImages.get(suppliesNum));
@@ -378,29 +346,68 @@ public class GamePlay extends Application {
 					useSpecialAction(chrctr, primaryStage);
 				});
 			}
-			int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
-			ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
-			if (vaccinesNum <= 5 && vaccinesNum > 0) {
-				vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
-			} else if (vaccinesNum > 5) {
-				vaccineImageView = new ImageView(vaccineImages.get(5));
+			if (chrctr instanceof model.characters.Medic) {
+				ImageView fighterProfileView = new ImageView(medicProfile);
+				fighterProfileView.setScaleX(0.2);
+				fighterProfileView.setScaleY(0.2);
+				root.add(fighterProfileView, 0, 16);
+				select(new ImageView(medicImage), (Hero) chrctr);
+
+				ImageView supplyImageView = new ImageView(medicSupplyImages.get(0));
+
+				if (suppliesNum <= 5 && suppliesNum > 0) {
+					supplyImageView = new ImageView(medicSupplyImages.get(suppliesNum));
+				} else if (suppliesNum > 5) {
+					supplyImageView = new ImageView(medicSupplyImages.get(5));
+				}
+				supplyImageView.setScaleX(0.25);
+				supplyImageView.setScaleY(0.25);
+				supplyImageView.setTranslateY(-15);
+				root.add(supplyImageView, 3, 17);
+
+				ImageView useSpecialView = new ImageView(useSpecialImages.get(2));
+				useSpecialView.setScaleX(0.4);
+				useSpecialView.setScaleY(0.4);
+				root.add(useSpecialView, 9, 16);
 			}
-			vaccineImageView.setScaleX(0.3);
-			vaccineImageView.setScaleY(0.3);
-			vaccineImageView.setTranslateY(-20);
-			root.add(vaccineImageView, 3, 16);
+		}
+		if (chrctr instanceof model.characters.Zombie) {
+			name.setStroke(Color.ORANGERED);
+			ImageView zombieProfileView = new ImageView(zombieProfile);
+			selectZombie(zombieProfileView, (Zombie) chrctr);
+			zombieProfileView.setScaleX(0.2);
+			zombieProfileView.setScaleY(0.2);
+			root.add(zombieProfileView, 0, 16);
 		}
 
+		int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
+		ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
+		if (vaccinesNum <= 5 && vaccinesNum > 0) {
+			vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
+		} else if (vaccinesNum > 5) {
+			vaccineImageView = new ImageView(vaccineImages.get(5));
+		}
+		vaccineImageView.setScaleX(0.3);
+		vaccineImageView.setScaleY(0.3);
+		vaccineImageView.setTranslateY(-20);
+		root.add(vaccineImageView, 3, 16);
 	}
 
 	private void useSpecialAction(Character chrctr, Stage primaryStage) {
 		if (chrctr instanceof Explorer) {
 			try {
 				((Explorer) chrctr).useSpecial();
+				updateBar(chrctr, primaryStage);
 			} catch (NoAvailableResourcesException | InvalidTargetException e) {
 				showPopUp(e.getMessage(), primaryStage);
 			}
-			updateBar(chrctr, primaryStage);
+		} else if (chrctr instanceof Fighter) {
+			try {
+				((Fighter) chrctr).useSpecial();
+				updateBar(chrctr, primaryStage);
+			} catch (NoAvailableResourcesException | InvalidTargetException e) {
+				showPopUp(e.getMessage(), primaryStage);
+			}
 		}
 
 	}
@@ -429,7 +436,7 @@ public class GamePlay extends Application {
 		} catch (NotEnoughActionsException e) {
 		} catch (InvalidTargetException e) {
 		}
-		// TODO add transition to zombieAttackImg
+		// TODO add sound to transition to zombieAttackImg
 		ImageView zombieView = new ImageView(ZombieAttackImg);
 		BorderPane layout2 = new BorderPane(zombieView);
 		zombieView.fitWidthProperty().bind(layout2.widthProperty());
@@ -437,32 +444,34 @@ public class GamePlay extends Application {
 		primaryStage.getScene().setRoot(layout2);
 
 		FadeTransition fadeInZombie = new FadeTransition(Duration.seconds(5), layout2);
+		// opacity
 		fadeInZombie.setFromValue(0.0);
 		fadeInZombie.setToValue(1.0);
 		fadeInZombie.setOnFinished(e -> {
 			primaryStage.getScene().setRoot(root);
+			layout2.getChildren().clear();
 		});
 		fadeInZombie.play();
 
-		if (Game.checkWin()) {
-			Text txt = new Text("You Won!");
-			txt.setFont(Font.font("Yu Gothic Regular", 5));
-			txt.setFill(Color.BLACK);
-			txt.setScaleX(2);
-			txt.setScaleY(2);
-			endGameScene.getChildren().add(txt);
-//			primaryStage.setScene(scene2);
-			primaryStage.show();
-		}
-		if (Game.checkGameOver()) {
-			Text txt = new Text("Game Over!");
-			endGameScene.getChildren().add(txt);
-			txt.setFill(Color.BLACK);
-			txt.setScaleX(2);
-			txt.setScaleY(2);
-//			primaryStage.setScene(scene2);
-			primaryStage.show();
-		}
+//		if (Game.checkWin()) {
+//			Text txt = new Text("You Won!");
+//			txt.setFont(Font.font("Yu Gothic Regular", 5));
+//			txt.setFill(Color.BLACK);
+//			txt.setScaleX(2);
+//			txt.setScaleY(2);
+//			endGameScene.getChildren().add(txt);
+////			primaryStage.setScene(scene2);
+//			primaryStage.show();
+//		}
+//		if (Game.checkGameOver()) {
+//			Text txt = new Text("Game Over!");
+//			endGameScene.getChildren().add(txt);
+//			txt.setFill(Color.BLACK);
+//			txt.setScaleX(2);
+//			txt.setScaleY(2);
+////			primaryStage.setScene(scene2);
+//			primaryStage.show();
+//		}
 		updateTexturedWall(primaryStage);
 	}
 
@@ -479,7 +488,7 @@ public class GamePlay extends Application {
 
 	private void loadResources() {
 		try {
-			Game.loadHeroes("src/test_heros.csv");
+			Game.loadHeroes("src/Heroes.csv");
 		} catch (IOException e) {
 		}
 		Image useSpecialExplorer = new Image("icons/UseSpecialExplorer.png");
@@ -549,7 +558,12 @@ public class GamePlay extends Application {
 			} else if (chrctr instanceof Hero) {
 				if (e.getCode() == KeyCode.W) {
 					try {
+						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.UP);
+						int currentHP = ((Hero) chrctr).getCurrentHp();
+						if (previousHP > currentHP) {
+							showPopUp("You have stepped on a trap cell", primaryStage);
+						}
 					} catch (MovementException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					} catch (NotEnoughActionsException e1) {
@@ -612,6 +626,20 @@ public class GamePlay extends Application {
 		try {
 			selected.setTarget(selectedZombie);
 			selected.attack();
+			if (Game.zombies.contains(selectedZombie)) {
+				ImageView zombieAttacked = new ImageView(zombieHighlighted);
+				zombieAttacked.setScaleX(0.08);
+				zombieAttacked.setScaleY(0.08);
+				PauseTransition delay = new PauseTransition(Duration.seconds(1));
+				delay.setOnFinished(e -> {
+					ImageView imgView = new ImageView(zombieImage);
+					imgView.setScaleX(0.08);
+					imgView.setScaleY(0.08);
+					root.add(imgView, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
+				});
+				root.add(zombieAttacked, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
+				delay.play();
+			}
 		} catch (NotEnoughActionsException | InvalidTargetException e) {
 			showPopUp(e.getMessage(), primaryStage);
 		}
