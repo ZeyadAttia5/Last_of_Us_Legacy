@@ -257,13 +257,14 @@ public class GamePlay extends Application {
 			supplyText.setFill(Color.WHITE);
 			supplyText.setStroke(Color.WHITE);
 			supplyText.setTranslateX(-10);
-			supplyText.setTranslateY(-7);
+			supplyText.setTranslateY(-8);
 			root.add(supplyText, 2, 17);
 
 			ImageView actionsAvailableView = new ImageView(availableActionsText);
 			actionsAvailableView.setScaleX(0.27);
 			actionsAvailableView.setScaleY(0.27);
 			root.add(actionsAvailableView, 5, 16);
+
 			Text actionsAvailable = new Text(((Hero) chrctr).getActionsAvailable() + "");
 			actionsAvailable.setFont(Font.font("Monospaced", 20));
 			actionsAvailable.setFill(Color.WHITE);
@@ -271,22 +272,19 @@ public class GamePlay extends Application {
 			actionsAvailable.setTranslateX(5);
 			actionsAvailable.setTranslateY(4.8);
 			root.add(actionsAvailable, 6, 16);
+			
 			ImageView attackImageView = new ImageView(attackModeImage);
-			// showPopUp("Select Zombie before pressing attack or cure", primaryStage);
-			attackImageView.setOnMouseClicked(e -> attackUI(primaryStage));
-			ImageView cureImageView = new ImageView(cureModeImage);
+			attackImageView.setOnMouseClicked(e -> attackUI(primaryStage, attackImageView));
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
-			attackImageView.setTranslateX(-20);
-			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage));
+//			attackImageView.setTranslateX(-20);
+			
+			ImageView cureImageView = new ImageView(cureModeImage);
+			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage, cureImageView));
 			cureImageView.setScaleX(0.4);
 			cureImageView.setScaleY(0.4);
-			cureImageView.setTranslateX(20);
-			ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
-			progressBar.setStyle("-fx-accent: blue");
-			progressBar.setBorder(Border.EMPTY);
-			progressBar.setPadding(new Insets(15, 0, 0, 8));
-			root.add(progressBar, 0, 17);
+//			cureImageView.setTranslateX(20);
+			
 			root.add(cureImageView, 7, 16);
 			root.add(attackImageView, 11, 16);
 
@@ -316,7 +314,7 @@ public class GamePlay extends Application {
 				useSpecialView.setScaleY(0.4);
 				root.add(useSpecialView, 9, 16);
 				useSpecialView.setOnMouseClicked(e -> {
-					useSpecialAction(chrctr, primaryStage);
+					useSpecialAction(chrctr, primaryStage, useSpecialView);
 				});
 			}
 			if (chrctr instanceof model.characters.Explorer) {
@@ -343,7 +341,7 @@ public class GamePlay extends Application {
 				useSpecialView.setScaleY(0.4);
 				root.add(useSpecialView, 9, 16);
 				useSpecialView.setOnMouseClicked(e -> {
-					useSpecialAction(chrctr, primaryStage);
+					useSpecialAction(chrctr, primaryStage, useSpecialView);
 				});
 			}
 			if (chrctr instanceof model.characters.Medic) {
@@ -379,6 +377,11 @@ public class GamePlay extends Application {
 			zombieProfileView.setScaleY(0.2);
 			root.add(zombieProfileView, 0, 16);
 		}
+		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
+		progressBar.setStyle("-fx-accent: blue");
+		progressBar.setBorder(Border.EMPTY);
+		progressBar.setPadding(new Insets(15, 0, 0, 8));
+		root.add(progressBar, 0, 17);
 
 		int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
 		ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
@@ -393,7 +396,7 @@ public class GamePlay extends Application {
 		root.add(vaccineImageView, 3, 16);
 	}
 
-	private void useSpecialAction(Character chrctr, Stage primaryStage) {
+	private void useSpecialAction(Character chrctr, Stage primaryStage, ImageView useSpecialView) {
 		if (chrctr instanceof Explorer) {
 			try {
 				((Explorer) chrctr).useSpecial();
@@ -622,7 +625,21 @@ public class GamePlay extends Application {
 		delay.play();
 	}
 
-	private void attackUI(Stage primaryStage) {
+	private void attackUI(Stage primaryStage, ImageView attackImgView) {
+		int column = GridPane.getColumnIndex(attackImgView);
+		int row = GridPane.getRowIndex(attackImgView);
+		
+		ImageView cureHighlightedImgView = new ImageView(AttackModeHighlighted);
+		cureHighlightedImgView.setScaleX(0.4);
+		cureHighlightedImgView.setScaleY(0.4);
+		root.add(cureHighlightedImgView, column, row);
+		
+		PauseTransition delayClick = new PauseTransition(Duration.millis(100));
+		delayClick.setOnFinished(e->{
+			root.getChildren().remove(cureHighlightedImgView);
+			root.add(attackImgView, column, row);
+		});
+		delayClick.play();
 		try {
 			selected.setTarget(selectedZombie);
 			selected.attack();
@@ -645,10 +662,24 @@ public class GamePlay extends Application {
 		}
 	}
 
-	private void cureUI(Stage primaryStage) {
-
-		selected.setTarget(selectedZombie);
+	private void cureUI(Stage primaryStage, ImageView cureImgView) {
+		int column = GridPane.getColumnIndex(cureImgView);
+		int row = GridPane.getRowIndex(cureImgView);
+		
+		ImageView cureHighlightedImgView = new ImageView(CureModeHighlighted);
+		cureHighlightedImgView.setScaleX(0.4);
+		cureHighlightedImgView.setScaleY(0.4);
+		root.add(cureHighlightedImgView, column, row);
+		
+		PauseTransition delay = new PauseTransition(Duration.millis(100));
+		delay.setOnFinished(e->{
+			root.getChildren().remove(cureHighlightedImgView);
+			root.add(cureImgView, column, row);	
+		});
+		delay.play();
+		
 		try {
+			selected.setTarget(selectedZombie);
 			selected.cure();
 		} catch (NoAvailableResourcesException | InvalidTargetException | NotEnoughActionsException e) {
 			showPopUp(e.getMessage(), primaryStage);
