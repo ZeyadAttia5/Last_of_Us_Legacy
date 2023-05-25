@@ -77,6 +77,9 @@ public class GamePlay extends Application {
 	private Image cureModeImage = new Image("icons/CureMode.png");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 //	private Character selected = null;
+	private Hero selected;
+	private Zombie selectedZombie;
+	private ImageView selectedZombieImage;
 	private ImageView selectedImage;
 	private ImageView emptyCellView = new ImageView(emptyCell);
 	private ArrayList<Image> fighterSupplyImages = new ArrayList<Image>();
@@ -129,6 +132,8 @@ public class GamePlay extends Application {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
+								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
+								medicImageView.setOnMouseClicked(e -> select(medicImageView,h));
 								medicImageView.setScaleX(0.08);
 								medicImageView.setScaleY(0.08);
 								root.add(medicImageView, y, 14 - x);
@@ -142,6 +147,8 @@ public class GamePlay extends Application {
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
+								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
+								fighterImageView.setOnMouseClicked(e -> select(fighterImageView,h));
 								fighterImageView.setScaleX(0.09);
 								fighterImageView.setScaleY(0.09);
 								root.add(fighterImageView, y, 14 - x);
@@ -155,6 +162,8 @@ public class GamePlay extends Application {
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
+								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
+								explorerImageView.setOnMouseClicked(e -> select(explorerImageView,h));
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
@@ -170,7 +179,8 @@ public class GamePlay extends Application {
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
-							zombieImageView.
+							Zombie h = (Zombie)((CharacterCell)Game.map[x][y]).getCharacter();
+							zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView,h));
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
 							Image image = new Image("icons/swordImage.png");
@@ -203,8 +213,7 @@ public class GamePlay extends Application {
 				} else if (!Game.map[x][y].isVisible()) {
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
 					Image image = new Image("icons/cross.png");
-					invisibleEmptyCellView
-							.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
+					invisibleEmptyCellView.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
 					invisibleEmptyCellView.setScaleX(0.7);
 					invisibleEmptyCellView.setScaleY(0.3);
 					root.add(invisibleEmptyCellView, y, 14 - x);
@@ -246,7 +255,10 @@ public class GamePlay extends Application {
 			root.add(actionsAvailable, 6, 16);
 			
 			ImageView attackImageView = new ImageView(attackModeImage);
+			showPopUp("Select Zombie before pressing attack or cure",primaryStage);
+			attackImageView.setOnMouseClicked(e -> attackUI(selectedZombie));
 			ImageView cureImageView = new ImageView(cureModeImage);
+			cureImageView.setOnMouseClicked(e -> cureUI(selectedZombie));
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
 			attackImageView.setTranslateX(-20);
@@ -287,7 +299,7 @@ public class GamePlay extends Application {
 		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
 
-		if ((chrctr) instanceof Hero) {
+		if ((chrctr) instanceof Character) {
 
 			Text vaccineText = new Text("Vaccines");
 			vaccineText.setFont(Font.font("Monospaced", 14));
@@ -655,14 +667,32 @@ public class GamePlay extends Application {
 		});
 		delay.play();
 	}
-	private void attackUI(Character zombie) throws NotEnoughActionsException, InvalidTargetException {
+	
+	private void attackUI(Character zombie) {
 		selected.setTarget(zombie);
-		selected.attack();
+		try {
+			selected.attack();
+		} catch (NotEnoughActionsException | InvalidTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	private void select(ImageView v, Character character) {
+	private void cureUI(Character zombie){
+		selected.setTarget(zombie);
+		try {
+			selected.cure();
+		} catch (NoAvailableResourcesException | InvalidTargetException | NotEnoughActionsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+	}
+	private void select(ImageView v, Hero character) {
 		selected = character;
-		root.setCursor(new ImageCursor(imaged));
 		selectedImage = v;
+	}
+	private void selectZombie(ImageView v, Zombie h) {
+		selectedZombie = h;
+		selectedZombieImage = v;
 	}
 
 //	private void selectedSetter(Character newSelection) {
