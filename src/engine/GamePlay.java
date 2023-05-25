@@ -25,12 +25,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -75,6 +69,7 @@ public class GamePlay extends Application {
 	private Image availableActionsText = new Image("icons/ActionsAvialable.png");
 	private Image attackModeImage = new Image("icons/AttackMode.png");
 	private Image cureModeImage = new Image("icons/CureMode.png");
+	private Image ZombieAttackImg = new Image("endTurnResources/ZombieAttackImg.jpg");
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 //	private Character selected = null;
 	private Hero selected;
@@ -88,7 +83,6 @@ public class GamePlay extends Application {
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
 	private ArrayList<Image> useSpecialImages = new ArrayList<Image>();
 	private Scene scene1 = new Scene(root, Color.BEIGE);
-//	private Scene scene2 = new Scene(endGameScene, Color.BISQUE);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -132,8 +126,10 @@ public class GamePlay extends Application {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
-								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
-								medicImageView.setOnMouseClicked(e -> select(medicImageView,h));
+								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
+								// TODO delete next line
+								h.getVaccineInventory().add(new Vaccine());
+								medicImageView.setOnMouseClicked(e -> select(medicImageView, h));
 								medicImageView.setScaleX(0.08);
 								medicImageView.setScaleY(0.08);
 								root.add(medicImageView, y, 14 - x);
@@ -147,8 +143,8 @@ public class GamePlay extends Application {
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Fighter) {
 								ImageView fighterImageView = new ImageView(fighterImage);
-								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
-								fighterImageView.setOnMouseClicked(e -> select(fighterImageView,h));
+								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
+								fighterImageView.setOnMouseClicked(e -> select(fighterImageView, h));
 								fighterImageView.setScaleX(0.09);
 								fighterImageView.setScaleY(0.09);
 								root.add(fighterImageView, y, 14 - x);
@@ -162,7 +158,7 @@ public class GamePlay extends Application {
 
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
-								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
+								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
 //								explorerImageView.setOnMouseClicked(e -> );
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
@@ -171,7 +167,7 @@ public class GamePlay extends Application {
 								// TODO delete TEST
 								explorerImageView.setOnMouseClicked(e -> {
 									root.requestFocus();
-									select(explorerImageView,h);
+									select(explorerImageView, h);
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
 								});
@@ -180,8 +176,8 @@ public class GamePlay extends Application {
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
-							Zombie h = (Zombie)((CharacterCell)Game.map[x][y]).getCharacter();
-							zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView,h));
+							Zombie h = (Zombie) ((CharacterCell) Game.map[x][y]).getCharacter();
+							zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
 							Image image = new Image("icons/swordImage.png");
@@ -214,7 +210,8 @@ public class GamePlay extends Application {
 				} else if (!Game.map[x][y].isVisible()) {
 					ImageView invisibleEmptyCellView = new ImageView(invisibleEmptyCell);
 					Image image = new Image("icons/cross.png");
-					invisibleEmptyCellView.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
+					invisibleEmptyCellView
+							.setOnMouseEntered(e -> invisibleEmptyCellView.setCursor(new ImageCursor(image)));
 					invisibleEmptyCellView.setScaleX(0.7);
 					invisibleEmptyCellView.setScaleY(0.3);
 					root.add(invisibleEmptyCellView, y, 14 - x);
@@ -260,37 +257,37 @@ public class GamePlay extends Application {
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
-			select(new ImageView(fighterImage), (Hero)chrctr);
+			select(new ImageView(fighterImage), (Hero) chrctr);
 		}
 		if (chrctr instanceof model.characters.Explorer) {
 			ImageView fighterProfileView = new ImageView(explorerPrfile);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
-			select(new ImageView(explorerImage), (Hero)chrctr);
+			select(new ImageView(explorerImage), (Hero) chrctr);
 		}
 		if (chrctr instanceof model.characters.Medic) {
 			ImageView fighterProfileView = new ImageView(medicProfile);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
-			select(new ImageView(medicImage), (Hero)chrctr);
+			select(new ImageView(medicImage), (Hero) chrctr);
 		}
 		if (chrctr instanceof model.characters.Zombie) {
-			ImageView fighterProfileView = new ImageView(zombieProfile);
-			selectZombie(fighterProfileView, (Zombie)chrctr);
 			name.setStroke(Color.ORANGERED);
-			fighterProfileView.setScaleX(0.2);
-			fighterProfileView.setScaleY(0.2);
-			root.add(fighterProfileView, 0, 16);
+			ImageView zombieProfileView = new ImageView(zombieProfile);
+			selectZombie(zombieProfileView, (Zombie) chrctr);
+			zombieProfileView.setScaleX(0.2);
+			zombieProfileView.setScaleY(0.2);
+			root.add(zombieProfileView, 0, 16);
 			ImageView attackImageView = new ImageView(attackModeImage);
-			showPopUp("Select Zombie before pressing attack or cure",primaryStage);
-			attackImageView.setOnMouseClicked(e -> attackUI());
+			showPopUp("Select Zombie before pressing attack or cure", primaryStage);
+			attackImageView.setOnMouseClicked(e -> attackUI(primaryStage));
 			ImageView cureImageView = new ImageView(cureModeImage);
-			cureImageView.setOnMouseClicked(e -> cureUI());
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
 			attackImageView.setTranslateX(-20);
+			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage));
 			cureImageView.setScaleX(0.4);
 			cureImageView.setScaleY(0.4);
 			cureImageView.setTranslateX(20);
@@ -334,7 +331,7 @@ public class GamePlay extends Application {
 				supplyImageView.setScaleY(0.25);
 				supplyImageView.setTranslateY(-15);
 				root.add(supplyImageView, 3, 17);
-				
+
 				ImageView useSpecialView = new ImageView(useSpecialImages.get(1));
 				useSpecialView.setScaleX(0.4);
 				useSpecialView.setScaleY(0.4);
@@ -353,7 +350,7 @@ public class GamePlay extends Application {
 				supplyImageView.setScaleY(0.25);
 				supplyImageView.setTranslateY(-15);
 				root.add(supplyImageView, 3, 17);
-				
+
 				ImageView useSpecialView = new ImageView(useSpecialImages.get(2));
 				useSpecialView.setScaleX(0.4);
 				useSpecialView.setScaleY(0.4);
@@ -392,7 +389,6 @@ public class GamePlay extends Application {
 			vaccineImageView.setScaleY(0.3);
 			vaccineImageView.setTranslateY(-20);
 			root.add(vaccineImageView, 3, 16);
-
 		}
 
 	}
@@ -401,14 +397,10 @@ public class GamePlay extends Application {
 		if (chrctr instanceof Explorer) {
 			try {
 				((Explorer) chrctr).useSpecial();
-				updateMap(primaryStage);
-			} catch (NoAvailableResourcesException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (NoAvailableResourcesException | InvalidTargetException e) {
+				showPopUp(e.getMessage(), primaryStage);
 			}
+			updateBar(chrctr, primaryStage);
 		}
 
 	}
@@ -437,75 +429,20 @@ public class GamePlay extends Application {
 		} catch (NotEnoughActionsException e) {
 		} catch (InvalidTargetException e) {
 		}
+		// TODO add transition to zombieAttackImg
+		ImageView zombieView = new ImageView(ZombieAttackImg);
+		BorderPane layout2 = new BorderPane(zombieView);
+		zombieView.fitWidthProperty().bind(layout2.widthProperty());
+		zombieView.fitHeightProperty().bind(layout2.heightProperty());
+		primaryStage.getScene().setRoot(layout2);
 
-		// Create the fade transition
-		StackPane stackPane = new StackPane();
-		Scene scene2 = new Scene(stackPane);
-		FadeTransition fadeOut = new FadeTransition(Duration.seconds(1));
-		fadeOut.setFromValue(1.0);
-		fadeOut.setToValue(0.0);
-		fadeOut.setOnFinished(event -> {
-			// This code will run after the fade out transition completes
-			// Create and play the cutscene media player
-			MediaPlayer player = new MediaPlayer(
-					new Media(getClass().getResource("../videos/ZombieAttack.mp4").toExternalForm()));
-			MediaView mediaView = new MediaView(player);
-			player.setStartTime(Duration.millis(800));
-			mediaView.setScaleX(0.9);
-			mediaView.setScaleY(0.9);
-			player.play();
-
-			// Create the cutscene scene
-			stackPane.getChildren().add(mediaView);
-
-			// Set the cutscene scene as the active scene
-			primaryStage.setScene(scene2);
-			primaryStage.setFullScreen(true);
-
-			// Create the fade in transition
-			FadeTransition fadeIn = new FadeTransition(Duration.seconds(1));
-			fadeIn.setFromValue(0.0);
-			fadeIn.setToValue(1.0);
-
-			// Apply the fade in transition to the root of the cutscene scene
-			scene2.getRoot().setOpacity(0.0);
-			fadeIn.setNode(scene2.getRoot());
-			fadeIn.play();
+		FadeTransition fadeInZombie = new FadeTransition(Duration.seconds(5), layout2);
+		fadeInZombie.setFromValue(0.0);
+		fadeInZombie.setToValue(1.0);
+		fadeInZombie.setOnFinished(e -> {
+			primaryStage.getScene().setRoot(root);
 		});
-
-		// Apply the fade out transition to the root of the current scene
-		scene1.getRoot().setOpacity(1.0);
-		fadeOut.setNode(scene1.getRoot());
-		fadeOut.play();
-
-		PauseTransition delay = new PauseTransition(Duration.millis(5200));
-		delay.setOnFinished(e -> {
-			FadeTransition fadeOut2 = new FadeTransition(Duration.seconds(1));
-			fadeOut2.setFromValue(1.0);
-			fadeOut2.setToValue(0.0);
-			fadeOut2.setOnFinished(event -> {
-
-				// Set the old scene as the active scene
-				primaryStage.setScene(scene1);
-				primaryStage.setFullScreen(true);
-
-				// Create the fade in transition
-				FadeTransition fadeIn = new FadeTransition(Duration.seconds(1));
-				fadeIn.setFromValue(0.0);
-				fadeIn.setToValue(1.0);
-
-				// Apply the fade in transition to the root of the cutscene scene
-				scene1.getRoot().setOpacity(0.0);
-				fadeIn.setNode(scene1.getRoot());
-				fadeIn.play();
-			});
-
-			// Apply the fade out transition to the root of the current scene
-			scene2.getRoot().setOpacity(1.0);
-			fadeOut2.setNode(scene2.getRoot());
-			fadeOut2.play();
-		});
-		delay.play();
+		fadeInZombie.play();
 
 		if (Game.checkWin()) {
 			Text txt = new Text("You Won!");
@@ -651,7 +588,6 @@ public class GamePlay extends Application {
 
 	}
 
-
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Text content = new Text(popUpContent);
 		content.setFont(Font.font("Monospaced", 20));
@@ -671,35 +607,35 @@ public class GamePlay extends Application {
 		});
 		delay.play();
 	}
-	
-	private void attackUI() {
-		selected.setTarget(selectedZombie);
+
+	private void attackUI(Stage primaryStage) {
 		try {
+			selected.setTarget(selectedZombie);
 			selected.attack();
 		} catch (NotEnoughActionsException | InvalidTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			showPopUp(e.getMessage(), primaryStage);
 		}
 	}
-	private void cureUI(){
+
+	private void cureUI(Stage primaryStage) {
+
 		selected.setTarget(selectedZombie);
 		try {
 			selected.cure();
 		} catch (NoAvailableResourcesException | InvalidTargetException | NotEnoughActionsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
+			showPopUp(e.getMessage(), primaryStage);
+		}
+
 	}
+
 	private void select(ImageView v, Hero character) {
 		selected = character;
 		selectedImage = v;
 	}
+
 	private void selectZombie(ImageView v, Zombie h) {
 		selectedZombie = h;
 		selectedZombieImage = v;
 	}
 
-//	private void selectedSetter(Character newSelection) {
-//		this.selected = newSelection;
-//	}
 }
