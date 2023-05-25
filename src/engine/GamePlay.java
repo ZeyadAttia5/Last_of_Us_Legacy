@@ -163,7 +163,7 @@ public class GamePlay extends Application {
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
 								Hero h = (Hero)((CharacterCell)Game.map[x][y]).getCharacter();
-								explorerImageView.setOnMouseClicked(e -> select(explorerImageView,h));
+//								explorerImageView.setOnMouseClicked(e -> );
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
@@ -171,6 +171,7 @@ public class GamePlay extends Application {
 								// TODO delete TEST
 								explorerImageView.setOnMouseClicked(e -> {
 									root.requestFocus();
+									select(explorerImageView,h);
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
 								});
@@ -259,21 +260,25 @@ public class GamePlay extends Application {
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
+			select(new ImageView(fighterImage), (Hero)chrctr);
 		}
 		if (chrctr instanceof model.characters.Explorer) {
 			ImageView fighterProfileView = new ImageView(explorerPrfile);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
+			select(new ImageView(explorerImage), (Hero)chrctr);
 		}
 		if (chrctr instanceof model.characters.Medic) {
 			ImageView fighterProfileView = new ImageView(medicProfile);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
 			root.add(fighterProfileView, 0, 16);
+			select(new ImageView(medicImage), (Hero)chrctr);
 		}
 		if (chrctr instanceof model.characters.Zombie) {
 			ImageView fighterProfileView = new ImageView(zombieProfile);
+			selectZombie(fighterProfileView, (Zombie)chrctr);
 			name.setStroke(Color.ORANGERED);
 			fighterProfileView.setScaleX(0.2);
 			fighterProfileView.setScaleY(0.2);
@@ -289,8 +294,8 @@ public class GamePlay extends Application {
 			cureImageView.setScaleX(0.4);
 			cureImageView.setScaleY(0.4);
 			cureImageView.setTranslateX(20);
-			root.add(cureImageView, 10, 16);
-			root.add(attackImageView, 8, 16);
+			root.add(cureImageView, 8, 16);
+			root.add(attackImageView, 10, 16);
 		}
 		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
 		progressBar.setStyle("-fx-accent: blue");
