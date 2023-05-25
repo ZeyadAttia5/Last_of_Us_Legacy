@@ -50,7 +50,10 @@ public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
 	private static BorderPane endGameScene = new BorderPane();
-	private Image logo = new Image("icons/logo.png");
+	
+//	private ImageLoader imageLoader = ImageLoader.loadImageLoader();
+	
+	private Image logo = ImageLoader.loadImage("icons/logo.png");
 	private Image emptyCell = new Image("icons/emptyCell.png");
 	private Image explorerImage = new Image("icons/explorerImage.png");
 	private Image medicImage = new Image("icons/medicImage.png");
