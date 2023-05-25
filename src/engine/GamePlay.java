@@ -76,8 +76,11 @@ public class GamePlay extends Application {
 	private Image UseSpecialFighterHighlighted = new Image("icons/UseSpecialFighterHighlighted.png");
 	private Image UseSpecialMedicHighlighted = new Image("icons/UseSpecialMedicHighlighted.png");
 	private Image UseSpecialExplorerHighlighted = new Image("icons/UseSpecialExplorerHighlighted.png");
+	private Image GunCursorImage = new Image("icons/cursors/GunCursor.png");
+	private boolean AttackMode = false;
 
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
+	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
 //	private Character selected = null;
 	private Hero selected;
 	private Zombie selectedZombie;
@@ -162,7 +165,7 @@ public class GamePlay extends Application {
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
 								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
-//								explorerImageView.setOnMouseClicked(e -> );
+								explorerImageView.setOnMouseClicked(e ->  select(explorerImageView, h));
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
@@ -180,7 +183,9 @@ public class GamePlay extends Application {
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							Zombie h = (Zombie) ((CharacterCell) Game.map[x][y]).getCharacter();
+							if(AttackMode) {
 							zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
+							}
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
 							Image image = new Image("icons/swordImage.png");
@@ -235,6 +240,9 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr, Stage primaryStage) {
+		if (chrctr instanceof Zombie && AttackMode) {
+			attackUI(primaryStage);
+		}
 		root.getChildren().clear();
 		updateTexturedWall(primaryStage);
 		Text name = new Text(chrctr.getName());
@@ -274,7 +282,17 @@ public class GamePlay extends Application {
 			root.add(actionsAvailable, 6, 16);
 			
 			ImageView attackImageView = new ImageView(attackModeImage);
-			attackImageView.setOnMouseClicked(e -> attackUI(primaryStage, attackImageView));
+			//attackImageView.setOnMouseClicked(e -> attackUI(primaryStage, attackImageView));
+			attackImageView.setOnMouseClicked(e -> {
+				if(!AttackMode) { 
+					AttackMode = true;
+					root.setCursor(GunCursor);
+				}
+				else {
+					AttackMode = false;
+					root.setCursor(Cursor.DEFAULT);
+				}
+			});
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
 //			attackImageView.setTranslateX(-20);
@@ -640,6 +658,30 @@ public class GamePlay extends Application {
 			root.add(attackImgView, column, row);
 		});
 		delayClick.play();
+		
+		try {
+			selected.setTarget(selectedZombie);
+			selected.attack();
+			if (Game.zombies.contains(selectedZombie)) {
+				ImageView zombieAttacked = new ImageView(zombieHighlighted);
+				zombieAttacked.setScaleX(0.08);
+				zombieAttacked.setScaleY(0.08);
+				PauseTransition delay = new PauseTransition(Duration.seconds(1));
+				delay.setOnFinished(e -> {
+					ImageView imgView = new ImageView(zombieImage);
+					imgView.setScaleX(0.08);
+					imgView.setScaleY(0.08);
+					root.add(imgView, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
+				});
+				root.add(zombieAttacked, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
+				delay.play();
+			}
+		} catch (NotEnoughActionsException | InvalidTargetException e) {
+			showPopUp(e.getMessage(), primaryStage);
+		}
+	}
+	private void attackUI(Stage primaryStage) {
+		
 		try {
 			selected.setTarget(selectedZombie);
 			selected.attack();
@@ -696,5 +738,6 @@ public class GamePlay extends Application {
 		selectedZombie = h;
 		selectedZombieImage = v;
 	}
+	
 
 }
