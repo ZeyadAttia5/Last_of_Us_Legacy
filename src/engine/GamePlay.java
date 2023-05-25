@@ -125,8 +125,6 @@ public class GamePlay extends Application {
 				emptyCellView.setScaleY(0.3);
 				root.add(emptyCellView, y, 14 - x);
 				if (Game.map[x][y].isVisible()) {
-					Image imaged = new Image("icons/move.png");
-					emptyCellView.setOnMouseEntered(e -> emptyCellView.setCursor(new ImageCursor(imaged)));
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
@@ -172,6 +170,7 @@ public class GamePlay extends Application {
 							}
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
+							zombieImageView.
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
 							Image image = new Image("icons/swordImage.png");
