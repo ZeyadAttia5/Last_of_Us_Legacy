@@ -612,6 +612,7 @@ public class GamePlay extends Application {
 		BorderPane layout2 = new BorderPane(imageView);
 		imageView.fitWidthProperty().bind(layout2.widthProperty());
 		imageView.fitHeightProperty().bind(layout2.heightProperty());
+		//TODO Show Dr.Nourhan
 		if (!transitionBack) {
 			ImageView endGameButton = new ImageView(ImageLoader.loadImage("icons/EndGame.png"));
 			layout2.getChildren().add(endGameButton);
