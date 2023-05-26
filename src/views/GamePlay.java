@@ -51,7 +51,7 @@ import javafx.stage.Popup;
 public class GamePlay extends Application {
 
 	private static GridPane root = new GridPane();
-	private static BorderPane endGameScene = new BorderPane();
+//	private static BorderPane endGameScene = new BorderPane();
 
 //	private ImageLoader imageLoader = ImageLoader.loadImageLoader();ِ
 
@@ -82,7 +82,7 @@ public class GamePlay extends Application {
 	private Image UseSpecialMedicHighlighted = ImageLoader.loadImage("icons/UseSpecialMedicHighlighted.png");
 	private Image UseSpecialExplorerHighlighted = ImageLoader.loadImage("icons/UseSpecialExplorerHighlighted.png");
 	private Image GunCursorImage = ImageLoader.loadImage("icons/cursors/GunCursor.png");
-	//New Decs
+	// New Decs
 	private Image StartTitleImg = new Image("icons/TitleScreen.jpg");
 	private Image StartBtn = new Image("icons/Start.png");
 	private Image StartBtnHighlighted = new Image("icons/StartGameHighlighted.png");
@@ -105,7 +105,7 @@ public class GamePlay extends Application {
 	private boolean useSpecialMedicMode = false;
 	private boolean CureMode = false;
 	private boolean gameRunning = true;
-	
+
 	private int HeroIndex = -1;
 	private boolean FinishedSelection = false;
 	//
@@ -137,7 +137,7 @@ public class GamePlay extends Application {
 		startGameMenu(primaryStage);
 		primaryStage.show();
 	}
-	
+
 	private void LoadMapGUI(Stage primaryStage) {
 		initializeGrid(primaryStage);
 		putEndTurnButton(primaryStage);
@@ -278,7 +278,7 @@ public class GamePlay extends Application {
 				}
 			}
 		}
-		if(FinishedSelection) {
+		if (FinishedSelection) {
 			primaryStage.setScene(scene1);
 			primaryStage.setFullScreen(true);
 			FinishedSelection = false;
@@ -567,7 +567,7 @@ public class GamePlay extends Application {
 	}
 
 	private void initializeGrid(Stage primaryStage) {
-		
+
 		root.setGridLinesVisible(true);
 		for (int i = 0; i < 18; i++) {
 			RowConstraints row = new RowConstraints();
@@ -597,40 +597,50 @@ public class GamePlay extends Application {
 		CureMode = false;
 		useSpecialMedicMode = false;
 		root.setCursor(Cursor.DEFAULT);
-		
-		
+
 		// TODO add sound to transition to zombieAttackImg
 		checkEndGame(primaryStage);
-		if(gameRunning) {			
+		if (gameRunning) {
 			ImageView zombieView = new ImageView(ZombieAttackImg);
 			putImageFullScreen(zombieView, Duration.seconds(1), Duration.seconds(2), primaryStage, true);
 			updateTexturedWall(primaryStage);
 		}
 	}
 
-	private void putImageFullScreen(ImageView imageView, Duration transitionTime, Duration keepForTime, Stage primaryStage, boolean transitionBack) {
+	private void putImageFullScreen(ImageView imageView, Duration transitionTime, Duration keepForTime,
+			Stage primaryStage, boolean transitionBack) {
 		BorderPane layout2 = new BorderPane(imageView);
 		imageView.fitWidthProperty().bind(layout2.widthProperty());
 		imageView.fitHeightProperty().bind(layout2.heightProperty());
+		if (!transitionBack) {
+			ImageView endGameButton = new ImageView(ImageLoader.loadImage("icons/EndGame.png"));
+			layout2.getChildren().add(endGameButton);
+			endGameButton.setScaleX(1.2);
+			endGameButton.setScaleY(1.2);
+			endGameButton.setTranslateX(635);
+			endGameButton.setTranslateY(735);
+			endGameButton.setOnMouseEntered(e-> layout2.setCursor(handCursor));
+			endGameButton.setOnMouseExited(e-> layout2.setCursor(Cursor.DEFAULT));
+			endGameButton.setOnMouseClicked(e-> primaryStage.close());
+		}
 		primaryStage.getScene().setRoot(layout2);
 		FadeTransition fadeInZombie = new FadeTransition(transitionTime, layout2);
-		
 		// opacity
 		fadeInZombie.setFromValue(0.0);
 		fadeInZombie.setToValue(1.0);
 		fadeInZombie.setOnFinished(e -> {
-			if(transitionBack == true) {
+			if (transitionBack == true) {
 				PauseTransition keepImageView = new PauseTransition(keepForTime);
-				
+
 				keepImageView.setOnFinished(trigger -> {
 					primaryStage.getScene().setRoot(root);
-					layout2.getChildren().clear();									
+					layout2.getChildren().clear();
 				});
 				keepImageView.play();
 			}
 		});
 		fadeInZombie.play();
-		
+
 	}
 
 	private void putEndTurnButton(Stage primaryStage) {
@@ -722,7 +732,7 @@ public class GamePlay extends Application {
 						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
-					} catch (MovementException  | NotEnoughActionsException e1) {
+					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
 				} else if (e.getCode() == KeyCode.D) {
@@ -843,6 +853,7 @@ public class GamePlay extends Application {
 			gameRunning = false;
 		}
 	}
+
 	private void startGameMenu(Stage primaryStage) {
 		ImageView TitleView = new ImageView(StartTitleImg);
 		ImageView StartButton = new ImageView(StartBtn);
@@ -856,7 +867,7 @@ public class GamePlay extends Application {
 		StartButton.setOnMouseEntered(event -> {
 			StartButton.setImage(StartBtnHighlighted);
 			StartButton.setCursor(handCursor);
-			});
+		});
 		StartButton.setOnMouseExited(event -> StartButton.setImage(StartBtn));
 		StartButton.setOnMouseClicked(event -> {
 			TitleView.setImage(PickClass);
@@ -879,10 +890,10 @@ public class GamePlay extends Application {
 			layout01.getChildren().add(SpecialMessage);
 			SpecialMessage.setTranslateX(1180);
 			SpecialMessage.setTranslateY(500);
-			
+
 			MedicClass.setTranslateX(340);
 			MedicClass.setTranslateY(250);
-			
+
 			ExplorerClass.setTranslateX(-370);
 			ExplorerClass.setTranslateY(250);
 			FighterClass.setOnMouseEntered(event2 -> {
@@ -918,15 +929,15 @@ public class GamePlay extends Application {
 				MedicClass.setImage(MedicForMenu);
 				SpecialMessage.setImage(null);
 			});
-			
-			FighterClass.setOnMouseClicked(event2 ->{
+
+			FighterClass.setOnMouseClicked(event2 -> {
 				layout01.getChildren().remove(SpecialMessage);
 				layout01.getChildren().remove(ExplorerClass);
 				layout01.getChildren().remove(FighterClass);
 				layout01.getChildren().remove(MedicClass);
 				TitleView.setImage(FighterPickScreen);
-				ImageView ChooseJoel = new ImageView(ChooseBtn); 
-				ImageView ChooseDavid = new ImageView(ChooseBtn); 
+				ImageView ChooseJoel = new ImageView(ChooseBtn);
+				ImageView ChooseDavid = new ImageView(ChooseBtn);
 				layout01.setCenter(ChooseJoel);
 				ChooseJoel.setScaleX(0.6);
 				ChooseJoel.setScaleY(0.6);
@@ -961,18 +972,18 @@ public class GamePlay extends Application {
 					LoadMapGUI(primaryStage);
 					FinishedSelection = true;
 				});
-				
+
 			});
-			
+
 			ExplorerClass.setOnMouseClicked(event2 -> {
 				layout01.getChildren().remove(SpecialMessage);
 				layout01.getChildren().remove(ExplorerClass);
 				layout01.getChildren().remove(FighterClass);
 				layout01.getChildren().remove(MedicClass);
 				TitleView.setImage(ExplorerPickScreen);
-				ImageView ChooseTess = new ImageView(ChooseBtn); 
-				ImageView ChooseRiley = new ImageView(ChooseBtn); 
-				ImageView ChooseTommy = new ImageView(ChooseBtn); 
+				ImageView ChooseTess = new ImageView(ChooseBtn);
+				ImageView ChooseRiley = new ImageView(ChooseBtn);
+				ImageView ChooseTommy = new ImageView(ChooseBtn);
 				layout01.setTop(ChooseTess);
 				layout01.setCenter(ChooseRiley);
 				layout01.setBottom(ChooseTommy);
@@ -1032,9 +1043,9 @@ public class GamePlay extends Application {
 				layout01.getChildren().remove(FighterClass);
 				layout01.getChildren().remove(MedicClass);
 				TitleView.setImage(MedicPickScreen);
-				ImageView ChooseEllie = new ImageView(ChooseBtn); 
-				ImageView ChooseBill = new ImageView(ChooseBtn); 
-				ImageView ChooseHenry = new ImageView(ChooseBtn); 
+				ImageView ChooseEllie = new ImageView(ChooseBtn);
+				ImageView ChooseBill = new ImageView(ChooseBtn);
+				ImageView ChooseHenry = new ImageView(ChooseBtn);
 				layout01.setTop(ChooseEllie);
 				layout01.setCenter(ChooseBill);
 				layout01.setBottom(ChooseHenry);
@@ -1087,8 +1098,8 @@ public class GamePlay extends Application {
 					FinishedSelection = true;
 				});
 			});
-			});
-		
+		});
+
 		Scene scene = new Scene(layout01);
 		primaryStage.setScene(scene);
 	}
