@@ -82,12 +82,34 @@ public class GamePlay extends Application {
 	private Image UseSpecialMedicHighlighted = ImageLoader.loadImage("icons/UseSpecialMedicHighlighted.png");
 	private Image UseSpecialExplorerHighlighted = ImageLoader.loadImage("icons/UseSpecialExplorerHighlighted.png");
 	private Image GunCursorImage = ImageLoader.loadImage("icons/cursors/GunCursor.png");
-
+	//New Decs
+	private Image StartTitleImg = new Image("icons/TitleScreen.jpg");
+	private Image StartBtn = new Image("icons/Start.png");
+	private Image StartBtnHighlighted = new Image("icons/StartGameHighlighted.png");
+	private Image PickClass = new Image("icons/pickclassFullyEmpty.png");
+	private Image FighterForMenu = new Image("icons/FighterSizeConsistent.png");
+	private Image MedicForMenu = new Image("icons/MedicSizeConsistent.png");
+	private Image ExplorerForMenu = new Image("icons/ExplorerSizeConsistent.png");
+	private Image FighterForMenuFaded = new Image("icons/FighterSizeConsistentFaded.png");
+	private Image MedicForMenuFaded = new Image("icons/MedicSizeConsistentFaded.png");
+	private Image ExplorerForMenuFaded = new Image("icons/ExplorerSizeConsistentFaded.png");
+	private Image SpecialMessageM = new Image("icons/MedicSpecial.png");
+	private Image SpecialMessageE = new Image("icons/ExplorerSpecial.png");
+	private Image SpecialMessageF = new Image("icons/FighterSpecial.png");
+	private Image FighterPickScreen = new Image("icons/PickFighterScreen.png");
+	private Image ExplorerPickScreen = new Image("icons/PickExplorerScreenNoBtn.jpg");
+	private Image MedicPickScreen = new Image("icons/PickMedicScreen.jpg");
+	private Image ChooseBtn = new Image("icons/ChooseButton.png");
+	private Image ChooseBtnHighlighted = new Image("icons/ChooseButtonHighlighted.png");
 	private boolean AttackMode = false;
 	private boolean useSpecialMedicMode = false;
 	private boolean CureMode = false;
 	private boolean gameRunning = true;
 	
+	private int HeroIndex = -1;
+	private boolean FinishedSelection = false;
+	//
+
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
 	private ImageCursor CureCursor = new ImageCursor(vaccineImage);
@@ -112,14 +134,16 @@ public class GamePlay extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
+		startGameMenu(primaryStage);
+		primaryStage.show();
+	}
+	
+	private void LoadMapGUI(Stage primaryStage) {
 		initializeGrid(primaryStage);
 		putEndTurnButton(primaryStage);
 		loadResources();
-		Game.startGame(Game.availableHeroes.remove(0));
+		Game.startGame(Game.availableHeroes.remove(HeroIndex));
 		updateMap(primaryStage);
-//		moveHelper();
-		primaryStage.setScene(scene1);
-		primaryStage.show();
 	}
 
 	private void primaryStageInit(Stage primaryStage) {
@@ -253,6 +277,11 @@ public class GamePlay extends Application {
 					root.add(invisibleEmptyCellView, y, 14 - x);
 				}
 			}
+		}
+		if(FinishedSelection) {
+			primaryStage.setScene(scene1);
+			primaryStage.setFullScreen(true);
+			FinishedSelection = false;
 		}
 	}
 
@@ -538,7 +567,7 @@ public class GamePlay extends Application {
 	}
 
 	private void initializeGrid(Stage primaryStage) {
-
+		
 		root.setGridLinesVisible(true);
 		for (int i = 0; i < 18; i++) {
 			RowConstraints row = new RowConstraints();
@@ -553,6 +582,8 @@ public class GamePlay extends Application {
 			}
 		}
 		updateTexturedWall(primaryStage);
+		primaryStage.setScene(scene1);
+		primaryStage.setFullScreen(true);
 	}
 
 	private void controllerEndTurn(Stage primaryStage) {
@@ -806,5 +837,254 @@ public class GamePlay extends Application {
 			putImageFullScreen(winView, Duration.seconds(1), primaryStage, false);
 			gameRunning = false;
 		}
+	}
+	private void startGameMenu(Stage primaryStage) {
+		ImageView TitleView = new ImageView(StartTitleImg);
+		ImageView StartButton = new ImageView(StartBtn);
+		BorderPane layout01 = new BorderPane();
+		layout01.getChildren().add(TitleView);
+		layout01.setBottom(StartButton);
+		StartButton.setTranslateX(520);
+		StartButton.setTranslateY(-50);
+		TitleView.fitWidthProperty().bind(layout01.widthProperty());
+		TitleView.fitHeightProperty().bind(layout01.heightProperty());
+		StartButton.setOnMouseEntered(event -> {
+			StartButton.setImage(StartBtnHighlighted);
+			StartButton.setCursor(handCursor);
+			});
+		StartButton.setOnMouseExited(event -> StartButton.setImage(StartBtn));
+		StartButton.setOnMouseClicked(event -> {
+			TitleView.setImage(PickClass);
+			layout01.getChildren().remove(StartButton);
+			ImageView FighterClass = new ImageView(FighterForMenu);
+			ImageView MedicClass = new ImageView(MedicForMenu);
+			ImageView ExplorerClass = new ImageView(ExplorerForMenu);
+			ImageView SpecialMessage = new ImageView();
+			MedicClass.setScaleX(0.57);
+			MedicClass.setScaleY(0.57);
+			FighterClass.setScaleX(0.57);
+			FighterClass.setScaleY(0.57);
+			ExplorerClass.setScaleX(0.55);
+			ExplorerClass.setScaleY(0.55);
+			layout01.setLeft(MedicClass);
+			layout01.setCenter(FighterClass);
+			layout01.setRight(ExplorerClass);
+			FighterClass.setTranslateX(-25);
+			FighterClass.setTranslateY(150);
+			layout01.getChildren().add(SpecialMessage);
+			SpecialMessage.setTranslateX(1180);
+			SpecialMessage.setTranslateY(500);
+			
+			MedicClass.setTranslateX(340);
+			MedicClass.setTranslateY(250);
+			
+			ExplorerClass.setTranslateX(-370);
+			ExplorerClass.setTranslateY(250);
+			FighterClass.setOnMouseEntered(event2 -> {
+				FighterClass.setCursor(handCursor);
+				MedicClass.setImage(MedicForMenuFaded);
+				ExplorerClass.setImage(ExplorerForMenuFaded);
+				SpecialMessage.setImage(SpecialMessageF);
+			});
+			FighterClass.setOnMouseExited(event2 -> {
+				MedicClass.setImage(MedicForMenu);
+				ExplorerClass.setImage(ExplorerForMenu);
+				SpecialMessage.setImage(null);
+			});
+			MedicClass.setOnMouseEntered(event2 -> {
+				MedicClass.setCursor(handCursor);
+				FighterClass.setImage(FighterForMenuFaded);
+				ExplorerClass.setImage(ExplorerForMenuFaded);
+				SpecialMessage.setImage(SpecialMessageM);
+			});
+			MedicClass.setOnMouseExited(event2 -> {
+				FighterClass.setImage(FighterForMenu);
+				ExplorerClass.setImage(ExplorerForMenu);
+				SpecialMessage.setImage(null);
+			});
+			ExplorerClass.setOnMouseEntered(event2 -> {
+				ExplorerClass.setCursor(handCursor);
+				MedicClass.setImage(MedicForMenuFaded);
+				FighterClass.setImage(FighterForMenuFaded);
+				SpecialMessage.setImage(SpecialMessageE);
+			});
+			ExplorerClass.setOnMouseExited(event2 -> {
+				FighterClass.setImage(FighterForMenu);
+				MedicClass.setImage(MedicForMenu);
+				SpecialMessage.setImage(null);
+			});
+			
+			FighterClass.setOnMouseClicked(event2 ->{
+				layout01.getChildren().remove(SpecialMessage);
+				layout01.getChildren().remove(ExplorerClass);
+				layout01.getChildren().remove(FighterClass);
+				layout01.getChildren().remove(MedicClass);
+				TitleView.setImage(FighterPickScreen);
+				ImageView ChooseJoel = new ImageView(ChooseBtn); 
+				ImageView ChooseDavid = new ImageView(ChooseBtn); 
+				layout01.setCenter(ChooseJoel);
+				ChooseJoel.setScaleX(0.6);
+				ChooseJoel.setScaleY(0.6);
+				ChooseJoel.setTranslateX(90);
+				ChooseJoel.setTranslateY(90);
+				layout01.setBottom(ChooseDavid);
+				ChooseDavid.setScaleX(0.6);
+				ChooseDavid.setScaleY(0.6);
+				ChooseDavid.setTranslateX(725);
+				ChooseDavid.setTranslateY(-52);
+				ChooseJoel.setOnMouseEntered(event3 -> {
+					ChooseJoel.setCursor(handCursor);
+					ChooseJoel.setImage(ChooseBtnHighlighted);
+				});
+				ChooseJoel.setOnMouseExited(event3 -> {
+					ChooseJoel.setImage(ChooseBtn);
+				});
+				ChooseJoel.setOnMouseClicked(event3 -> {
+					HeroIndex = 0;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+				ChooseDavid.setOnMouseEntered(event3 -> {
+					ChooseDavid.setCursor(handCursor);
+					ChooseDavid.setImage(ChooseBtnHighlighted);
+				});
+				ChooseDavid.setOnMouseExited(event3 -> {
+					ChooseDavid.setImage(ChooseBtn);
+				});
+				ChooseDavid.setOnMouseClicked(event3 -> {
+					HeroIndex = 6;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+				
+			});
+			
+			ExplorerClass.setOnMouseClicked(event2 -> {
+				layout01.getChildren().remove(SpecialMessage);
+				layout01.getChildren().remove(ExplorerClass);
+				layout01.getChildren().remove(FighterClass);
+				layout01.getChildren().remove(MedicClass);
+				TitleView.setImage(ExplorerPickScreen);
+				ImageView ChooseTess = new ImageView(ChooseBtn); 
+				ImageView ChooseRiley = new ImageView(ChooseBtn); 
+				ImageView ChooseTommy = new ImageView(ChooseBtn); 
+				layout01.setTop(ChooseTess);
+				layout01.setCenter(ChooseRiley);
+				layout01.setBottom(ChooseTommy);
+				ChooseTess.setScaleX(0.5);
+				ChooseTess.setScaleY(0.5);
+				ChooseRiley.setScaleX(0.5);
+				ChooseRiley.setScaleY(0.5);
+				ChooseTommy.setScaleX(0.5);
+				ChooseTommy.setScaleY(0.5);
+				ChooseTess.setTranslateX(830);
+				ChooseTess.setTranslateY(240);
+				ChooseRiley.setTranslateX(192);
+				ChooseRiley.setTranslateY(60);
+				ChooseTommy.setTranslateX(830);
+				ChooseTommy.setTranslateY(-110);
+				ChooseTess.setOnMouseEntered(event3 -> {
+					ChooseTess.setCursor(handCursor);
+					ChooseTess.setImage(ChooseBtnHighlighted);
+				});
+				ChooseTess.setOnMouseExited(event3 -> {
+					ChooseTess.setImage(ChooseBtn);
+				});
+				ChooseTess.setOnMouseClicked(event3 -> {
+					HeroIndex = 2;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+				ChooseRiley.setOnMouseEntered(event3 -> {
+					ChooseRiley.setCursor(handCursor);
+					ChooseRiley.setImage(ChooseBtnHighlighted);
+				});
+				ChooseRiley.setOnMouseExited(event3 -> {
+					ChooseRiley.setImage(ChooseBtn);
+				});
+				ChooseRiley.setOnMouseClicked(event3 -> {
+					HeroIndex = 3;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+				ChooseTommy.setOnMouseEntered(event3 -> {
+					ChooseTommy.setCursor(handCursor);
+					ChooseTommy.setImage(ChooseBtnHighlighted);
+				});
+				ChooseTommy.setOnMouseExited(event3 -> {
+					ChooseTommy.setImage(ChooseBtn);
+				});
+				ChooseTommy.setOnMouseClicked(event3 -> {
+					HeroIndex = 4;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+
+			});
+			MedicClass.setOnMouseClicked(event2 -> {
+				layout01.getChildren().remove(SpecialMessage);
+				layout01.getChildren().remove(ExplorerClass);
+				layout01.getChildren().remove(FighterClass);
+				layout01.getChildren().remove(MedicClass);
+				TitleView.setImage(MedicPickScreen);
+				ImageView ChooseEllie = new ImageView(ChooseBtn); 
+				ImageView ChooseBill = new ImageView(ChooseBtn); 
+				ImageView ChooseHenry = new ImageView(ChooseBtn); 
+				layout01.setTop(ChooseEllie);
+				layout01.setCenter(ChooseBill);
+				layout01.setBottom(ChooseHenry);
+				ChooseEllie.setScaleX(0.5);
+				ChooseEllie.setScaleY(0.5);
+				ChooseBill.setScaleX(0.5);
+				ChooseBill.setScaleY(0.5);
+				ChooseHenry.setScaleX(0.5);
+				ChooseHenry.setScaleY(0.5);
+				ChooseEllie.setTranslateX(830);
+				ChooseEllie.setTranslateY(240);
+				ChooseBill.setTranslateX(192);
+				ChooseBill.setTranslateY(60);
+				ChooseHenry.setTranslateX(830);
+				ChooseHenry.setTranslateY(-110);
+				ChooseEllie.setOnMouseEntered(event3 -> {
+					ChooseEllie.setCursor(handCursor);
+					ChooseEllie.setImage(ChooseBtnHighlighted);
+				});
+				ChooseEllie.setOnMouseExited(event3 -> {
+					ChooseEllie.setImage(ChooseBtn);
+				});
+				ChooseEllie.setOnMouseClicked(event3 -> {
+					HeroIndex = 1;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+				ChooseBill.setOnMouseEntered(event3 -> {
+					ChooseBill.setCursor(handCursor);
+					ChooseBill.setImage(ChooseBtnHighlighted);
+				});
+				ChooseBill.setOnMouseExited(event3 -> {
+					ChooseBill.setImage(ChooseBtn);
+				});
+				ChooseBill.setOnMouseClicked(event3 -> {
+					HeroIndex = 5;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+				ChooseHenry.setOnMouseEntered(event3 -> {
+					ChooseHenry.setCursor(handCursor);
+					ChooseHenry.setImage(ChooseBtnHighlighted);
+				});
+				ChooseHenry.setOnMouseExited(event3 -> {
+					ChooseHenry.setImage(ChooseBtn);
+				});
+				ChooseHenry.setOnMouseClicked(event3 -> {
+					HeroIndex = 7;
+					LoadMapGUI(primaryStage);
+					FinishedSelection = true;
+				});
+			});
+			});
+		
+		Scene scene = new Scene(layout01);
+		primaryStage.setScene(scene);
 	}
 }
