@@ -77,15 +77,10 @@ public class GamePlay extends Application {
 	private Image UseSpecialMedicHighlighted = new Image("icons/UseSpecialMedicHighlighted.png");
 	private Image UseSpecialExplorerHighlighted = new Image("icons/UseSpecialExplorerHighlighted.png");
 	private Image GunCursorImage = new Image("icons/cursors/GunCursor.png");
-	private Image CureCursorImage = new Image("icons/cursors/syringeImg.png");
-	private Image StartMenuImage = new Image("icons/StartGame.png");
-	private Image StartButton = new Image("icons/Start.png");
 	private boolean AttackMode = false;
-	private boolean CureMode = false;
 
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
-	private ImageCursor CureCursor = new ImageCursor(CureCursorImage);
 //	private Character selected = null;
 	private Hero selected;
 	private Zombie selectedZombie;
@@ -103,21 +98,9 @@ public class GamePlay extends Application {
 		launch(args);
 	}
 
-	private void StartMenu(Stage primaryStage) {
-		ImageView StartMenu = new ImageView(StartMenuImage);
-		BorderPane layout01 = new BorderPane(StartMenu);
-		StartMenu.fitWidthProperty().bind(layout01 .widthProperty());
-		StartMenu.fitHeightProperty().bind(layout01 .heightProperty());
-		primaryStage.getScene().setRoot(layout01);
-		ImageView StartPress = new ImageView(StartButton);
-		
-	}
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStageInit(primaryStage);
-		
-		
-		//StartMenu(primaryStage);
 		initializeGrid(primaryStage);
 		putEndTurnButton(primaryStage);
 		loadResources();
@@ -126,7 +109,6 @@ public class GamePlay extends Application {
 //		moveHelper();
 		primaryStage.setScene(scene1);
 		primaryStage.show();
-		
 	}
 
 	private void primaryStageInit(Stage primaryStage) {
@@ -258,8 +240,9 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr, Stage primaryStage) {
-		
-		
+		if (chrctr instanceof Zombie && AttackMode) {
+			attackUI(primaryStage);
+		}
 		root.getChildren().clear();
 		updateTexturedWall(primaryStage);
 		Text name = new Text(chrctr.getName());
@@ -300,9 +283,6 @@ public class GamePlay extends Application {
 			
 			ImageView attackImageView = new ImageView(attackModeImage);
 			//attackImageView.setOnMouseClicked(e -> attackUI(primaryStage, attackImageView));
-			if (chrctr instanceof Zombie && AttackMode) {
-				attackUI(primaryStage,attackImageView);
-			}
 			attackImageView.setOnMouseClicked(e -> {
 				if(!AttackMode) { 
 					AttackMode = true;
@@ -318,20 +298,7 @@ public class GamePlay extends Application {
 //			attackImageView.setTranslateX(-20);
 			
 			ImageView cureImageView = new ImageView(cureModeImage);
-			if (chrctr instanceof Zombie && CureMode) {
-				cureUI(primaryStage,cureImageView);
-			}
-			cureImageView.setOnMouseClicked(e -> {
-				if(!CureMode) { 
-					CureMode = true;
-					root.setCursor(CureCursor);
-				}
-				else {
-					CureMode = false;
-					root.setCursor(Cursor.DEFAULT);
-				}
-			});
-			//cureImageView.setOnMouseClicked(e -> cureUI(primaryStage, cureImageView));
+			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage, cureImageView));
 			cureImageView.setScaleX(0.4);
 			cureImageView.setScaleY(0.4);
 //			cureImageView.setTranslateX(20);
