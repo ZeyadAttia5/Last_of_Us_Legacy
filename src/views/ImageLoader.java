@@ -1,4 +1,4 @@
-package engine;
+package views;
 
 import javafx.scene.image.Image;
 import java.util.HashMap;
