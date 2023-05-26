@@ -141,11 +141,6 @@ public class GamePlay extends Application {
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
-								// TODO delete following line
-								((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getSupplyInventory()
-										.add(new Supply());
-								((Hero) ((CharacterCell) Game.map[x][y]).getCharacter()).getVaccineInventory()
-										.add(new Vaccine());
 								ImageView medicImageView = new ImageView(medicImage);
 								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
 								medicImageView.setScaleX(0.08);
@@ -188,13 +183,12 @@ public class GamePlay extends Application {
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
 								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
-								explorerImageView.setOnMouseClicked(e -> select(explorerImageView, h));
 								explorerImageView.setScaleX(0.06);
 								explorerImageView.setScaleY(0.06);
 								root.add(explorerImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
-								// TODO delete TEST
 								explorerImageView.setOnMouseClicked(e -> {
+									select(explorerImageView, h);
 									root.requestFocus();
 									select(explorerImageView, h);
 									moveHelper(chrctr, primaryStage);
@@ -210,10 +204,7 @@ public class GamePlay extends Application {
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							Zombie h = (Zombie) ((CharacterCell) Game.map[x][y]).getCharacter();
-							if (AttackMode) {
-								zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
-							}
-							if (CureMode) {
+							if (AttackMode || CureMode) {
 								zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
 							}
 							zombieImageView.setScaleX(0.08);
@@ -337,7 +328,6 @@ public class GamePlay extends Application {
 			});
 			attackImageView.setScaleX(0.4);
 			attackImageView.setScaleY(0.4);
-			//TODO editing
 			attackImageView.setTranslateX(20);
 			
 			ImageView cureImageView = new ImageView(cureModeImage);
@@ -404,7 +394,7 @@ public class GamePlay extends Application {
 				supplyImageView.setTranslateY(-20);
 				root.add(supplyImageView, 3, 17);
 
-				// TODO editing
+
 				ImageView useSpecialView = new ImageView(useSpecialImages.get(0));
 				useSpecialView.setScaleX(0.4);
 				useSpecialView.setScaleY(0.4);
