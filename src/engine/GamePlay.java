@@ -80,10 +80,13 @@ public class GamePlay extends Application {
 	private Image UseSpecialMedicHighlighted = new Image("icons/UseSpecialMedicHighlighted.png");
 	private Image UseSpecialExplorerHighlighted = new Image("icons/UseSpecialExplorerHighlighted.png");
 	private Image GunCursorImage = new Image("icons/cursors/GunCursor.png");
+	private Image VaccineImage = new Image("icons/cursors/syringeImg.png");
 	private boolean AttackMode = false;
+	private boolean CureMode = false;
 
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
+	private ImageCursor CureCursor = new ImageCursor(VaccineImage);
 //	private Character selected = null;
 	private Hero selected;
 	private Zombie selectedZombie;
@@ -189,6 +192,9 @@ public class GamePlay extends Application {
 							if (AttackMode) {
 								zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
 							}
+							if (CureMode) {
+								zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
+							}
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
 							Image image = new Image("icons/swordImage.png");
@@ -246,6 +252,9 @@ public class GamePlay extends Application {
 		if (chrctr instanceof Zombie && AttackMode) {
 			attackUI(primaryStage);
 		}
+		if (chrctr instanceof Zombie && CureMode) {
+			cureUI(primaryStage);
+		}
 		root.getChildren().clear();
 		updateTexturedWall(primaryStage);
 		Text name = new Text(chrctr.getName());
@@ -301,13 +310,21 @@ public class GamePlay extends Application {
 //			attackImageView.setTranslateX(-20);
 
 			ImageView cureImageView = new ImageView(cureModeImage);
-			cureImageView.setOnMouseClicked(e -> cureUI(primaryStage, cureImageView));
+			cureImageView.setOnMouseClicked(e -> {
+				if (!CureMode) {
+					CureMode = true;
+					root.setCursor(CureCursor);
+				} else {
+					CureMode = false;
+					root.setCursor(Cursor.DEFAULT);
+				}
+			});
 			cureImageView.setScaleX(0.4);
 			cureImageView.setScaleY(0.4);
 //			cureImageView.setTranslateX(20);
 
 			root.add(cureImageView, 7, 16);
-			root.add(attackImageView, 11, 16);
+			root.add(attackImageView, 10, 16);
 
 			int suppliesNum = ((Hero) chrctr).getSupplyInventory().size();
 
@@ -404,11 +421,7 @@ public class GamePlay extends Application {
 		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
 
-		int vaccinesNum = 0;
-		try {
-			vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
-		} catch (Exception e) {
-		}
+		int vaccinesNum = ((Hero) chrctr).getVaccineInventory().size();
 		ImageView vaccineImageView = new ImageView(vaccineImages.get(0));
 		if (vaccinesNum <= 5 && vaccinesNum > 0) {
 			vaccineImageView = new ImageView(vaccineImages.get(vaccinesNum));
@@ -711,8 +724,18 @@ public class GamePlay extends Application {
 			showPopUp(e.getMessage(), primaryStage);
 		}
 	}
+	private void cureUI(Stage primaryStage) {
 
-	private void cureUI(Stage primaryStage, ImageView cureImgView) {
+	try {
+		selected.setTarget(selectedZombie);
+		selected.cure();
+	} catch (NoAvailableResourcesException | InvalidTargetException | NotEnoughActionsException e) {
+		showPopUp(e.getMessage(), primaryStage);
+	}
+
+}
+
+	/*private void cureUI(Stage primaryStage, ImageView cureImgView) {
 		int column = GridPane.getColumnIndex(cureImgView);
 		int row = GridPane.getRowIndex(cureImgView);
 
@@ -735,7 +758,8 @@ public class GamePlay extends Application {
 			showPopUp(e.getMessage(), primaryStage);
 		}
 
-	}
+	}*/
+	
 
 	private void select(ImageView v, Hero character) {
 		selected = character;
