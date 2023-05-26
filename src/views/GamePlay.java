@@ -603,25 +603,30 @@ public class GamePlay extends Application {
 		checkEndGame(primaryStage);
 		if(gameRunning) {			
 			ImageView zombieView = new ImageView(ZombieAttackImg);
-			putImageFullScreen(zombieView, Duration.seconds(3), primaryStage, true);
+			putImageFullScreen(zombieView, Duration.seconds(1), Duration.seconds(2), primaryStage, true);
 			updateTexturedWall(primaryStage);
 		}
 	}
 
-	private void putImageFullScreen(ImageView imageView, Duration seconds, Stage primaryStage, boolean transitionBack) {
+	private void putImageFullScreen(ImageView imageView, Duration transitionTime, Duration keepForTime, Stage primaryStage, boolean transitionBack) {
 		BorderPane layout2 = new BorderPane(imageView);
 		imageView.fitWidthProperty().bind(layout2.widthProperty());
 		imageView.fitHeightProperty().bind(layout2.heightProperty());
 		primaryStage.getScene().setRoot(layout2);
-		FadeTransition fadeInZombie = new FadeTransition(seconds, layout2);
+		FadeTransition fadeInZombie = new FadeTransition(transitionTime, layout2);
 		
 		// opacity
 		fadeInZombie.setFromValue(0.0);
 		fadeInZombie.setToValue(1.0);
 		fadeInZombie.setOnFinished(e -> {
 			if(transitionBack == true) {
-				primaryStage.getScene().setRoot(root);
-				layout2.getChildren().clear();				
+				PauseTransition keepImageView = new PauseTransition(keepForTime);
+				
+				keepImageView.setOnFinished(trigger -> {
+					primaryStage.getScene().setRoot(root);
+					layout2.getChildren().clear();									
+				});
+				keepImageView.play();
 			}
 		});
 		fadeInZombie.play();
@@ -829,12 +834,12 @@ public class GamePlay extends Application {
 		if (Game.checkGameOver()) {
 			ImageView gameOverView = new ImageView(ImageLoader.loadImage("icons/GameOver.png"));
 			gameOverView.setScaleY(1.01);
-			putImageFullScreen(gameOverView, Duration.seconds(1), primaryStage, false);
+			putImageFullScreen(gameOverView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
 		} else if (Game.checkWin()) {
 			ImageView winView = new ImageView(ImageLoader.loadImage("icons/Win.png"));
 			winView.setScaleY(1.01);
-			putImageFullScreen(winView, Duration.seconds(1), primaryStage, false);
+			putImageFullScreen(winView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
 		}
 	}
