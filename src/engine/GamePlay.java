@@ -442,7 +442,7 @@ public class GamePlay extends Application {
 			root.add(zombieProfileView, 0, 16);
 		}
 		ProgressBar progressBar = new ProgressBar((double) chrctr.getCurrentHp() / (double) chrctr.getMaxHp());
-		progressBar.setStyle("-fx-accent: blue");
+		progressBar.setStyle("-fx-accent: red");
 		progressBar.setBorder(Border.EMPTY);
 		progressBar.setPadding(new Insets(15, 0, 0, 8));
 		root.add(progressBar, 0, 17);
@@ -474,11 +474,11 @@ public class GamePlay extends Application {
 	
 	private void setCureMode(boolean b, ImageView cureImageView) {
 		if (b == true) {
-			AttackMode = true;
+			CureMode = true;
 			cureImageView.setImage(cureModeHighlighted);
 		}
 		else {
-			AttackMode = false;
+			CureMode = false;
 			cureImageView.setImage(cureModeImage);
 		}
 		
@@ -716,16 +716,18 @@ public class GamePlay extends Application {
 			selected.attack();
 			if (Game.zombies.contains(selectedZombie)) {
 				ImageView zombieAttacked = new ImageView(zombieHighlighted);
+				//TODO fix zombie Highlighted issue
+				System.out.println("in zombie highlighted");
 				zombieAttacked.setScaleX(0.08);
 				zombieAttacked.setScaleY(0.08);
 				PauseTransition delay = new PauseTransition(Duration.seconds(1));
+				root.add(zombieAttacked, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
 				delay.setOnFinished(e -> {
 					ImageView imgView = new ImageView(zombieImage);
 					imgView.setScaleX(0.08);
 					imgView.setScaleY(0.08);
 					root.add(imgView, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
 				});
-				root.add(zombieAttacked, selectedZombie.getLocation().y, 14 - selectedZombie.getLocation().x);
 				delay.play();
 			}
 		} catch (NotEnoughActionsException | InvalidTargetException e) {
