@@ -53,7 +53,7 @@ public class GamePlay extends Application {
 
 //	private ImageLoader imageLoader = ImageLoader.loadImageLoader();ِ
 
-	private Image logo = ImageLoader.loadImage("icons/logo.png");
+
 	private Image emptyCell = new Image("icons/emptyCell.png");
 	private Image explorerImage = new Image("icons/explorerImage.png");
 	private Image medicImage = new Image("icons/medicImage.png");
@@ -119,7 +119,7 @@ public class GamePlay extends Application {
 
 	private void primaryStageInit(Stage primaryStage) {
 		primaryStage.setTitle("Last of Us - Legacy");
-		primaryStage.getIcons().add(logo);
+
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitHint("");
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("Alt + Enter"));
