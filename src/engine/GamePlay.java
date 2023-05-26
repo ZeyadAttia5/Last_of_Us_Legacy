@@ -44,6 +44,7 @@ import model.collectibles.Supply;
 import model.collectibles.Vaccine;
 import model.world.CharacterCell;
 import model.world.CollectibleCell;
+import views.ImageLoader;
 import javafx.stage.Popup;
 
 public class GamePlay extends Application {
