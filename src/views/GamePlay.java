@@ -86,7 +86,8 @@ public class GamePlay extends Application {
 	private boolean AttackMode = false;
 	private boolean useSpecialMedicMode = false;
 	private boolean CureMode = false;
-
+	private boolean gameRunning = true;
+	
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
 	private ImageCursor CureCursor = new ImageCursor(vaccineImage);
@@ -566,26 +567,31 @@ public class GamePlay extends Application {
 		useSpecialMedicMode = false;
 		root.setCursor(Cursor.DEFAULT);
 		
+		
 		// TODO add sound to transition to zombieAttackImg
-		ImageView zombieView = new ImageView(ZombieAttackImg);
-
-		putImageFullScreen(zombieView, Duration.seconds(5), primaryStage);
-		updateTexturedWall(primaryStage);
+		checkEndGame(primaryStage);
+		if(gameRunning) {			
+			ImageView zombieView = new ImageView(ZombieAttackImg);
+			putImageFullScreen(zombieView, Duration.seconds(3), primaryStage, true);
+			updateTexturedWall(primaryStage);
+		}
 	}
 
-	private void putImageFullScreen(ImageView imageView, Duration seconds, Stage primaryStage) {
+	private void putImageFullScreen(ImageView imageView, Duration seconds, Stage primaryStage, boolean transitionBack) {
 		BorderPane layout2 = new BorderPane(imageView);
 		imageView.fitWidthProperty().bind(layout2.widthProperty());
 		imageView.fitHeightProperty().bind(layout2.heightProperty());
 		primaryStage.getScene().setRoot(layout2);
-		FadeTransition fadeInZombie = new FadeTransition(Duration.seconds(5), layout2);
+		FadeTransition fadeInZombie = new FadeTransition(seconds, layout2);
 		
 		// opacity
 		fadeInZombie.setFromValue(0.0);
 		fadeInZombie.setToValue(1.0);
 		fadeInZombie.setOnFinished(e -> {
-			primaryStage.getScene().setRoot(root);
-			layout2.getChildren().clear();
+			if(transitionBack == true) {
+				primaryStage.getScene().setRoot(root);
+				layout2.getChildren().clear();				
+			}
 		});
 		fadeInZombie.play();
 		
@@ -680,9 +686,7 @@ public class GamePlay extends Application {
 						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
-					} catch (MovementException e1) {
-						showPopUp(e1.getMessage(), primaryStage);
-					} catch (NotEnoughActionsException e1) {
+					} catch (MovementException  | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
 				} else if (e.getCode() == KeyCode.D) {
@@ -711,8 +715,8 @@ public class GamePlay extends Application {
 					}
 				} else
 					return;
-//				updateMap(primaryStage);
 				updateBar(chrctr, primaryStage);
+				checkEndGame(primaryStage);
 			}
 		});
 
@@ -769,6 +773,7 @@ public class GamePlay extends Application {
 		try {
 			selected.setTarget(selectedZombie);
 			selected.cure();
+			checkEndGame(primaryStage);
 		} catch (NoAvailableResourcesException | InvalidTargetException | NotEnoughActionsException e) {
 			showPopUp(e.getMessage(), primaryStage);
 		}
@@ -789,11 +794,17 @@ public class GamePlay extends Application {
 		selectedZombieImage = v;
 	}
 
-	private void checkEndGame() {
+	private void checkEndGame(Stage primaryStage) {
 		if (Game.checkGameOver()) {
-			ImageView gameOverView = new ImageView(ImageLoader.loadImage(""));
+			ImageView gameOverView = new ImageView(ImageLoader.loadImage("icons/GameOver.png"));
+			gameOverView.setScaleY(1.01);
+			putImageFullScreen(gameOverView, Duration.seconds(1), primaryStage, false);
+			gameRunning = false;
 		} else if (Game.checkWin()) {
-
+			ImageView winView = new ImageView(ImageLoader.loadImage("icons/Win.png"));
+			winView.setScaleY(1.01);
+			putImageFullScreen(winView, Duration.seconds(1), primaryStage, false);
+			gameRunning = false;
 		}
 	}
 }
