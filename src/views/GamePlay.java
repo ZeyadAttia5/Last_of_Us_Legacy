@@ -416,6 +416,7 @@ public class GamePlay extends Application {
 //					System.out.println("useSpecialMedicMode activated");
 					useSpecialAction(chrctr, primaryStage);
 				});
+				useSpecialMedicMode = false;
 				root.add(useSpecialView, 8, 16);
 			}
 
