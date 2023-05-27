@@ -83,24 +83,24 @@ public class GamePlay extends Application {
 	private Image UseSpecialExplorerHighlighted = ImageLoader.loadImage("icons/UseSpecialExplorerHighlighted.png");
 	private Image GunCursorImage = ImageLoader.loadImage("icons/cursors/GunCursor.png");
 	// New Decs
-	private Image StartTitleImg = new Image("icons/TitleScreen.jpg");
-	private Image StartBtn = new Image("icons/Start.png");
-	private Image StartBtnHighlighted = new Image("icons/StartGameHighlighted.png");
-	private Image PickClass = new Image("icons/pickclassFullyEmpty.png");
-	private Image FighterForMenu = new Image("icons/FighterSizeConsistent.png");
-	private Image MedicForMenu = new Image("icons/MedicSizeConsistent.png");
-	private Image ExplorerForMenu = new Image("icons/ExplorerSizeConsistent.png");
-	private Image FighterForMenuFaded = new Image("icons/FighterSizeConsistentFaded.png");
-	private Image MedicForMenuFaded = new Image("icons/MedicSizeConsistentFaded.png");
-	private Image ExplorerForMenuFaded = new Image("icons/ExplorerSizeConsistentFaded.png");
-	private Image SpecialMessageM = new Image("icons/MedicSpecial.png");
-	private Image SpecialMessageE = new Image("icons/ExplorerSpecial.png");
-	private Image SpecialMessageF = new Image("icons/FighterSpecial.png");
-	private Image FighterPickScreen = new Image("icons/PickFighterScreen.png");
-	private Image ExplorerPickScreen = new Image("icons/PickExplorerScreenNoBtn.jpg");
-	private Image MedicPickScreen = new Image("icons/PickMedicScreen.jpg");
-	private Image ChooseBtn = new Image("icons/ChooseButton.png");
-	private Image ChooseBtnHighlighted = new Image("icons/ChooseButtonHighlighted.png");
+	private Image StartTitleImg = ImageLoader.loadImage("icons/TitleScreen.jpg");
+	private Image StartBtn = ImageLoader.loadImage("icons/Start.png");
+	private Image StartBtnHighlighted = ImageLoader.loadImage("icons/StartGameHighlighted.png");
+	private Image PickClass = ImageLoader.loadImage("icons/pickclassFullyEmpty.png");
+	private Image FighterForMenu = ImageLoader.loadImage("icons/FighterSizeConsistent.png");
+	private Image MedicForMenu = ImageLoader.loadImage("icons/MedicSizeConsistent.png");
+	private Image ExplorerForMenu = ImageLoader.loadImage("icons/ExplorerSizeConsistent.png");
+	private Image FighterForMenuFaded = ImageLoader.loadImage("icons/FighterSizeConsistentFaded.png");
+	private Image MedicForMenuFaded = ImageLoader.loadImage("icons/MedicSizeConsistentFaded.png");
+	private Image ExplorerForMenuFaded = ImageLoader.loadImage("icons/ExplorerSizeConsistentFaded.png");
+	private Image SpecialMessageM = ImageLoader.loadImage("icons/MedicSpecial.png");
+	private Image SpecialMessageE = ImageLoader.loadImage("icons/ExplorerSpecial.png");
+	private Image SpecialMessageF = ImageLoader.loadImage("icons/FighterSpecial.png");
+	private Image FighterPickScreen = ImageLoader.loadImage("icons/PickFighterScreen.png");
+	private Image ExplorerPickScreen = ImageLoader.loadImage("icons/PickExplorerScreenNoBtn.jpg");
+	private Image MedicPickScreen = ImageLoader.loadImage("icons/PickMedicScreen.jpg");
+	private Image ChooseBtn = ImageLoader.loadImage("icons/ChooseButton.png");
+	private Image ChooseBtnHighlighted = ImageLoader.loadImage("icons/ChooseButtonHighlighted.png");
 	private boolean AttackMode = false;
 	private boolean useSpecialMedicMode = false;
 	private boolean CureMode = false;
@@ -842,17 +842,20 @@ public class GamePlay extends Application {
 	}
 
 	private void checkEndGame(Stage primaryStage) {
-		if (Game.checkGameOver()) {
-			ImageView gameOverView = new ImageView(ImageLoader.loadImage("icons/GameOver.png"));
-			gameOverView.setScaleY(1.01);
-			putImageFullScreen(gameOverView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
-			gameRunning = false;
-		} else if (Game.checkWin()) {
+		
+		if (Game.checkWin()) {
 			ImageView winView = new ImageView(ImageLoader.loadImage("icons/Win.png"));
 			winView.setScaleY(1.01);
 			putImageFullScreen(winView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
 		}
+		
+		else if (Game.checkGameOver()) {
+			ImageView gameOverView = new ImageView(ImageLoader.loadImage("icons/GameOver.png"));
+			gameOverView.setScaleY(1.01);
+			putImageFullScreen(gameOverView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
+			gameRunning = false;
+		} 
 	}
 
 	private void startGameMenu(Stage primaryStage) {
