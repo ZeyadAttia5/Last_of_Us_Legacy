@@ -48,6 +48,7 @@ import model.collectibles.Vaccine;
 import model.world.CharacterCell;
 import model.world.CollectibleCell;
 import javafx.stage.Popup;
+import javafx.scene.text.Font;
 
 public class GamePlay extends Application {
 
@@ -110,6 +111,7 @@ public class GamePlay extends Application {
 	private int HeroIndex = -1;
 	private boolean FinishedSelection = false;
 	//
+	Font minecraftFont = new Font("fonts/minecraftFont.ttf", 20);
 
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
@@ -156,6 +158,9 @@ public class GamePlay extends Application {
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitHint("");
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("Alt + Enter"));
+		for (String fontName : Font.getFamilies()) {
+			System.out.println(fontName);
+		}
 	}
 
 	private void updateMap(Stage primaryStage) {
@@ -227,7 +232,7 @@ public class GamePlay extends Application {
 										useSpecialActionMedic(h, primaryStage, fighterImageView);
 									}
 								});
-								
+
 								root.add(fighterImageView, y, 14 - x);
 							} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Explorer) {
 								ImageView explorerImageView = new ImageView(explorerImage);
@@ -243,7 +248,6 @@ public class GamePlay extends Application {
 									select(h);
 									moveHelper(chrctr, primaryStage);
 									updateBar(chrctr, primaryStage);
-//									System.out.println(useSpecialMedicMode);
 									if (useSpecialMedicMode) {
 										useSpecialActionMedic(h, primaryStage, explorerImageView);
 									}
@@ -259,7 +263,7 @@ public class GamePlay extends Application {
 								});
 //								explorerImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
 							}
-							
+
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							Zombie h = (Zombie) ((CharacterCell) Game.map[x][y]).getCharacter();
@@ -286,7 +290,7 @@ public class GamePlay extends Application {
 							emptyCellView.setOnMouseClicked(e -> {
 								if (AttackMode || CureMode) {
 									selectZombie(zombieImageView, h);
-									
+
 								}
 								updateBar(chrctr, primaryStage);
 							});
@@ -853,28 +857,40 @@ public class GamePlay extends Application {
 					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
+
 				} else if (e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) {
 					try {
+						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.RIGHT);
-					} catch (MovementException e1) {
-						showPopUp(e1.getMessage(), primaryStage);
-					} catch (NotEnoughActionsException e1) {
+						int currentHP = ((Hero) chrctr).getCurrentHp();
+						if (previousHP > currentHP) {
+							showPopUp("You have stepped on a trap cell", primaryStage);
+						}
+					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
+
 				} else if (e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) {
 					try {
+						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.LEFT);
-					} catch (MovementException e1) {
-						showPopUp(e1.getMessage(), primaryStage);
-					} catch (NotEnoughActionsException e1) {
+						int currentHP = ((Hero) chrctr).getCurrentHp();
+						if (previousHP > currentHP) {
+							showPopUp("You have stepped on a trap cell", primaryStage);
+						}
+					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
+
 				} else if (e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) {
 					try {
+						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.DOWN);
-					} catch (MovementException e1) {
-						showPopUp(e1.getMessage(), primaryStage);
-					} catch (NotEnoughActionsException e1) {
+						int currentHP = ((Hero) chrctr).getCurrentHp();
+						if (previousHP > currentHP) {
+							showPopUp("You have stepped on a trap cell", primaryStage);
+						}
+					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
 				} else
@@ -888,8 +904,9 @@ public class GamePlay extends Application {
 
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Text content = new Text(popUpContent);
-		content.setFont(Font.font("Monospaced", 20));
-		content.setFill(Color.ANTIQUEWHITE);
+//		content.setFont(Font.loadFont("MingLiU_HKSCS-ExtB",22));
+		content.setFill(Color.BLACK);
+		content.setStyle("-fx-font-family: MingLiU_HKSCS-ExtB; -fx-font-size: 20");
 		Popup popup = new Popup();
 		popup.getContent().add(content);
 		// Create the popup content
@@ -899,7 +916,7 @@ public class GamePlay extends Application {
 			popup.show(primaryStage);
 		}
 
-		PauseTransition delay = new PauseTransition(Duration.seconds(5));
+		PauseTransition delay = new PauseTransition(Duration.seconds(3));
 		delay.setOnFinished(e -> {
 			popup.hide();
 		});
