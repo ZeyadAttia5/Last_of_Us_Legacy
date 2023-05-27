@@ -344,6 +344,32 @@ public class GamePlay extends Application {
 					root.setCursor(Cursor.DEFAULT);
 				}
 			});
+			attackImageView.setOnMouseEntered(e -> {
+				attackImageView.setImage(attackModeHighlighted);
+				root.setCursor(handCursor);
+			});
+			attackImageView.setOnMouseExited(e -> {
+				if(AttackMode) {
+					attackImageView.setImage(attackModeHighlighted);
+					root.setCursor(GunCursor);}
+					else {
+						attackImageView.setImage(attackModeImage);
+						root.setCursor(Cursor.DEFAULT);
+					}
+			});
+			cureImageView.setOnMouseEntered(e -> {
+				cureImageView.setImage(cureModeHighlighted);
+				root.setCursor(handCursor);
+			});
+			cureImageView.setOnMouseExited(e -> {
+				if(CureMode) {
+					cureImageView.setImage(cureModeHighlighted);
+					root.setCursor(CureCursor);}
+					else {
+						cureImageView.setImage(cureModeImage);
+						root.setCursor(Cursor.DEFAULT);
+					}
+			});
 
 			if (chrctr instanceof model.characters.Fighter) {
 				ImageView fighterProfileView = new ImageView(fighterProfile);
