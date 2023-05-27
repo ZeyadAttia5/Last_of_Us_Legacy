@@ -851,43 +851,43 @@ public class GamePlay extends Application {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.UP);
 						int currentHP = ((Hero) chrctr).getCurrentHp();
-						if (previousHP > currentHP || !Game.heroes.contains(chrctr)) {
+						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
 					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
-					
+
 				} else if (e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) {
 					try {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.RIGHT);
 						int currentHP = ((Hero) chrctr).getCurrentHp();
-						if (previousHP > currentHP || !Game.heroes.contains(chrctr)) {
+						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
 					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
-					
+
 				} else if (e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) {
 					try {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.LEFT);
 						int currentHP = ((Hero) chrctr).getCurrentHp();
-						if (previousHP > currentHP || !Game.heroes.contains(chrctr)) {
+						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
 					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
-					
+
 				} else if (e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) {
 					try {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.DOWN);
 						int currentHP = ((Hero) chrctr).getCurrentHp();
-						if (previousHP > currentHP || !Game.heroes.contains(chrctr)) {
+						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
 					} catch (MovementException | NotEnoughActionsException e1) {
