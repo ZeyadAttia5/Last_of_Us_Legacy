@@ -139,11 +139,11 @@ public class GamePlay extends Application {
 	}
 
 	private void LoadMapGUI(Stage primaryStage) {
-		initializeGrid(primaryStage);
-		putEndTurnButton(primaryStage);
 		loadResources();
 		Game.startGame(Game.availableHeroes.remove(HeroIndex));
-		updateMap(primaryStage);
+		initializeGrid(primaryStage);
+//		putEndTurnButton(primaryStage);
+//		updateMap(primaryStage);
 	}
 
 	private void primaryStageInit(Stage primaryStage) {
@@ -279,8 +279,8 @@ public class GamePlay extends Application {
 			}
 		}
 		if (FinishedSelection) {
-			primaryStage.setScene(scene1);
-			primaryStage.setFullScreen(true);
+//			primaryStage.setScene(scene1);
+//			primaryStage.setFullScreen(true);
 			FinishedSelection = false;
 		}
 	}
