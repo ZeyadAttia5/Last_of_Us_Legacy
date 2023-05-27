@@ -140,8 +140,11 @@ public class GamePlay extends Application {
 
 	private void LoadMapGUI(Stage primaryStage) {
 		loadResources();
-		Game.startGame(Game.availableHeroes.remove(HeroIndex));
+		selected = Game.availableHeroes.remove(HeroIndex);
+		Game.startGame(selected);
 		initializeGrid(primaryStage);
+		moveHelper(selected, primaryStage);
+		
 //		putEndTurnButton(primaryStage);
 //		updateMap(primaryStage);
 	}
@@ -179,8 +182,8 @@ public class GamePlay extends Application {
 									select(h);
 									selectMedic(h);
 									root.requestFocus();
-									moveHelper(chrctr, primaryStage);
-									updateBar(chrctr, primaryStage);
+									moveHelper(selected, primaryStage);
+									updateBar(selected, primaryStage);
 //									System.out.println(useSpecialMedicMode);
 									if (useSpecialMedicMode) {
 										useSpecialActionMedic(h, primaryStage, medicImageView);
@@ -349,16 +352,16 @@ public class GamePlay extends Application {
 				root.setCursor(handCursor);
 			});
 			attackImageView.setOnMouseExited(e -> {
-				if(AttackMode) {
+				if (AttackMode) {
 					attackImageView.setImage(attackModeHighlighted);
-					root.setCursor(GunCursor);}
-					else {
-						attackImageView.setImage(attackModeImage);
-						root.setCursor(Cursor.DEFAULT);
-					}
-				if(AttackMode)
 					root.setCursor(GunCursor);
-				if(CureMode)
+				} else {
+					attackImageView.setImage(attackModeImage);
+					root.setCursor(Cursor.DEFAULT);
+				}
+				if (AttackMode)
+					root.setCursor(GunCursor);
+				if (CureMode)
 					root.setCursor(CureCursor);
 			});
 			cureImageView.setOnMouseEntered(e -> {
@@ -366,16 +369,16 @@ public class GamePlay extends Application {
 				root.setCursor(handCursor);
 			});
 			cureImageView.setOnMouseExited(e -> {
-				if(CureMode) {
+				if (CureMode) {
 					cureImageView.setImage(cureModeHighlighted);
-					root.setCursor(CureCursor);}
-					else {
-						cureImageView.setImage(cureModeImage);
-						root.setCursor(Cursor.DEFAULT);
-					}
-				if(AttackMode)
+					root.setCursor(CureCursor);
+				} else {
+					cureImageView.setImage(cureModeImage);
+					root.setCursor(Cursor.DEFAULT);
+				}
+				if (AttackMode)
 					root.setCursor(GunCursor);
-				if(CureMode)
+				if (CureMode)
 					root.setCursor(CureCursor);
 			});
 
@@ -397,12 +400,12 @@ public class GamePlay extends Application {
 					root.setCursor(handCursor);
 					useSpecialView.setImage(UseSpecialFighterHighlighted);
 				});
-				useSpecialView.setOnMouseExited(e ->{
-					//root.setCursor(Cursor.DEFAULT);
+				useSpecialView.setOnMouseExited(e -> {
+					// root.setCursor(Cursor.DEFAULT);
 					useSpecialView.setImage(useSpecialImages.get(1));
-					if(AttackMode)
+					if (AttackMode)
 						root.setCursor(GunCursor);
-					if(CureMode)
+					if (CureMode)
 						root.setCursor(CureCursor);
 				});
 			}
@@ -424,12 +427,12 @@ public class GamePlay extends Application {
 					root.setCursor(handCursor);
 					useSpecialView.setImage(UseSpecialExplorerHighlighted);
 				});
-				useSpecialView.setOnMouseExited(e ->{
-					//root.setCursor(Cursor.DEFAULT);
+				useSpecialView.setOnMouseExited(e -> {
+					// root.setCursor(Cursor.DEFAULT);
 					useSpecialView.setImage(useSpecialImages.get(0));
-					if(AttackMode)
+					if (AttackMode)
 						root.setCursor(GunCursor);
-					if(CureMode)
+					if (CureMode)
 						root.setCursor(CureCursor);
 				});
 			}
@@ -452,12 +455,12 @@ public class GamePlay extends Application {
 					root.setCursor(handCursor);
 					useSpecialView.setImage(UseSpecialMedicHighlighted);
 				});
-				useSpecialView.setOnMouseExited(e ->{
-					//root.setCursor(Cursor.DEFAULT);
+				useSpecialView.setOnMouseExited(e -> {
+					// root.setCursor(Cursor.DEFAULT);
 					useSpecialView.setImage(useSpecialImages.get(2));
-					if(AttackMode)
+					if (AttackMode)
 						root.setCursor(GunCursor);
-					if(CureMode)
+					if (CureMode)
 						root.setCursor(CureCursor);
 				});
 				useSpecialMedicMode = false;
@@ -489,8 +492,6 @@ public class GamePlay extends Application {
 		progressBar.setBorder(Border.EMPTY);
 		progressBar.setPadding(new Insets(15, 8, 0, 9));
 		root.add(progressBar, 0, 17);
-		
-		
 	}
 
 	private void addActionsAvailable(int col, int row, Character chrctr) {
@@ -654,7 +655,7 @@ public class GamePlay extends Application {
 				root.getColumnConstraints().add(col);
 			}
 		}
-		updateTexturedWall(primaryStage);
+		updateBar(selected, primaryStage);
 		primaryStage.setScene(scene1);
 		primaryStage.setFullScreen(true);
 	}
@@ -685,7 +686,7 @@ public class GamePlay extends Application {
 		BorderPane layout2 = new BorderPane(imageView);
 		imageView.fitWidthProperty().bind(layout2.widthProperty());
 		imageView.fitHeightProperty().bind(layout2.heightProperty());
-		//TODO Show Dr.Nourhan
+		// TODO Show Dr.Nourhan
 		if (!transitionBack) {
 			ImageView endGameButton = new ImageView(ImageLoader.loadImage("icons/EndGame.png"));
 			layout2.getChildren().add(endGameButton);
@@ -693,9 +694,9 @@ public class GamePlay extends Application {
 			endGameButton.setScaleY(1.2);
 			endGameButton.setTranslateX(635);
 			endGameButton.setTranslateY(735);
-			endGameButton.setOnMouseEntered(e-> layout2.setCursor(handCursor));
-			endGameButton.setOnMouseExited(e-> layout2.setCursor(Cursor.DEFAULT));
-			endGameButton.setOnMouseClicked(e-> primaryStage.close());
+			endGameButton.setOnMouseEntered(e -> layout2.setCursor(handCursor));
+			endGameButton.setOnMouseExited(e -> layout2.setCursor(Cursor.DEFAULT));
+			endGameButton.setOnMouseClicked(e -> primaryStage.close());
 		}
 		primaryStage.getScene().setRoot(layout2);
 		FadeTransition fadeInZombie = new FadeTransition(transitionTime, layout2);
@@ -793,8 +794,8 @@ public class GamePlay extends Application {
 
 	private void moveHelper(Character chrctr, Stage primaryStage) {
 		root.setFocusTraversable(true);
+		root.requestFocus();
 		root.setOnKeyPressed(e -> {
-			root.requestFocus();
 			if (chrctr == null) {
 //				System.out.println(selected);				
 				return;
@@ -836,8 +837,8 @@ public class GamePlay extends Application {
 					}
 				} else
 					return;
-				updateBar(chrctr, primaryStage);
 				checkEndGame(primaryStage);
+				updateBar(chrctr, primaryStage);
 			}
 		});
 
@@ -916,20 +917,20 @@ public class GamePlay extends Application {
 	}
 
 	private void checkEndGame(Stage primaryStage) {
-		
+
 		if (Game.checkWin()) {
 			ImageView winView = new ImageView(ImageLoader.loadImage("icons/Win.png"));
 			winView.setScaleY(1.01);
 			putImageFullScreen(winView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
 		}
-		
+
 		else if (Game.checkGameOver()) {
 			ImageView gameOverView = new ImageView(ImageLoader.loadImage("icons/GameOver.png"));
 			gameOverView.setScaleY(1.01);
 			putImageFullScreen(gameOverView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
-		} 
+		}
 	}
 
 	private void startGameMenu(Stage primaryStage) {
