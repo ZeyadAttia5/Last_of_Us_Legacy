@@ -709,6 +709,7 @@ public class GamePlay extends Application {
 				keepImageView.setOnFinished(trigger -> {
 					primaryStage.getScene().setRoot(root);
 					layout2.getChildren().clear();
+					root.requestFocus();
 				});
 				keepImageView.play();
 			}
