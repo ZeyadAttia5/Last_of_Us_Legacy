@@ -9,27 +9,28 @@ import exceptions.MovementException;
 import exceptions.NoAvailableResourcesException;
 import exceptions.NotEnoughActionsException;
 import javafx.animation.FadeTransition;
-import javafx.animation.FillTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.effect.Glow;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
-import javafx.scene.Node;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -144,7 +145,7 @@ public class GamePlay extends Application {
 		Game.startGame(selected);
 		initializeGrid(primaryStage);
 		moveHelper(selected, primaryStage);
-		
+
 //		putEndTurnButton(primaryStage);
 //		updateMap(primaryStage);
 	}
@@ -168,6 +169,7 @@ public class GamePlay extends Application {
 				emptyCellView.setScaleY(0.3);
 				root.add(emptyCellView, y, 14 - x);
 				if (Game.map[x][y].isVisible()) {
+					addGlowEffect(emptyCellView, Color.BLACK, root);
 					if (Game.map[x][y] instanceof CharacterCell) {
 						if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Hero) {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
@@ -232,9 +234,7 @@ public class GamePlay extends Application {
 						} else if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Zombie) {
 							ImageView zombieImageView = new ImageView(zombieImage);
 							Zombie h = (Zombie) ((CharacterCell) Game.map[x][y]).getCharacter();
-							if (AttackMode || CureMode) {
-								zombieImageView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
-							}
+
 							zombieImageView.setScaleX(0.08);
 							zombieImageView.setScaleY(0.08);
 							zombieImageView.setOnMouseEntered(e -> {
@@ -248,7 +248,13 @@ public class GamePlay extends Application {
 							root.add(zombieImageView, y, 14 - x);
 							model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 //							zombieImageView.setOnMouseEntered(e -> zombieImageView.setCursor(handCursor));
-							zombieImageView.setOnMouseClicked(e -> updateBar(chrctr, primaryStage));
+							zombieImageView.setOnMouseClicked(e -> {
+								if (AttackMode || CureMode) {
+									selectZombie(zombieImageView, h);
+								}
+								updateBar(chrctr, primaryStage);
+							});
+							emptyCellView.setOnMouseClicked(e -> selectZombie(zombieImageView, h));
 						}
 
 					} else if (Game.map[x][y] instanceof CollectibleCell) {
@@ -311,6 +317,7 @@ public class GamePlay extends Application {
 		addName(chrctr);
 
 		if (chrctr instanceof Hero) {
+
 			Text vaccineText = new Text("Vaccines");
 			vaccineText.setFont(Font.font("Monospaced", 14));
 			vaccineText.setFill(Color.WHITE);
@@ -914,6 +921,30 @@ public class GamePlay extends Application {
 	private void selectZombie(ImageView v, Zombie h) {
 		selectedZombie = h;
 		selectedZombieImage = v;
+	}
+
+	private void addGlowEffect(ImageView imageView, Color glowColor, Pane parentPane) {
+		Glow glow = new Glow();
+		glow.setLevel(0);
+
+		ColorInput colorInput = new ColorInput();
+		colorInput.setPaint(glowColor);
+
+		Blend blend = new Blend();
+		blend.setMode(BlendMode.MULTIPLY);
+		blend.setTopInput(glow);
+		blend.setBottomInput(colorInput);
+
+		imageView.setEffect(blend);
+
+		Duration duration = Duration.millis(300);
+		double targetLevel = 0.35;
+
+		Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(glow.levelProperty(), 0)),
+				new KeyFrame(duration, new KeyValue(glow.levelProperty(), targetLevel)));
+
+		imageView.setOnMouseEntered(event -> timeline.playFromStart());
+		imageView.setOnMouseExited(event -> glow.setLevel(0));
 	}
 
 	private void checkEndGame(Stage primaryStage) {
