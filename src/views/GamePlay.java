@@ -800,7 +800,7 @@ public class GamePlay extends Application {
 //				System.out.println(selected);				
 				return;
 			} else if (chrctr instanceof Hero) {
-				if (e.getCode() == KeyCode.W) {
+				if (e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) {
 					try {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.UP);
@@ -811,7 +811,7 @@ public class GamePlay extends Application {
 					} catch (MovementException | NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
-				} else if (e.getCode() == KeyCode.D) {
+				} else if (e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) {
 					try {
 						((Hero) chrctr).move(Direction.RIGHT);
 					} catch (MovementException e1) {
@@ -819,7 +819,7 @@ public class GamePlay extends Application {
 					} catch (NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
-				} else if (e.getCode() == KeyCode.A) {
+				} else if (e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) {
 					try {
 						((Hero) chrctr).move(Direction.LEFT);
 					} catch (MovementException e1) {
@@ -827,7 +827,7 @@ public class GamePlay extends Application {
 					} catch (NotEnoughActionsException e1) {
 						showPopUp(e1.getMessage(), primaryStage);
 					}
-				} else if (e.getCode() == KeyCode.S) {
+				} else if (e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) {
 					try {
 						((Hero) chrctr).move(Direction.DOWN);
 					} catch (MovementException e1) {
