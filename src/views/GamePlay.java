@@ -356,6 +356,10 @@ public class GamePlay extends Application {
 						attackImageView.setImage(attackModeImage);
 						root.setCursor(Cursor.DEFAULT);
 					}
+				if(AttackMode)
+					root.setCursor(GunCursor);
+				if(CureMode)
+					root.setCursor(CureCursor);
 			});
 			cureImageView.setOnMouseEntered(e -> {
 				cureImageView.setImage(cureModeHighlighted);
@@ -369,6 +373,10 @@ public class GamePlay extends Application {
 						cureImageView.setImage(cureModeImage);
 						root.setCursor(Cursor.DEFAULT);
 					}
+				if(AttackMode)
+					root.setCursor(GunCursor);
+				if(CureMode)
+					root.setCursor(CureCursor);
 			});
 
 			if (chrctr instanceof model.characters.Fighter) {
@@ -385,6 +393,18 @@ public class GamePlay extends Application {
 				useSpecialView.setOnMouseClicked(e -> {
 					useSpecialAction(chrctr, primaryStage);
 				});
+				useSpecialView.setOnMouseEntered(e -> {
+					root.setCursor(handCursor);
+					useSpecialView.setImage(UseSpecialFighterHighlighted);
+				});
+				useSpecialView.setOnMouseExited(e ->{
+					//root.setCursor(Cursor.DEFAULT);
+					useSpecialView.setImage(useSpecialImages.get(1));
+					if(AttackMode)
+						root.setCursor(GunCursor);
+					if(CureMode)
+						root.setCursor(CureCursor);
+				});
 			}
 			if (chrctr instanceof model.characters.Explorer) {
 				ImageView explorerProfileView = new ImageView(explorerPrfile);
@@ -399,6 +419,18 @@ public class GamePlay extends Application {
 				root.add(useSpecialView, 8, 16);
 				useSpecialView.setOnMouseClicked(e -> {
 					useSpecialAction(chrctr, primaryStage);
+				});
+				useSpecialView.setOnMouseEntered(e -> {
+					root.setCursor(handCursor);
+					useSpecialView.setImage(UseSpecialExplorerHighlighted);
+				});
+				useSpecialView.setOnMouseExited(e ->{
+					//root.setCursor(Cursor.DEFAULT);
+					useSpecialView.setImage(useSpecialImages.get(0));
+					if(AttackMode)
+						root.setCursor(GunCursor);
+					if(CureMode)
+						root.setCursor(CureCursor);
 				});
 			}
 			if (chrctr instanceof model.characters.Medic) {
@@ -415,6 +447,18 @@ public class GamePlay extends Application {
 					useSpecialMedicMode = true;
 //					System.out.println("useSpecialMedicMode activated");
 					useSpecialAction(chrctr, primaryStage);
+				});
+				useSpecialView.setOnMouseEntered(e -> {
+					root.setCursor(handCursor);
+					useSpecialView.setImage(UseSpecialMedicHighlighted);
+				});
+				useSpecialView.setOnMouseExited(e ->{
+					//root.setCursor(Cursor.DEFAULT);
+					useSpecialView.setImage(useSpecialImages.get(2));
+					if(AttackMode)
+						root.setCursor(GunCursor);
+					if(CureMode)
+						root.setCursor(CureCursor);
 				});
 				useSpecialMedicMode = false;
 				root.add(useSpecialView, 8, 16);
@@ -445,6 +489,8 @@ public class GamePlay extends Application {
 		progressBar.setBorder(Border.EMPTY);
 		progressBar.setPadding(new Insets(15, 8, 0, 9));
 		root.add(progressBar, 0, 17);
+		
+		
 	}
 
 	private void addActionsAvailable(int col, int row, Character chrctr) {
