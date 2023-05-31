@@ -2,7 +2,7 @@ package views;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.io.File;
 import engine.Game;
 import exceptions.InvalidTargetException;
 import exceptions.MovementException;
@@ -26,6 +26,8 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -103,15 +105,16 @@ public class GamePlay extends Application {
 	private Image MedicPickScreen = ImageLoader.loadImage("icons/PickMedicScreen.jpg");
 	private Image ChooseBtn = ImageLoader.loadImage("icons/ChooseButton.png");
 	private Image ChooseBtnHighlighted = ImageLoader.loadImage("icons/ChooseButtonHighlighted.png");
+	//private Media theme = new Media("media/TrimmedLast.mp3");  
 	private boolean AttackMode = false;
 	private boolean useSpecialMedicMode = false;
 	private boolean CureMode = false;
 	private boolean gameRunning = true;
-
 	private int HeroIndex = -1;
 	private boolean FinishedSelection = false;
 	//
 	Font minecraftFont = new Font("fonts/minecraftFont.ttf", 20);
+	//private String css = this.getClass().getResource("css/application.css").toExternalForm();
 
 	private ImageCursor handCursor = new ImageCursor(handCursorImage);
 	private ImageCursor GunCursor = new ImageCursor(GunCursorImage);
@@ -129,7 +132,15 @@ public class GamePlay extends Application {
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
 	private ArrayList<Image> useSpecialImages = new ArrayList<Image>();
 	private Scene scene1 = new Scene(root, Color.BEIGE);
+	private Media theme = new Media(getClass().getResource("/media/TrimmedLast.mp3").toExternalForm());
+	private Media walk = new Media(getClass().getResource("/media/theWalk.mp3").toExternalForm());
+	private Media Gunshot = new Media(getClass().getResource("/media/Gunshot.mp3").toExternalForm());
+	private MediaPlayer mediaPlayer = new MediaPlayer(theme);
+	//private 
 
+	
+	
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -145,6 +156,7 @@ public class GamePlay extends Application {
 		loadResources();
 		selected = Game.availableHeroes.remove(HeroIndex);
 		Game.startGame(selected);
+		mediaPlayer.stop();
 		initializeGrid(primaryStage);
 		moveHelper(selected, primaryStage);
 
@@ -158,9 +170,6 @@ public class GamePlay extends Application {
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitHint("");
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.valueOf("Alt + Enter"));
-		for (String fontName : Font.getFamilies()) {
-			System.out.println(fontName);
-		}
 	}
 
 	private void updateMap(Stage primaryStage) {
@@ -839,6 +848,8 @@ public class GamePlay extends Application {
 	}
 
 	private void moveHelper(Character chrctr, Stage primaryStage) {
+		//walkSound.stop();
+		
 		root.setFocusTraversable(true);
 		root.requestFocus();
 		root.setOnKeyPressed(e -> {
@@ -851,6 +862,8 @@ public class GamePlay extends Application {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.UP);
 						int currentHP = ((Hero) chrctr).getCurrentHp();
+						MediaPlayer walkSound = new MediaPlayer(walk);
+						walkSound.play();
 						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
@@ -863,6 +876,8 @@ public class GamePlay extends Application {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.RIGHT);
 						int currentHP = ((Hero) chrctr).getCurrentHp();
+						MediaPlayer walkSound = new MediaPlayer(walk);
+						walkSound.play();
 						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
 						}
@@ -874,6 +889,8 @@ public class GamePlay extends Application {
 					try {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.LEFT);
+						MediaPlayer walkSound = new MediaPlayer(walk);
+						walkSound.play();
 						int currentHP = ((Hero) chrctr).getCurrentHp();
 						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
@@ -886,6 +903,8 @@ public class GamePlay extends Application {
 					try {
 						int previousHP = ((Hero) chrctr).getCurrentHp();
 						((Hero) chrctr).move(Direction.DOWN);
+						MediaPlayer walkSound = new MediaPlayer(walk);
+						walkSound.play();
 						int currentHP = ((Hero) chrctr).getCurrentHp();
 						if (previousHP > currentHP) {
 							showPopUp("You have stepped on a trap cell", primaryStage);
@@ -895,6 +914,7 @@ public class GamePlay extends Application {
 					}
 				} else
 					return;
+				//walkSound.play();
 				checkEndGame(primaryStage);
 				updateBar(chrctr, primaryStage);
 			}
@@ -905,8 +925,9 @@ public class GamePlay extends Application {
 	private void showPopUp(String popUpContent, Stage primaryStage) {
 		Text content = new Text(popUpContent);
 //		content.setFont(Font.loadFont("MingLiU_HKSCS-ExtB",22));
-		content.setFill(Color.BLACK);
-		content.setStyle("-fx-font-family: MingLiU_HKSCS-ExtB; -fx-font-size: 20");
+		content.setFill(Color.WHITE	);
+		content.setStyle("-fx-font-family: Minecraftia-Regular; -fx-font-size: 20");
+		
 		Popup popup = new Popup();
 		popup.getContent().add(content);
 		// Create the popup content
@@ -928,6 +949,8 @@ public class GamePlay extends Application {
 		try {
 			selected.setTarget(selectedZombie);
 			selected.attack();
+			MediaPlayer ShootSound = new MediaPlayer(Gunshot); 
+			ShootSound.play();
 		} catch (NotEnoughActionsException | InvalidTargetException e) {
 			showPopUp(e.getMessage(), primaryStage);
 		}
@@ -1007,6 +1030,8 @@ public class GamePlay extends Application {
 	}
 
 	private void startGameMenu(Stage primaryStage) {
+		//File file = new File("\"C:\\Users\\omar\\OneDrive\\Documents\\GitHub\\Last_of_Us_Legacy\\src\\media\\TrimmedLast.wav\"");
+		mediaPlayer.play();
 		ImageView TitleView = new ImageView(StartTitleImg);
 		ImageView StartButton = new ImageView(StartBtn);
 		BorderPane layout01 = new BorderPane();
