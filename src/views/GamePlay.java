@@ -132,9 +132,10 @@ public class GamePlay extends Application {
 	private ArrayList<Image> vaccineImages = new ArrayList<Image>();
 	private ArrayList<Image> useSpecialImages = new ArrayList<Image>();
 	private Scene scene1 = new Scene(root, Color.BEIGE);
-	private Media theme = new Media(getClass().getResource("/media/TrimmedLast.mp3").toExternalForm());
-	private Media walk = new Media(getClass().getResource("/media/theWalk.mp3").toExternalForm());
-	private Media Gunshot = new Media(getClass().getResource("/media/Gunshot.mp3").toExternalForm());
+	SoundLoader soundLoader = new SoundLoader();
+	private Media theme = soundLoader.getSound("/media/TrimmedLast.mp3");
+	private Media walk = soundLoader.getSound("/media/theWalk.mp3");
+	private Media Gunshot = soundLoader.getSound("/media/Gunshot.mp3");
 	private MediaPlayer mediaPlayer = new MediaPlayer(theme);
 	//private 
 
@@ -159,7 +160,8 @@ public class GamePlay extends Application {
 		mediaPlayer.stop();
 		initializeGrid(primaryStage);
 		moveHelper(selected, primaryStage);
-
+		soundLoader.removeSound(theme);
+		ImageLoader.clearCache();
 //		putEndTurnButton(primaryStage);
 //		updateMap(primaryStage);
 	}
