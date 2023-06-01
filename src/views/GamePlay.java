@@ -1,6 +1,7 @@
 package views;
 
 import java.io.IOException;
+import javafx.scene.media.*;
 import java.util.ArrayList;
 import java.io.File;
 import engine.Game;
