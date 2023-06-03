@@ -136,6 +136,7 @@ public class GamePlay extends Application {
 	private Media theme = soundLoader.getSound("/media/TrimmedLast.mp3");
 	private Media walk = soundLoader.getSound("/media/theWalk.mp3");
 	private Media Gunshot = soundLoader.getSound("/media/Gunshot.mp3");
+	private Media EndTurn = soundLoader.getSound("/media/ZombieAttack.mp3");
 	private MediaPlayer mediaPlayer = new MediaPlayer(theme);
 	//private 
 
@@ -733,7 +734,9 @@ public class GamePlay extends Application {
 		checkEndGame(primaryStage);
 		if (gameRunning) {
 			ImageView zombieView = new ImageView(ZombieAttackImg);
-			putImageFullScreen(zombieView, Duration.seconds(1), Duration.seconds(2), primaryStage, true);
+			MediaPlayer endTurnSound = new MediaPlayer(EndTurn);
+			endTurnSound.play();
+			putImageFullScreen(zombieView, Duration.seconds(2), Duration.seconds(5), primaryStage, true);
 			updateTexturedWall(primaryStage);
 		}
 	}
