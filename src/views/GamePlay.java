@@ -138,7 +138,11 @@ public class GamePlay extends Application {
 	private Media walk = soundLoader.getSound("/media/theWalk.mp3");
 	private Media Gunshot = soundLoader.getSound("/media/Gunshot.mp3");
 	private Media EndTurn = soundLoader.getSound("/media/ZombieAttack.mp3");
+	private Media InGameMusic = soundLoader.getSound("/media/mainSound.mp3");
+	private Media HealSound = soundLoader.getSound("/media/healSound.mp3");
+	private Media GameOver = soundLoader.getSound("/media/GameOver.mp3");
 	private MediaPlayer mediaPlayer = new MediaPlayer(theme);
+	private MediaPlayer InGameMusicPlayer = new MediaPlayer(InGameMusic);
 	//private 
 
 	
@@ -193,8 +197,8 @@ public class GamePlay extends Application {
 							if (((CharacterCell) Game.map[x][y]).getCharacter() instanceof Medic) {
 								ImageView medicImageView = new ImageView(medicImage);
 								Hero h = (Hero) ((CharacterCell) Game.map[x][y]).getCharacter();
-								medicImageView.setScaleX(0.08);
-								medicImageView.setScaleY(0.08);
+								medicImageView.setScaleX(0.07);
+								medicImageView.setScaleY(0.07);
 								root.add(medicImageView, y, 14 - x);
 								model.characters.Character chrctr = (((CharacterCell) Game.map[x][y]).getCharacter());
 								medicImageView.setOnMouseEntered(e -> medicImageView.setCursor(handCursor));
@@ -358,6 +362,12 @@ public class GamePlay extends Application {
 	}
 
 	private void updateBar(model.characters.Character chrctr, Stage primaryStage) {
+		InGameMusicPlayer.setOnEndOfMedia(new Runnable() {
+		       public void run() {
+		    	   InGameMusicPlayer.seek(Duration.ZERO);
+		       }
+		   });
+		InGameMusicPlayer.play();
 		if (chrctr instanceof Zombie && AttackMode) {
 			attackUI(primaryStage);
 		}
@@ -560,11 +570,11 @@ public class GamePlay extends Application {
 		root.add(actionsAvailableView, col, row);
 
 		Text actionsAvailable = new Text(((Hero) chrctr).getActionsAvailable() + "");
-		actionsAvailable.setFont(Font.font("Monospaced", 20));
+		actionsAvailable.setFont(Font.font("Monospaced", 22));
 		actionsAvailable.setFill(Color.WHITE);
 		actionsAvailable.setStroke(Color.WHITE);
 		actionsAvailable.setTranslateX(5);
-		actionsAvailable.setTranslateY(4.8);
+		actionsAvailable.setTranslateY(4);
 		root.add(actionsAvailable, col + 1, row);
 
 	}
@@ -734,10 +744,18 @@ public class GamePlay extends Application {
 		// TODO add sound to transition to zombieAttackImg
 		checkEndGame(primaryStage);
 		if (gameRunning) {
+			//InGameMusicPlayer.seek(Duration.ZERO);
+			InGameMusicPlayer.stop();
 			ImageView zombieView = new ImageView(ZombieAttackImg);
 			MediaPlayer endTurnSound = new MediaPlayer(EndTurn);
 			endTurnSound.play();
-			putImageFullScreen(zombieView, Duration.seconds(2), Duration.seconds(5), primaryStage, true);
+			endTurnSound.setOnEndOfMedia(new Runnable() {
+			       public void run() {
+			    	   InGameMusicPlayer.seek(Duration.ZERO);
+			    	   InGameMusicPlayer.play();
+			       }
+			   });
+			putImageFullScreen(zombieView, Duration.seconds(2), Duration.seconds(2.5), primaryStage, true);
 			updateTexturedWall(primaryStage);
 		}
 	}
@@ -963,7 +981,8 @@ public class GamePlay extends Application {
 	}
 
 	private void cureUI(Stage primaryStage) {
-
+		MediaPlayer healingSound = new MediaPlayer(HealSound); 
+		healingSound.play();
 		try {
 			selected.setTarget(selectedZombie);
 			selected.cure();
@@ -1025,6 +1044,9 @@ public class GamePlay extends Application {
 			winView.setScaleY(1.01);
 			putImageFullScreen(winView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
+			InGameMusicPlayer.stop();
+			mediaPlayer.seek(Duration.ZERO);
+			mediaPlayer.play();
 		}
 
 		else if (Game.checkGameOver()) {
@@ -1032,6 +1054,9 @@ public class GamePlay extends Application {
 			gameOverView.setScaleY(1.01);
 			putImageFullScreen(gameOverView, Duration.seconds(3), Duration.seconds(3), primaryStage, false);
 			gameRunning = false;
+			InGameMusicPlayer.stop();
+			MediaPlayer GameOverMusic = new MediaPlayer(GameOver);
+			GameOverMusic.play();
 		}
 	}
 
